@@ -1,13 +1,26 @@
-func g() {
-	j := 0
-	j = f(3)
-	f(j)
+package main
+
+func main(i int, hello int) {  
 }
 
-func f(i int) (int) {
-	return i
+
+
+func foo(alo int, i int, afafsjsaflja int) (int, int){
+{
+    {
+    {
+
+        }
+    }
+    {
+        for ; ; {
+            
+        }
+    }
 }
 
-func main() {
-  g()
+}
+
+func hello()(int){
+
 }
