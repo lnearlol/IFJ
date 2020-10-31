@@ -1,7 +1,7 @@
 #include "scanner.h"
 
 int allowed_symbol(char state){
-    if((state >= ' ' && state <= '"') || state == '\n' || state == TAB || state >= '(' && state <= '>' || 
+    if((state >= ' ' && state <= '"') || state == '\n' || state >= '(' && state <= '>' || 
     state >= 'A' && state <= 'Z' || state == '_' || state >= 'a' && state <= '{' || state == '}' || state == EOF)
         return 1;
     else 
@@ -22,34 +22,14 @@ int num(char state){
         return 0;
 }
 
-char read_a_symbol(char state){
-    state = fgetc(program_code);
-    if(!allowed_symbol(state)){
-        fprintf(stderr, "FORBIDDEN SYMBOL!\n");
-        exit(1);
-    }
-    return state;
-}
-
 char first_non_space(char state){
     do{
-        state = read_a_symbol(state);
+        state = fgetc(program_code);
+        if(!allowed_symbol(state)){
+            fprintf(stderr, "FORBIDDEN SYMBOL!\n");
+            exit(1);
+        }
     } while(state == ' ');
-
-    return state;
-}
-
-char first_non_TAB(char state){
-    while(state == TAB)
-        state = read_a_symbol(state);
-
-    return state;
-}
-
-char first_non_EOL(char state){
-    do{
-        state = read_a_symbol(state);
-    } while(state == '\n');
 
     return state;
 }
@@ -68,13 +48,6 @@ int check_command_functions(Token *token){
     return 0;
 }
 
-void dctor(Token *first){
-    while(first != NULL){
-        Token *freed = first;
-        free(freed);
-        first = first->next;
-    }
-}
 
 void get_token(Token *token){
     char logical_operators[LOGICAL_OPERATORS_QUANTITY][LOGICAL_OPERATORS_LENGTH] = {">", "<", "==", "!=", ">=", "<="};
@@ -89,9 +62,6 @@ void get_token(Token *token){
         state = first_non_space(state);
     state_flag = 0;
     
-    if(state == TAB)
-        state = first_non_TAB(state);
-
     if(state >= '0' && state <= '9')
         token->type = TOKEN_TYPE_LITERAL_INT;
     else if((state >= 'a' && state <= 'z') || (state >= 'A' && state <= 'Z'))
@@ -105,9 +75,7 @@ void get_token(Token *token){
         token->type = TOKEN_TYPE_LOGICAL_OPERATOR;
     else if(state == '\n'){
         token->type = TOKEN_TYPE_EOL;
-        data_append(token, '$');
-        state = first_non_EOL(state);
-        state_flag++;
+        data_append(token, 'n');  // RETURN STATE AGAIN
         return;
     }
     else if(state == '_')
@@ -158,8 +126,11 @@ void get_token(Token *token){
     while(state  != EOF){
 
         if(token->type <= TOKEN_TYPE_UNDERSCORE && cycle_flag == 0){
-            state = read_a_symbol(state);
-            cycle_flag = 0;
+            state = fgetc(program_code);
+            if(!allowed_symbol(state)){
+                fprintf(stderr, "FORBIDDEN SYMBOL!\n");
+                exit(1);
+            }
         }
 
         if(token->type == TOKEN_TYPE_LITERAL_INT){
@@ -177,15 +148,12 @@ void get_token(Token *token){
         else if (token->type == TOKEN_TYPE_IDENTIFIER){
             if(letter_or_num(state)){
                 data_append(token, state);
-                state = read_a_symbol(state);
+                state = fgetc(program_code);
                 if(!strcmp(token->data, "func") && !letter_or_num(state)){
                     token->type = TOKEN_TYPE_FUNC;
                 }
                 else if(!strcmp(token->data, "package") && !letter_or_num(state)){
                     token->type = TOKEN_TYPE_PACKAGE;
-                }
-                else if(!strcmp(token->data, "int") && !letter_or_num(state)){
-                    token->type = TOKEN_TYPE_INT;
                 }
                 else if(!strcmp(token->data, "return") && !letter_or_num(state)){
                     token->type = TOKEN_TYPE_RETURN;
@@ -199,9 +167,9 @@ void get_token(Token *token){
                 else if (letter_or_num(state)){
                     cycle_flag++;
                     continue;
-                }
-
-                state_flag++;
+                } else 
+                    state_flag++;
+                
 
                 return;
             }
@@ -212,3 +180,5 @@ void get_token(Token *token){
         }
     }
 }
+
+

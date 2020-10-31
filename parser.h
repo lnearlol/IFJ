@@ -7,14 +7,20 @@ STATE_NON_STRICT_EXPRESSION, STATE_ERROR,
 STATE_INPUT_PARAMS, STATE_OUTPUT_PARAMS, STATE_EXPRESSION_LEFT_SIDE, STATE_EXPRESSION_RIGHT_SIDE} Syntax_State; 
 typedef enum {CONDITION_STRICTLY, CONDITION_NON_STRICTLY} Syntax_Condition; 
 
-Token *token;
-bool program_start();
-bool function();
-bool input_parameters();
-bool input_single_parameters();
-bool output_parameters();
-bool output_single_parameters();
-bool function_body();
-bool for_construction();
-bool math_expression(int end_condition);
-bool logic_expression(int end_condition);
+typedef struct Stack_Next {
+    Token_type token_type;
+    struct Stack_Next *next;
+} *stack_next;
+
+typedef struct {
+    stack_next top;
+} Syntax_Stack;
+
+
+Syntax_Stack STACK; 
+
+void allocating_error();
+void delete_from_stack(Syntax_Stack *S);
+void add_to_stack(Syntax_Stack *S, int type);
+void create_new_stack(Syntax_Stack *S);
+int structure_check(Token *token);
