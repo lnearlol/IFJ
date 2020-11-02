@@ -9,10 +9,7 @@ void allocating_error(){
 void get_and_set_token(){
     token->next = malloc (sizeof(Token));
     token = token->next;
-    token->data = NULL;
     token->next = NULL;
-    token->size = 0;
-    token->type = 0;
     get_token(token);
 }
 
@@ -231,20 +228,51 @@ bool math_expression(int end_condition){
 
 bool logic_expression(int end_condition){
     bool logic_expression = false;
-    if(token->type == end_condition)
-        logic_expression = true;
-
-    return math_expression;
+    // if(token->type == end_condition)
+    //     logic_expression = true;
+    // else 
+    if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){ // при этом нужен чек по таблице символов
+        printf("            CONDITION1 %s\n", token->data);
+        get_and_set_token();
+        logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
+        printf("                            CONDITION1 returns token %s\n", token->data);
+        if(logic_expression){
+            get_and_set_token();
+            if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){
+                printf("          %d  CONDITION2 %s\n", token->type, token->data);
+                get_and_set_token();
+                logic_expression = expression(end_condition); //right side + semicolon (for)
+            }
+        } // взять у Вики логические операторы и потом затестить
+    
+    }
+    return logic_expression;
 }
+
+bool expression(int end_condition){
+    bool expression_accept = false;
+    printf("          EXPR  CONDITION1 %s\n", token->data);
+    if(token->type == end_condition){
+        expression_accept = true;
+        printf("          EXPR  CONDITION1 RETUUURN TRUE %s\n", token->data);
+    }
+    else if(token->type == TOKEN_TYPE_MATH_OPERATOR){
+        get_and_set_token();
+        if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){
+            get_and_set_token();
+            expression_accept = expression(end_condition);
+        }
+    }
+
+    return expression_accept;
+}
+
 
 int main(){
     program_code = fopen ("file.ifj20", "r");
 
     token = malloc (sizeof(Token));
-    token->data = NULL;
     token->next = NULL;
-    token->size = 0;
-    token->type = 0;
     Token *first = token;
     get_token(token);
 
@@ -256,7 +284,7 @@ int main(){
     //     printf("data: %s   number: %d \n", first->data, first->type);
     //     first = first->next;
     // }
-    dctor(first);
+    dtor(first);
     fclose(program_code);
     return 0;
 }

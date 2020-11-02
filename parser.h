@@ -18,3 +18,4 @@ bool function_body();
 bool for_construction();
 bool math_expression(int end_condition);
 bool logic_expression(int end_condition);
+bool expression(int end_condition);
