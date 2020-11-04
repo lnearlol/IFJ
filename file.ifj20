@@ -13,7 +13,7 @@ func foo(alo int, i int, afafsjsaflja int) (int, int){
         }
     }
     {
-        for ; a - c + a + 3 - hello; {
+        for a, B, c := 152, 2, 54+22*78; a - 1.12 >= (a + 3) - hello(abc, 123, 2); a = 5 {
             
         }
     }

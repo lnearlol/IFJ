@@ -16,6 +16,15 @@ bool output_parameters();
 bool output_single_parameters();
 bool function_body();
 bool for_construction();
-bool math_expression(int end_condition);
+// bool math_expression(int end_condition);
 bool logic_expression(int end_condition);
 bool expression(int end_condition);
+bool expression_func_operators();
+bool expression_func_single_operator();
+
+
+bool expression_including_string(int end_condition);
+bool define(int end_condition, int declare, int equating);
+bool define_operands();
+bool count_operands(int end_condition);
+

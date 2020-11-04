@@ -1,5 +1,6 @@
 #include "parser.h"
 int deep = -1;
+int number_of_operands = 0;
 bool function_body();
 void allocating_error(){
      printf ("*ERROR* Memory was not alocated.\n");
@@ -12,7 +13,7 @@ void get_and_set_token(){
     token->next = NULL;
     get_token(token);
 }
-
+//  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
 // package main \n func() EOF
 bool program_start(){
     bool program_start = false;
@@ -41,6 +42,8 @@ bool program_start(){
         printf("ERROR IN FIRST LINE OR THERE ARE NO (VALID) FUNCTIONS IN YOUR PROGRAM!\n");
     return program_start;
 }
+
+//  ------------------------------------ F U N C T I O N ------------------------------------
 
 bool function(){
     bool func = false;
@@ -76,6 +79,8 @@ bool function(){
     printf("HI FROM FUNC %s\n", token->data);
     return func;
 }
+
+//  ------------------------------------ I N P U T    P A R A M E T E R S ------------------------------------
 
 bool input_parameters(){
     bool input_parameters = false;
@@ -121,6 +126,8 @@ bool input_single_parameters(){
     return input_single_parameter;
 }
 
+//  ------------------------------------ O U T P U T    P A R A M E T E R S ------------------------------------
+
 bool output_parameters(){
     bool output_parameters = false;
     if(token->type == TOKEN_TYPE_START_BLOCK)
@@ -152,6 +159,8 @@ bool output_single_parameters(){
     } 
     return output_single_parameter;
 }
+
+//  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
 bool function_body(){
     bool function_accept = false;
@@ -193,10 +202,12 @@ bool function_body(){
     return function_accept;
 }
 
+//  ------------------------------------ F O R    C O N S T R U C T I O N ------------------------------------
+
 bool for_construction(){
     bool for_accept = false;
     printf("            HI FROM FOR_CONSTRUCTION %s\n", token->data);
-    if(!math_expression(TOKEN_TYPE_SEMICOLON)){
+    if(!define(TOKEN_TYPE_SEMICOLON, 1, 1)){
             printf("            here 1\n");
         return false;
     }
@@ -206,10 +217,11 @@ bool for_construction(){
         return false;
     }
     get_and_set_token();
-    if(!math_expression(TOKEN_TYPE_START_BLOCK)){
+    if(!define(TOKEN_TYPE_START_BLOCK, 0, 1)){
         printf("            here 3\n");
         return false;
     }
+    printf("            HI FROM FOR_CONSTRUCTION after here3 %s\n", token->data);
     if(token->type == TOKEN_TYPE_START_BLOCK){
         for_accept = function_body();
         printf("            here 4\n");
@@ -218,55 +230,212 @@ bool for_construction(){
     return for_accept;
 }
 
-bool math_expression(int end_condition){
-    bool math_expression = false;
-    if(token->type == end_condition)
-        math_expression = true;
-
-    return math_expression;
-}
+//  ------------------------------------ L O G I C    E X P R E S S I O N ------------------------------------
 
 bool logic_expression(int end_condition){
     bool logic_expression = false;
-    // if(token->type == end_condition)
-    //     logic_expression = true;
-    // else 
-    if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){ // при этом нужен чек по таблице символов
-        printf("            CONDITION1 %s\n", token->data);
-        get_and_set_token();
+    if(token->type == end_condition)
+        logic_expression = true;
+    else {
         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
         printf("                            CONDITION1 returns token %s\n", token->data);
         if(logic_expression){
             get_and_set_token();
-            if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){
-                printf("          %d  CONDITION2 %s\n", token->type, token->data);
-                get_and_set_token();
-                logic_expression = expression(end_condition); //right side + semicolon (for)
-            }
-        } // взять у Вики логические операторы и потом затестить
-    
+            printf("                            CONDITION2 returns token %s\n", token->data);
+            logic_expression = expression(end_condition); //right side + semicolon (for)
+        }
     }
     return logic_expression;
 }
 
-bool expression(int end_condition){
-    bool expression_accept = false;
-    printf("          EXPR  CONDITION1 %s\n", token->data);
-    if(token->type == end_condition){
-        expression_accept = true;
-        printf("          EXPR  CONDITION1 RETUUURN TRUE %s\n", token->data);
-    }
-    else if(token->type == TOKEN_TYPE_MATH_OPERATOR){
-        get_and_set_token();
-        if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_IDENTIFIER){
+
+
+
+//  ------------------------------------ D E C L A R E   &   E Q U A T I N G    E X P R E S S I O N ------------------------------------
+
+
+bool define(int end_condition, int declare, int equating){
+    bool define_accept = 0;
+
+    if(token->type == end_condition)
+        define_accept = true;
+    else {
+        printf("                            DEFINE1 returns token [%d] %s\n", end_condition, token->data);
+        define_accept = define_operands();
+        printf("                            DEFINE2 returns token %s\n", token->data);
+        if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
             get_and_set_token();
-            expression_accept = expression(end_condition);
+            printf("                            DEFINE3 returns token %s\n", token->data);
+            define_accept = count_operands(end_condition);
+        } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
+            get_and_set_token();
+            define_accept = count_operands(end_condition);
         }
     }
 
+    return define_accept;
+}
+
+bool define_operands(){
+    bool operands_accept = false;
+
+    if(token->type == TOKEN_TYPE_IDENTIFIER){
+        number_of_operands++;
+                        printf("                                      DEFINE2 returns token %d %s\n", number_of_operands, token->data);
+
+        get_and_set_token();
+        if(token->type == TOKEN_TYPE_COMMA){
+            get_and_set_token();
+            operands_accept = define_operands();
+        } else
+            operands_accept = true;
+    }
+    return operands_accept;
+}
+
+// FUNCTION FOR RECURSIVE CALLING EXPRESSIONS + COUNT OF OPERANDS
+bool count_operands(int end_condition){
+    int current_end_condition = 0;   // for a, b = 2+1, 3+1   ',' -> end_condition
+    bool count_operands_accept = false;
+    number_of_operands--;
+
+    if(number_of_operands > 0)
+        current_end_condition = TOKEN_TYPE_COMMA;
+    else
+        current_end_condition = end_condition;
+    
+                            printf("           COUNT_OPERANDS returns token; end [%d] current end [%d] [%d]\n", end_condition, current_end_condition, number_of_operands);
+
+
+    count_operands_accept = expression_including_string(current_end_condition);
+
+
+
+    if(count_operands_accept && number_of_operands > 0){
+        get_and_set_token();
+        count_operands_accept = count_operands(end_condition);
+
+    } else if(count_operands_accept && number_of_operands == 0)
+        count_operands_accept = true;
+
+    else if (token->type == TOKEN_TYPE_COMMA && number_of_operands == 0){
+        get_and_set_token();
+        if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
+            printf("WRONG COUNT OF OPPS <\n");
+            exit(1);
+        }
+    } else if(token->type == end_condition && number_of_operands > 0){
+        printf("WRONG COUNT OF OPPS >\n");
+        exit(1);
+    }
+
+    return count_operands_accept;
+}
+
+
+//  ------------------------------------ E X P R E S S I O N ------------------------------------
+
+bool expression_including_string(int end_condition){   // MAYBE WORKS
+    bool including_string_accept = false;
+    if(token->type == TOKEN_TYPE_STRING){
+        get_and_set_token();
+        if(token->type == end_condition)
+            including_string_accept = true;
+    } else
+        including_string_accept = expression(end_condition);
+    
+
+    return including_string_accept;
+}
+
+bool expression(int end_condition){
+    bool expression_accept = false;
+    bool identifier = false;
+    // static int bracket = 0;
+    // static int id_between_brackets = 0;
+    // if(token->type == TOKEN_TYPE_LEFT_BRACKET){
+    //     bracket++;
+    // } else if (token->type == TOKEN_TYPE_RIGHT_BRACKET){
+    //     bracket--;
+    //     if(bracket < 0 || id_between_brackets == 0){
+    //         printf("BRACKETS ERROR !\n");
+    //         exit(1);
+    //     }
+    // } else 
+    if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
+        id_between_brackets = 1;
+        if(token->type == TOKEN_TYPE_IDENTIFIER)
+            identifier = true;
+        get_and_set_token();
+                        printf("                                      EXPR returns token [%d] [%d] [%s]\n", end_condition, token->type, token->data);
+
+        if(token->type == end_condition){
+            expression_accept = true;
+        } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
+            get_and_set_token();
+            expression_accept = expression(end_condition);
+        } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && identifier){
+            get_and_set_token();
+                        printf("                            FUNCTION IN EXPRESSION %s\n", token->data);
+            expression_accept = expression_func_operators();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
+            if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
+                printf("                                                  HERE %s\n", token->data);
+                get_and_set_token();
+                                        printf("                            FUNCTION2 IN EXPRESSION %s\n", token->data);
+
+                if(token->type == end_condition){
+                    expression_accept = true;
+                } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
+                    get_and_set_token();
+                    expression_accept = expression(end_condition);
+                }
+            }
+        }
+    }
+
+                        printf("                                      EXPR returns %d [%d] [%d] [%d] [%s]\n", number_of_operands, expression_accept, end_condition, token->type, token->data);
+
+    // if(bracket != 0){
+    //         printf("BRACKETS ERROR 2!\n");
+    //         exit(1);
+    // }
     return expression_accept;
 }
 
+//  ------------------------------------ E X P R E S S I O N    O P E R A T O R S ------------------------------------
+
+bool expression_func_operators(){
+    bool func_oprators_accept = false;
+    
+    if(token->type == TOKEN_TYPE_RIGHT_BRACKET)
+        func_oprators_accept = true;
+    else 
+        func_oprators_accept = expression_func_single_operator();
+            printf("                            FUNCTION IN EXPRESSION INSIDE %s, %d\n", token->data, func_oprators_accept);
+    return func_oprators_accept;
+}
+
+bool expression_func_single_operator(){
+    bool func_single_operator = false;
+
+    if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
+    || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
+        get_and_set_token();
+        if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
+            func_single_operator = true;
+        } else if(token->type == TOKEN_TYPE_COMMA){
+            get_and_set_token();
+            func_single_operator = expression_func_single_operator();
+        }
+    }
+    return func_single_operator;
+}
+
+
+
+
+
+//  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
 int main(){
     program_code = fopen ("file.ifj20", "r");
