@@ -6,18 +6,18 @@ func main(i int, hello int) {
 
 
 func foo(alo int, i int, afafsjsaflja int) (int, int){
-{
     {
-    {
+        {
+        if a < 5 {
+}
 
         }
-    }
-    {
-        for a, B, c := 152, 2, 54+22*78; a - 1.12 >= (a + 3) - hello(abc, 123, 2); a = 5 {
-            
+        {
+            for a, B, c := 152, 2, boo(); a - 1.12 >=  abc(a, b, d); a = (a)+((1+(5))) {
+                
+            }
         }
     }
-}
 
 }
 

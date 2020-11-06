@@ -16,11 +16,13 @@ bool output_parameters();
 bool output_single_parameters();
 bool function_body();
 bool for_construction();
+bool if_construction();
 // bool math_expression(int end_condition);
 bool logic_expression(int end_condition);
 bool expression(int end_condition);
-bool expression_func_operators();
-bool expression_func_single_operator();
+int is_closed_bracket();
+bool expression_func_arguments();
+bool expression_func_single_argument();
 
 
 bool expression_including_string(int end_condition);

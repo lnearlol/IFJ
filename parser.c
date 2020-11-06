@@ -163,29 +163,50 @@ bool output_single_parameters(){
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
 bool function_body(){
+    static bool empty_block = false;
     bool function_accept = false;
     if(token->type == TOKEN_TYPE_END_BLOCK){
-       deep--;
-    } else if(token->type == TOKEN_TYPE_START_BLOCK)
-        deep++;
+        deep--;
+                   printf("                                 ITS EMPTY BLOCK  %d\n", empty_block);
+        if(empty_block){
+            printf("                                 ITS EMPTY BLOCK\n");
+            return false;
+        }
+    } 
+
+    // I G N O R I N G    E M P T Y    B L O C K S   -> { /n  /n }, but not if{ /n }
+    if(token->type != TOKEN_TYPE_END_BLOCK && token->type != TOKEN_TYPE_EOL){
+        empty_block = false;
+        printf("                                 ITS EMPTY BLOCK_FALSE WORKS  %s\n", token->data);
+    }
+        
 
 
     printf("DEEP = %d\n\n", deep);
+    // E N D    B L O C K   ( L A S T )
     if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1)
         function_accept = true;
+    
+    // E O L
     else if(token->type == TOKEN_TYPE_EOL){
         get_and_set_token();
         printf("HI FROM FUNCTION_BODY %s\n", token->data);
         function_accept = function_body();
     }
+
+    // S T A R T    B L O C K
     else if(token->type == TOKEN_TYPE_START_BLOCK){
         get_and_set_token();
+        deep++;
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
             printf("HI FROM FUNCTION_BODY %s\n", token->data);
+            empty_block = true;
             function_accept = function_body();
         }
     }
+
+    // E N D    B L O C K ( N O T    L A S T )
     else if(token->type == TOKEN_TYPE_END_BLOCK && deep != -1){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_EOL){
@@ -193,10 +214,17 @@ bool function_body(){
                 printf("HI FROM FUNCTION_BODY %s\n", token->data);
             function_accept = function_body();
         }
+
+    // F O R
     } else if(token->type == TOKEN_TYPE_FOR){
         get_and_set_token();
         function_accept = for_construction();
-    }
+
+    // I F
+    } else if(token->type == TOKEN_TYPE_IF){
+        get_and_set_token();
+        function_accept = if_construction();
+    } 
     
 
     return function_accept;
@@ -223,13 +251,39 @@ bool for_construction(){
     }
     printf("            HI FROM FOR_CONSTRUCTION after here3 %s\n", token->data);
     if(token->type == TOKEN_TYPE_START_BLOCK){
-        for_accept = function_body();
-        printf("            here 4\n");
+        get_and_set_token();
+        deep++;                                 
+        if(token->type == TOKEN_TYPE_EOL){
+            get_and_set_token();
+            for_accept = function_body();
+            printf("            here 4\n");
+        }
     }
 
     return for_accept;
 }
 
+//  ------------------------------------ I F    C O N S T R U C T I O N ------------------------------------
+
+bool if_construction()
+{
+    bool if_accept = false;
+    if_accept = logic_expression(TOKEN_TYPE_START_BLOCK);
+    if (if_accept){
+        if_accept = 0;
+        deep++;
+        get_and_set_token();
+        if(token->type == TOKEN_TYPE_EOL){
+            get_and_set_token();
+                printf("                                                               IF_ACCEPTED      %d   %s\n", if_accept, token->data);
+            if_accept = function_body();
+
+        }
+    }
+
+    printf("                                IF_ACCEPTED FINAL       %d   %s\n", if_accept, token->data);
+    return if_accept;
+}
 //  ------------------------------------ L O G I C    E X P R E S S I O N ------------------------------------
 
 bool logic_expression(int end_condition){
@@ -260,6 +314,7 @@ bool define(int end_condition, int declare, int equating){
     if(token->type == end_condition)
         define_accept = true;
     else {
+
         printf("                            DEFINE1 returns token [%d] %s\n", end_condition, token->data);
         define_accept = define_operands();
         printf("                            DEFINE2 returns token %s\n", token->data);
@@ -268,6 +323,7 @@ bool define(int end_condition, int declare, int equating){
             printf("                            DEFINE3 returns token %s\n", token->data);
             define_accept = count_operands(end_condition);
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
+                        printf("                            DEFINE4 (EQUATING) returns token %s\n", token->data);
             get_and_set_token();
             define_accept = count_operands(end_condition);
         }
@@ -350,44 +406,46 @@ bool expression_including_string(int end_condition){   // MAYBE WORKS
 
 bool expression(int end_condition){
     bool expression_accept = false;
-    bool identifier = false;
-    // static int bracket = 0;
-    // static int id_between_brackets = 0;
-    // if(token->type == TOKEN_TYPE_LEFT_BRACKET){
-    //     bracket++;
-    // } else if (token->type == TOKEN_TYPE_RIGHT_BRACKET){
-    //     bracket--;
-    //     if(bracket < 0 || id_between_brackets == 0){
-    //         printf("BRACKETS ERROR !\n");
-    //         exit(1);
-    //     }
-    // } else 
-    if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
-        id_between_brackets = 1;
-        if(token->type == TOKEN_TYPE_IDENTIFIER)
-            identifier = true;
+    static int is_function = 1;
+    static int bracket = 0;
+    static int closed_bracket_counter = 0;
+    if(token->type == TOKEN_TYPE_LEFT_BRACKET){
+        bracket++;
+        is_function = 0;
+                    printf("                            AFTER LEFT BRACKET TOKEN IS returns token %s\n", token->data);
         get_and_set_token();
+        expression_accept = expression(end_condition);
+    } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
+
+        get_and_set_token();
+    
+ printf("IM HEEEERE\n");
+    // CHECK CLOSED BRACKETS
+        closed_bracket_counter = is_closed_bracket();
+        if(closed_bracket_counter){
+            bracket -= closed_bracket_counter;
+        }
+    // --
                         printf("                                      EXPR returns token [%d] [%d] [%s]\n", end_condition, token->type, token->data);
 
         if(token->type == end_condition){
             expression_accept = true;
+            is_function = 1;
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
             get_and_set_token();
+            is_function = 0;
             expression_accept = expression(end_condition);
-        } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && identifier){
+        } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && is_function){
             get_and_set_token();
                         printf("                            FUNCTION IN EXPRESSION %s\n", token->data);
-            expression_accept = expression_func_operators();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
+            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 printf("                                                  HERE %s\n", token->data);
                 get_and_set_token();
                                         printf("                            FUNCTION2 IN EXPRESSION %s\n", token->data);
-
                 if(token->type == end_condition){
                     expression_accept = true;
-                } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
-                    get_and_set_token();
-                    expression_accept = expression(end_condition);
+                    is_function = 1;
                 }
             }
         }
@@ -395,40 +453,67 @@ bool expression(int end_condition){
 
                         printf("                                      EXPR returns %d [%d] [%d] [%d] [%s]\n", number_of_operands, expression_accept, end_condition, token->type, token->data);
 
-    // if(bracket != 0){
-    //         printf("BRACKETS ERROR 2!\n");
-    //         exit(1);
-    // }
+    if(bracket != 0){
+            printf("BRACKETS ERROR [%d] !\n", bracket);
+            exit(1);
+    }
     return expression_accept;
 }
 
-//  ------------------------------------ E X P R E S S I O N    O P E R A T O R S ------------------------------------
-
-bool expression_func_operators(){
-    bool func_oprators_accept = false;
+// CLOSED_BRACKET_COUNTER
+int is_closed_bracket(){
+    int closed_bracket_counter = 0;
+    printf(" %d %d\n", closed_bracket_counter, token->type);
+    while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
+        get_and_set_token();
+        closed_bracket_counter++;
+                printf("CLOSED_BRACKET_COUNTER_plus = %d\n", closed_bracket_counter);
+    }
+       
+    printf("CLOSED_BRACKET_COUNTER = %d\n", closed_bracket_counter);
+    return closed_bracket_counter;
     
-    if(token->type == TOKEN_TYPE_RIGHT_BRACKET)
-        func_oprators_accept = true;
-    else 
-        func_oprators_accept = expression_func_single_operator();
-            printf("                            FUNCTION IN EXPRESSION INSIDE %s, %d\n", token->data, func_oprators_accept);
-    return func_oprators_accept;
 }
 
-bool expression_func_single_operator(){
-    bool func_single_operator = false;
+
+//  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
+
+
+// bool function_equating_declare(){
+//     bool func_eq_dec_accept = false;
+
+//     if(token->type == TOKEN_TYPE_IDENTIFIER){
+
+//     }
+
+//     return func_eq_dec_accept;
+// }
+
+bool expression_func_arguments(){
+    bool func_arguments_accept = false;
+    
+    if(token->type == TOKEN_TYPE_RIGHT_BRACKET)
+        func_arguments_accept = true;
+    else 
+        func_arguments_accept = expression_func_single_argument();
+            printf("                            FUNCTION IN EXPRESSION INSIDE %s, %d\n", token->data, func_arguments_accept);
+    return func_arguments_accept;
+}
+
+bool expression_func_single_argument(){
+    bool func_single_argument = false;
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
     || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
-            func_single_operator = true;
+            func_single_argument = true;
         } else if(token->type == TOKEN_TYPE_COMMA){
             get_and_set_token();
-            func_single_operator = expression_func_single_operator();
+            func_single_argument = expression_func_single_argument();
         }
     }
-    return func_single_operator;
+    return func_single_argument;
 }
 
 
