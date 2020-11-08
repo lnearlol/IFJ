@@ -49,7 +49,7 @@ char first_non_TAB(char state){
 char first_non_EOL(char state){
     do{
         state = read_a_symbol(state);
-    } while(state == '\n' || state == TAB);
+    } while(state == '\n' || state == TAB || state == ' ');
 
     return state;
 }
@@ -69,10 +69,12 @@ int check_command_functions(Token *token){
 }
 
 void dtor(Token *first){
+    Token *freed;
     while(first != NULL){
-        Token *freed = first;
-        first = first->next;
-        free(freed);
+        freed = first->next;
+        free(first->data);
+        free(first);
+        first = freed;
     }
 }
 
@@ -82,6 +84,7 @@ void get_token(Token *token){
     token->size = 1;
 
     token->data = malloc(token->size);
+    token->data[0] = '\0';
 
     if(state_flag == 0 || state == ' ')
         state = first_non_space(state);
@@ -155,11 +158,16 @@ void get_token(Token *token){
         printf("\n\nERROR!!!\n\n");
     }
     
-    data_append(token, state);
+    if(token->type != TOKEN_TYPE_LITERAL_STRING)
+        data_append(token, state);
+    
     int cycle_flag = 0;
+    int Backslash_flag = 0;
+    int ASCII_code_flag = 0;
+    
     while(state  != EOF){
 
-        if(cycle_flag == 0)
+        if(cycle_flag == 0 && token->type != TOKEN_TYPE_LITERAL_STRING)
             state = read_a_symbol(state);
         
         cycle_flag = 0;
@@ -258,33 +266,59 @@ void get_token(Token *token){
             }
             return;
         }
+        else if (token->type == TOKEN_TYPE_LITERAL_STRING){
+            ///
+            ////
+            /////
+            //ERROR: \x USED WITH NO FOLLOWING HEX DIGITS
+            /////
+            ///////
+            //
+            state = fgetc(program_code);
+            
+            if(state != '"' || Backslash_flag != 0){
+                if(state == '\n'){
+                    fprintf(stderr, "ERROR: MISSING TERMINATING\n");
+                    exit(1);
+                }
+
+                if(ASCII_code_flag !=0){
+                    printf("\n    hexa ==> %c\n", state);
+                    // data_append(token, state);
+                    ASCII_code_flag = 0;
+                }
+                else{
+                    if(state != Backslash){
+                        if(Backslash_flag !=0){
+                            if(state == 'n')
+                                state = '\n';
+                            else if(state == 't')
+                                state = TAB;
+                            /*else if(state == 'x'){
+                                ASCII_code_flag++;
+                                Backslash_flag = 0;
+                                continue;
+                            }*/
+                            else if(state != '"'){
+                                fprintf(stderr, "ERROR: UNKNOWN ESCAPE SEQUENCE\n");
+                                exit(1);
+                            }
+                        }
+                        data_append(token, state);
+                        Backslash_flag = 0;
+                    }
+                    else{
+                        if(Backslash_flag !=0){
+                            data_append(token, state);
+                            Backslash_flag = 0;
+                        }
+                        else
+                            Backslash_flag++;
+                    }
+                }
+                continue;
+            }
+            return;
+        }
     }
-}
-
-
-int main(){
-    program_code = fopen ("file.go", "r");
-
-    Token *t;
-    t = malloc(sizeof(Token));
-    Token *first = t;
-
-    for(int i = 0; ; i++) {
-        get_token(t);
-        printf("%-10s       <-%d\n", t->data, t->type);
-        if(t->type == TOKEN_TYPE_EOFILE)
-            break;
-        t->next = malloc (sizeof(Token));
-        t = t->next;
-    }
-
-    // while(first != NULL){
-    //     printf("prev-token: %s\n", first->data);
-    //     printf("TOKEN TYPE: %d\n", first->type);
-    //     first = first->next;
-    // }
-
-    dtor(first);
-    fclose(program_code);
-    return 0;
 }
