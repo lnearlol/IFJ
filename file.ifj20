@@ -1,5 +1,6 @@
 package main
 
+<<<<<<< Updated upstream
 func main(i int, hello int) {  
 }
 
@@ -24,3 +25,35 @@ func foo(alo int, i int, afafsjsaflja int) (int, int){
 func hello()(int){
 
 }
+=======
+
+func hello(a int, b int) (float64){
+    for a = a+1; i > 5; adas = func111(1, b, c, d) {
+    }
+    a()
+    if a == b {
+
+    } else {
+        if p>0 {
+
+        } else {
+            
+        }
+    }
+
+
+    {
+       a = a+b
+       for a = "LOL BL"; a < kek; a=a+1{
+           
+       }
+       bac()
+       kek = kek-1*(kek+18)
+    }
+    
+}
+
+func main(){
+    return
+}
+>>>>>>> Stashed changes
