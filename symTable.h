@@ -1,4 +1,4 @@
-#include <stdbool.h>
+#include "token.h"
 union Types
 {
   int value;
@@ -9,44 +9,60 @@ union Types
 typedef struct Variable{
     char *name;
     int type;
-    union Types value;
+    //union Types value;
     int length;
-    bool used;
-    bool declared;
     int deep;
-    struct Variable *next;
-    struct Variable *other_deep;
+    struct Variable *RtPtr;
+    struct Variable *LPtr;
+    struct Variable *prevTree;
 } *variable;
+
+
+typedef struct outParam{
+    int type;
+    struct outParam *next;
+} *outputParams;
+
+typedef struct inParam{
+    char *name;
+    int type;
+    struct inParam *next;
+} *inputParams;
 
 typedef struct Function{
     char *name;
     int type;
     int length;
-    bool used;
-    bool declared;
-    struct Function *next;
-    struct Function *Tparams;
+    struct Function *RPtr;
+    struct Function *LPtr;
+    inputParams input_params;
+    outputParams output_params;
 } *function;
 
-typedef struct params{
-    char *type;
-    struct params *next;
-} *otParams;
 
-typedef struct param{
-    char *name;
-    char *type;
-    struct param *next;
-} *itParams;
 
-typedef struct Params{
-    itParams input;
-    otParams output;
-} Tparams;
 
 typedef struct sym_tab
 {
   variable var;//struct sym_tab* func;
   function func;//struct sym_tab* var;
 }SymTab;
-SymTab *S;
+// SymTab *SymTable = NULL;
+
+void insert_var(Token *token, int deeps, SymTab *SymTable);
+bool find_var_in_sym_test(Token *token,int deeps, SymTab*SymTable);
+void delete_level(Token *token, SymTab *SymTable);
+SymTab *declaration(SymTab *SymTable);
+void insertFunction(Token *token, function *Func);
+void freeFunctions(function *Func);
+function findFunction(Token *token, function Func);
+
+void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, function Func);
+void addOutputArguments(Token *func_name, Token *arg_type, function Func);
+
+
+
+
+// P R I N T
+void Print_func2(function TempTree, char* sufix, char fromdir);
+void Print_func(function TempTree);
