@@ -12,6 +12,7 @@ bool input_parameters();
 bool input_single_parameters();
 bool output_parameters();
 bool output_single_parameters();
+bool first_run_body();
 bool function_body();
 bool for_construction();
 bool if_construction();
@@ -40,5 +41,5 @@ void delete_from_else_stack();
 
 else_stack *elseStack;
 
-#define FIRST 1
-#define SECOND 2
+#define FIRST_RUN 1
+#define SECOND_RUN 2

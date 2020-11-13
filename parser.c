@@ -2,18 +2,23 @@
 int token_counter = 1;  // delete later
 int deep = -1;
 int number_of_operands = 0;
-int run = FIRST;
+int PROGRAMM_RUN = FIRST_RUN;
 int error_flag = 0;
 
 Token *second_run;
 
 void get_and_set_token(){
-    token->next = malloc (sizeof(Token));
-    token = token->next;
-    token->next = NULL;
-    if (get_token(token) == 1)
-        error_flag = 1;
-    token_counter++;  // delete later
+        if(PROGRAMM_RUN == FIRST_RUN){
+        token->next = malloc (sizeof(Token));
+        token = token->next;
+        token->next = NULL;
+        if (get_token(token) == 1)
+            error_flag = 1;
+        token_counter++;  // delete later
+    } else if (PROGRAMM_RUN == SECOND_RUN)
+        token = token->next;
+
+
 }
 
 //  ------------------------------------ E L S E    S T A C K ------------------------------------
@@ -97,7 +102,10 @@ bool function_check(){
                             if(token->type == TOKEN_TYPE_EOL){
                                 get_and_set_token();
                                 deep++;    // when first { is opened in function
-                                func = function_body();
+                                if(PROGRAMM_RUN == FIRST_RUN)
+                                    func = first_run_body();
+                                else
+                                    func = function_body();
                                 if(func && token->type == TOKEN_TYPE_END_BLOCK){
                                     get_and_set_token();
                                     if(token->type == TOKEN_TYPE_EOL)
@@ -183,20 +191,22 @@ bool output_single_parameters(){
 
 // //  ------------------------------------  B O D Y    1    R U N  ------------------------------------
 
-// bool first_run(){
-//     bool first_run_accept = true;
+bool first_run_body(){
+    bool first_run_accept = true;
 
 
-//     while(deep != -1){
-//         if(token->type == TOKEN_TYPE_END_BLOCK)
-//             deep--;
-//         if(token->type == TOKEN_TYPE_START_BLOCK)
-//             deep++;
-//         get_and_set_token();
-//     }
+    while(1){
+        if(token->type == TOKEN_TYPE_END_BLOCK)
+            deep--;
+        if(token->type == TOKEN_TYPE_START_BLOCK)
+            deep++;
+        if(deep == -1)
+            break;
+        get_and_set_token();
+    }
 
-//     return first_run_accept;
-// }
+    return first_run_accept;
+}
 
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
@@ -210,7 +220,7 @@ bool function_body(){
             printf("                                 ITS EMPTY BLOCK\n");
             return false;
         }
-    } else if(token->type == TOKEN_TYPE_END_BLOCK && run == FIRST)
+    }
 
     // I G N O R I N G    E M P T Y    B L O C K S   -> { /n  /n }, but not if{ /n }
     if(token->type != TOKEN_TYPE_END_BLOCK && token->type != TOKEN_TYPE_EOL){
@@ -618,8 +628,11 @@ int main(){
     token = malloc (sizeof(Token));
     token->next = NULL;
     second_run = token;
+
+    Token *first = token;
     if(get_token(token) == 1)
         error_flag = 1;
+
     if(error_flag == 0){
         bool result = program_start();
 
@@ -628,14 +641,29 @@ int main(){
             error_flag = 2;
         } 
     }
-     printf("\n\n                                                 PROGRAM FINISHED %d\n", error_flag);
+     printf("\n\n                                                 PROGRAM FINISHED 1: [%d]\n", error_flag);
+    PROGRAMM_RUN = SECOND_RUN;
+    token = second_run;
+    if(error_flag == 0){
+        bool result = program_start();
+
+        if(!result && error_flag == 0){
+            printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
+            error_flag = 2;
+        } 
+    printf("\n\n                                                 PROGRAM FINISHED 2: [%d]\n", error_flag);
+    }
+    
+
+
+
 
     // int i = 0;
-    // while(second_run != NULL){
-    //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
-    //     second_run = second_run->next;
+    // while(first != NULL){
+    //     printf("[%d] data: %s   number: %d \n", ++i, first->data, first->type);
+    //     first = first->next;
     // }
-    dtor(second_run);
+    dtor(first);
    // fclose(program_code);
     return error_flag;
 }
