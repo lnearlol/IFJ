@@ -3,7 +3,7 @@ package main
 func main(){
     a = (a+b-c)+4
     
-   lol(a, v, c)
+   o(a, v, c)
 }
 
 func o(i int, a float64){
@@ -14,6 +14,6 @@ func kek(promenna1 int, prom2 string){
 
 }
 
-func cool(var float64, RomaSuper int) (int, float, string){
-
+func cool(var float64, RomaSuper int) (int, float64, string){
+    kok(i, 2, "hello")
 }

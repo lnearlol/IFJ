@@ -407,7 +407,7 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
     if(token->type == end_condition)
         define_accept = true;
     else {
-
+        
         printf("                            DEFINE1 returns token [%d] %s\n", end_condition, token->data);
         define_accept = define_operands(func);
         printf("                            DEFINE2 returns token %s, %d\n", token->data, define_accept);
@@ -446,11 +446,19 @@ bool define_operands(int func){
 
     if(token->type == TOKEN_TYPE_IDENTIFIER){
         number_of_operands++;
-        if(func){
-            get_and_set_token();
-            operands_accept = true;
+        // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
+        saved_func_name = token;
+
+        get_and_set_token();
+        if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET){
+            // S Y M T A B L E    L O G I C
+            if(findFunction(saved_func_name, SymTable->func))       
+                operands_accept = true;
+            else {
+                operands_accept = false;
+                error_flag = 3;   //  ERROR 3
+            }
         } else {
-            get_and_set_token();
             if(token->type == TOKEN_TYPE_COMMA){
                 get_and_set_token();
                 operands_accept = define_operands(func);
@@ -600,6 +608,10 @@ bool expression_func_single_argument(){
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
     || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
+        // // F U N C T I O N   A R G U M E N T S   L O G I C
+        // function arg_find = findFunction(saved_func_name, SymTable->func);
+        // static inputParams args = arg_find->input_params;
+
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
             func_single_argument = true;
@@ -677,9 +689,9 @@ int main(){
             printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
             error_flag = 2;
         } 
-    printf("\n\n                                                 PROGRAM FINISHED 2: [%d]\n", error_flag);
+    printf("\n\n                                            PROGRAM FINISHED 2: [ERROR CODE %d]\n", error_flag);
     }
-    printf("------- %s\n", SymTable->func->LPtr->LPtr->input_params->next->name);
+    //printf("------- %d\n", SymTable->func->LPtr->LPtr->output_params->next->type);
 
 
     Print_func(SymTable->func);
