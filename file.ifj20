@@ -6,8 +6,14 @@ func main(){
    lol(a, v, c)
 }
 
-func o(){
-    
-    asadk akjdas
+func o(i int, a float64){
+
 }
 
+func kek(promenna1 int, prom2 string){
+
+}
+
+func cool(var float64, RomaSuper int) (int, float, string){
+
+}

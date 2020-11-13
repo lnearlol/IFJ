@@ -42,4 +42,6 @@ void delete_from_else_stack();
 else_stack *elseStack;
 
 #define FIRST_RUN 1
-#define SECOND_RUN 2
+#define SECOND_RUN 0
+SymTab *SymTable;
+Token *saved_func_name, *saved_arg_name, *saved_arg_type;

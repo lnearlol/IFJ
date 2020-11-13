@@ -5,7 +5,10 @@ int number_of_operands = 0;
 int PROGRAMM_RUN = FIRST_RUN;
 int error_flag = 0;
 
-Token *second_run;
+
+
+
+
 
 void get_and_set_token(){
         if(PROGRAMM_RUN == FIRST_RUN){
@@ -89,6 +92,11 @@ bool function_check(){
     if(token->type == TOKEN_TYPE_FUNC){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_IDENTIFIER){
+            // A D D    F U N C T I O N S    T O    S Y M T A B L E
+            if(PROGRAMM_RUN){          
+                insertFunction(token, &(SymTable->func));
+                saved_func_name = token;
+            }
             get_and_set_token();
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
                 get_and_set_token();
@@ -137,9 +145,20 @@ bool input_parameters(){
 bool input_single_parameters(){
     bool input_single_parameter = false;
     if(token->type == TOKEN_TYPE_IDENTIFIER){
+        if(PROGRAMM_RUN){
+            if(strcmp(saved_func_name->data, "main") == 0)      // I F    M A I N   H A S   I N P U T   P A R A M S
+                return false;  // error_flag = 4to-to
+
+            saved_arg_name = token;
+        }
         get_and_set_token();
         if(token->type == TOKEN_TYPE_INT || token->type == TOKEN_TYPE_FLOAT || token->type == TOKEN_TYPE_STRING){
-            
+
+            if(PROGRAMM_RUN){        // A D D   F U N C   A R G S    T O    S Y M T A B L E
+                saved_arg_type = token;
+                printf("INPUTS PARAMS -%s -%s -%s  -%s\n", saved_func_name->data, saved_arg_name->data, saved_arg_type->data, SymTable->func->name);
+                addInputArguments(saved_func_name, saved_arg_name, saved_arg_type, SymTable->func);
+            }
             // input_single_parameter = true;
             get_and_set_token();
             if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
@@ -175,6 +194,11 @@ bool output_parameters(){
 bool output_single_parameters(){
     bool output_single_parameter = false;
     if(token->type == TOKEN_TYPE_INT || token->type == TOKEN_TYPE_FLOAT || token->type == TOKEN_TYPE_STRING){
+        if(PROGRAMM_RUN){
+            saved_arg_type = token;
+            printf("OUTPUTS PARAMS -%s -%s -%s  -%s\n", saved_func_name->data, saved_arg_name->data, saved_arg_type->data, SymTable->func->name);
+            addOutputArguments(saved_func_name, saved_arg_type, SymTable->func);
+        }
         get_and_set_token();
         if(token->type == TOKEN_TYPE_COMMA){
             get_and_set_token();
@@ -624,12 +648,14 @@ bool start_block_new_line(){
 
 int main(){
    // program_code = fopen ("file.ifj20", "r");
+   SymTable = declaration(SymTable);
+
+    saved_func_name = saved_arg_name = saved_arg_type = NULL;
 
     token = malloc (sizeof(Token));
     token->next = NULL;
-    second_run = token;
+    Token *second_run = token;
 
-    Token *first = token;
     if(get_token(token) == 1)
         error_flag = 1;
 
@@ -653,17 +679,19 @@ int main(){
         } 
     printf("\n\n                                                 PROGRAM FINISHED 2: [%d]\n", error_flag);
     }
+    printf("------- %s\n", SymTable->func->LPtr->LPtr->input_params->next->name);
+
+
+    Print_func(SymTable->func);
     
-
-
-
-
     // int i = 0;
-    // while(first != NULL){
-    //     printf("[%d] data: %s   number: %d \n", ++i, first->data, first->type);
-    //     first = first->next;
+    // while(second_run != NULL){
+    //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
+    //     second_run = second_run->next;
     // }
-    dtor(first);
+    freeFunctions(&(SymTable->func));
+    free(SymTable);
+    dtor(second_run);
    // fclose(program_code);
     return error_flag;
 }
