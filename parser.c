@@ -531,6 +531,10 @@ bool expression(int end_condition){
         expression_accept = expression(end_condition);
          
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
+
+        // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
+        saved_func_name = token;
+
         get_and_set_token();
     // CHECK CLOSED BRACKETS
         closed_bracket_counter = is_closed_bracket();
@@ -547,6 +551,11 @@ bool expression(int end_condition){
             is_function = 0;
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && is_function){
+            // S Y M T A B L E    L O G I C
+            if(!findFunction(saved_func_name, SymTable->func)){
+                error_flag = 3;   //  ERROR 3
+                return false;
+            }
             get_and_set_token();
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
@@ -598,26 +607,53 @@ bool expression_func_arguments(){
     
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET)
         func_arguments_accept = true;
-    else 
-        func_arguments_accept = expression_func_single_argument();
+    else {
+        // F U N C T I O N   A R G U M E N T S   L O G I C
+        function arg_find = findFunction(saved_func_name, SymTable->func);
+        inputParams args_check = arg_find->input_params;
+        func_arguments_accept = expression_func_single_argument(args_check);
+    }
     return func_arguments_accept;
 }
 
-bool expression_func_single_argument(){
+bool expression_func_single_argument(inputParams args_check){
     bool func_single_argument = false;
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
     || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
-        // // F U N C T I O N   A R G U M E N T S   L O G I C
-        // function arg_find = findFunction(saved_func_name, SymTable->func);
-        // static inputParams args = arg_find->input_params;
-
+        if(args_check != NULL){
+            // F U N C T I O N   A R G U M E N T S   L O G I C  --   C H E C K    L I T E R A L    T Y P E
+            // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
+            if(token->type == TOKEN_TYPE_LITERAL_INT && args_check->type != TOKEN_TYPE_INT){
+                printf("             arg name - %s\n", args_check->name);
+                error_flag = 3;
+                return false;
+            } else if (token->type == TOKEN_TYPE_LITERAL_FLOAT && args_check->type != TOKEN_TYPE_FLOAT){
+                printf("             arg name - %s\n", args_check->name);
+                error_flag = 3;
+                return false;            
+            } else if (token->type == TOKEN_TYPE_LITERAL_STRING && args_check->type != TOKEN_TYPE_STRING){
+                printf("             arg name - %s\n", args_check->name);
+                error_flag = 3;
+                return false;            
+            }
+        } else {
+            error_flag = 3;
+                return false;     
+        }
+        // ---------
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
-            func_single_argument = true;
+            // L O G I C   C H E C K    [ args_check->next is NULL, it was the last parameter in SymTable->Func->InputParams ]
+            if(args_check->next == NULL)
+                func_single_argument = true;
+            else {
+                error_flag = 3;
+                func_single_argument = false;
+            }
         } else if(token->type == TOKEN_TYPE_COMMA){
             get_and_set_token();
-            func_single_argument = expression_func_single_argument();
+            func_single_argument = expression_func_single_argument(args_check->next);
         }
     }
     return func_single_argument;
