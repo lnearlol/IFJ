@@ -317,6 +317,14 @@ bool function_body(){
             function_accept = function_body();   
         }
 
+    // U N D E R S C O R E  --  D E C L A R E,  E Q U A T I N G
+    } else if (token->type == TOKEN_TYPE_UNDERSCORE){
+        
+        if(define_func(TOKEN_TYPE_EOL, 1, 1, false)){
+            get_and_set_token();
+            function_accept = function_body();   
+        }
+
     // R E T U R N
     } else if (token->type == TOKEN_TYPE_RETURN){
         get_and_set_token();
@@ -444,13 +452,14 @@ bool define_operands(int func){
    
     bool operands_accept = false;
 
-    if(token->type == TOKEN_TYPE_IDENTIFIER){
+    if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_UNDERSCORE){
         number_of_operands++;
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
+        printf("define ops   token->data = %s\n", token->data);
 
         get_and_set_token();
-        if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET){
+        if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET && saved_func_name == TOKEN_TYPE_IDENTIFIER){
             // S Y M T A B L E    L O G I C
             if(findFunction(saved_func_name, SymTable->func))       
                 operands_accept = true;
@@ -605,12 +614,16 @@ int is_closed_bracket(){
 bool expression_func_arguments(){
     bool func_arguments_accept = false;
     
-    if(token->type == TOKEN_TYPE_RIGHT_BRACKET)
-        func_arguments_accept = true;
-    else {
-        // F U N C T I O N   A R G U M E N T S   L O G I C
-        function arg_find = findFunction(saved_func_name, SymTable->func);
-        inputParams args_check = arg_find->input_params;
+    // F U N C T I O N   A R G U M E N T S   L O G I C
+    function arg_find = findFunction(saved_func_name, SymTable->func);
+    inputParams args_check = arg_find->input_params;
+
+    if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
+        if(args_check == NULL)
+            func_arguments_accept = true;
+        else 
+            error_flag = 3;
+    } else {
         func_arguments_accept = expression_func_single_argument(args_check);
     }
     return func_arguments_accept;

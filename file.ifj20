@@ -15,5 +15,6 @@ func kek(promenna1 int, prom2 string){
 }
 
 func cool(var float64, RomaSuper int) (int, float64, string){
-    a = kek(2, "3")
+    _ = kek(1, "fsdfs")
+    _, _ := 1+3, 2+2
 }
