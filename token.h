@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h> 
 
 typedef enum {
 TOKEN_TYPE_IDENTIFIER,  // 0
@@ -44,8 +45,9 @@ typedef struct token {
     struct token *next;
 } Token;
 
-void get_token(Token *token);       //function of processing a program code
+int get_token(Token *token);       //function of processing a program code
 //release the allocated memory created with malloc()
 void dtor(Token *first);
 
-FILE *program_code;
+
+

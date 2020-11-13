@@ -1,5 +1,4 @@
-#include "token.h"
-bool errflg = false;
+#include "symtable.h"
 //typedef enum {INPUT_PARAMS, OUTPUT_PARAMS, EXPRESSION_LEFT_SIDE, EXPRESSION_RIGHT_SIDE} nonterminal;
 typedef enum {STATE_NULL, STATE_BEGIN, STATE_FUNC, STATE_FREE, STATE_STRICT_EXPRESSION, 
 STATE_NON_STRICT_EXPRESSION, STATE_ERROR,
@@ -8,7 +7,7 @@ typedef enum {CONDITION_STRICTLY, CONDITION_NON_STRICTLY} Syntax_Condition;
 
 Token *token;
 bool program_start();
-bool function();
+bool function_check();
 bool input_parameters();
 bool input_single_parameters();
 bool output_parameters();
@@ -40,3 +39,6 @@ void add_to_else_stack();
 void delete_from_else_stack();
 
 else_stack *elseStack;
+
+#define FIRST 1
+#define SECOND 2
