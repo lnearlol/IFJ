@@ -459,6 +459,7 @@ bool define_operands(int func){
         printf("define ops   token->data = %s\n", token->data);
 
         get_and_set_token();
+        printf("define ops   token->next->data = %s\n", token->data);
         if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET && saved_func_name == TOKEN_TYPE_IDENTIFIER){
             // S Y M T A B L E    L O G I C
             if(findFunction(saved_func_name, SymTable->func))       
@@ -616,9 +617,14 @@ bool expression_func_arguments(){
     
     // F U N C T I O N   A R G U M E N T S   L O G I C
     function arg_find = findFunction(saved_func_name, SymTable->func);
+    if(!arg_find) {
+        error_flag = 3;
+        return false;
+    }
     inputParams args_check = arg_find->input_params;
 
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
+        // LOGIC
         if(args_check == NULL)
             func_arguments_accept = true;
         else 
