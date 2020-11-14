@@ -12,7 +12,7 @@ typedef struct Variable{
     //union Types value;
     int length;
     int deep;
-    struct Variable *RtPtr;
+    struct Variable *RPtr;
     struct Variable *LPtr;
     struct Variable *prevTree;
 } *variable;
@@ -54,7 +54,9 @@ bool find_var_in_sym_test(Token *token,int deeps, SymTab*SymTable);
 void delete_level(Token *token, SymTab *SymTable);
 SymTab *declaration(SymTab *SymTable);
 void insertFunction(Token *token, function *Func);
+void insertVariable(Token *token, variable *Var, int deepVar);
 void freeFunctions(function *Func);
+void freeVariables(variable *Var);
 function findFunction(Token *token, function Func);
 
 void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, function Func);
@@ -66,3 +68,5 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func);
 // P R I N T
 void Print_func2(function TempTree, char* sufix, char fromdir);
 void Print_func(function TempTree);
+void Print_var2(variable TempTree, char* sufix, char fromdir);
+void Print_var(variable TempTree);

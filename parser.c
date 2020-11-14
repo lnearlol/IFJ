@@ -71,7 +71,25 @@ int main(){
     //     printf("%s FOUND\n", tmp->name);
     // } else 
     //     printf("%s NOT FOUND\n", first->next->next->data);
-
+    
+    get_and_set_token();
+    int deep = 1;
+    insertVariable(token, &(S->var), deep);
+    get_and_set_token();
+    int dep = 1;
+    insertVariable(token, &(S->var), dep);
+    get_and_set_token();
+    int depp = 1;
+    insertVariable(token, &(S->var), depp);
+    Print_var(S->var);
+    get_and_set_token();
+    int deppp = 2;
+    insertVariable(token, &(S->var), deppp);
+    get_and_set_token();
+    int deppps = 2;
+    insertVariable(token, &(S->var), deppps);
+    Print_var(S->var->prevTree);
+    freeVariables(&(S->var));
     freeFunctions(&(S->func));
     free(S);
     dtor(first);

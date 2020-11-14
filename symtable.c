@@ -60,6 +60,46 @@ void Print_func(function TempTree)
 } 
 
 
+void Print_var2(variable TempTree, char* sufix, char fromdir)
+/* vykresli sktrukturu binarniho stromu */
+
+{
+     if (TempTree != NULL)
+     {
+	char* suf2 = (char*) malloc(strlen(sufix) + 4);
+	strcpy(suf2, sufix);
+        if (fromdir == 'L')
+	{
+	   suf2 = strcat(suf2, "  |");
+	   printf("%s\n", suf2);
+	}
+	else
+	   suf2 = strcat(suf2, "   ");
+	Print_var2(TempTree->RPtr, suf2, 'R');
+        printf("%s  +-[%s,%d,%d]\n", sufix, TempTree->name, TempTree->type, TempTree->deep);
+	strcpy(suf2, sufix);
+        if (fromdir == 'R')
+	   suf2 = strcat(suf2, "  |");	
+	else
+	   suf2 = strcat(suf2, "   ");
+	Print_var2(TempTree->LPtr, suf2, 'L');
+	if (fromdir == 'R') printf("%s\n", suf2);
+	free(suf2);
+    }
+}
+
+void Print_var(variable TempTree)
+{
+  printf("Struktura binarniho stromu:\n");
+  printf("\n");
+  if (TempTree != NULL)
+     Print_var2(TempTree, "", 'X');
+  else
+     printf("strom je prazdny\n");
+  printf("\n");
+  printf("=================================================\n");
+} 
+
 
 
 
@@ -214,8 +254,126 @@ void Print_func(function TempTree)
 
 
 // --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
+variable Create_variable(Token *token){
 
+    variable newPtr = malloc(sizeof(struct Variable));//zkontrolovat úspěšnost operace 
+    newPtr->name = token->data;
+    newPtr->RPtr = NULL;
+    newPtr->LPtr = NULL;
+    newPtr->length = token->size;
+    //newPtr->deep??
+    //newPtr->
+    return newPtr;
+ }
 
+ void insertVariable(Token *token, variable *Var, int deepVar){
+
+    if ((*Var != NULL) && ((*Var)->deep < deepVar))
+    {  
+            printf("pppo %s\n",(*Var)->name);
+            variable temp = malloc(sizeof(struct Variable));
+            temp->LPtr =NULL;
+            temp->RPtr =NULL;
+            temp->deep = deepVar;
+            temp->name = token->data;
+            temp->length = token->size;
+            temp->prevTree = (*Var);
+            //S->var = temp;
+            (*Var) = temp;
+            
+            
+    }
+     	if(*Var == NULL){
+		*Var = malloc(sizeof(struct Variable));
+		(*Var)->name = token->data;
+		(*Var)->length = token->size;
+		(*Var)->LPtr = NULL;
+		(*Var)->RPtr = NULL;
+        (*Var)->prevTree = NULL;
+        (*Var)->deep = deepVar;
+        printf( "SYMBOL! \n");
+        printf("%s\n",(*Var)->name);
+		return;
+
+	} else if(strcmp((*Var)->name, token->data) > 0) {
+        printf("%s hi\n",(*Var)->name);
+    if((*Var)->deep == deepVar)
+    {
+        printf("DEEP\n");
+    }
+		insertVariable(token, &((*Var)->LPtr),deepVar);
+
+	} else if(strcmp((*Var)->name, token->data) < 0) {
+        printf("%s %s %s bye\n",(*Var)->name,(*Var)->LPtr->name,(*Var)->LPtr->LPtr->name);
+		insertVariable(token, &((*Var)->RPtr),deepVar);
+
+	} else if(strcmp((*Var)->name, token->data) == 0) {
+        fprintf(stderr,"VARIABLE WITH THE SAME NAME ALREADY EXISTS!!!\n");
+        exit(1);
+		return;
+	}
+}
+
+variable findVariable(Token *token, variable Var,int deepVar){
+    if (Var->deep == deepVar)
+    {
+        printf("DEEP\n");
+    }
+    if(Var == NULL){
+		return NULL;
+	} else if(strcmp(Var->name, token->data) < 0) {
+		findVariable(token, Var->RPtr,deepVar);
+
+	} else if(strcmp(Var->name, token->data) > 0) {
+		findVariable(token, Var->LPtr,deepVar);
+		
+	} else if(strcmp(Var->name, token->data) == 0) {
+		return Var;
+	}
+}
+//  void checkType(Token *token, variable Var, int deepVar)
+//  {
+//     variable check = findFunction(Var,deepVar);
+//     if(check->deep == )
+//  }
+
+void freeVariables(variable *Var){
+    	if(*Var == NULL){
+		return;
+	}
+	freeVariables(&(*Var)->LPtr);
+	freeVariables(&(*Var)->RPtr);
+    // inputParams itmp;
+	// while((*Func)->input_params != NULL){
+    //     itmp = (*Func)->input_params->next;
+    //     free((*Func)->input_params);
+    //     (*Func)->input_params = itmp;
+    // }
+    // outputParams otmp;
+    // while((*Func)->output_params != NULL){
+    //     otmp = (*Func)->output_params->next;
+    //     free((*Func)->output_params);
+    //     (*Func)->output_params = otmp;
+    // }
+	free(*Var);
+	*Var = NULL;
+	
+	return;
+}
+
+// void freeVariables(variable *Var,int deepVar){
+//     	if(*Var == NULL){
+// 		return;
+// 	}
+//     if((*Var)->deep == deepVar)
+// 	freeVariables(&(*Var)->LPtr);
+// 	freeVariables(&(*Var)->RPtr);
+//     // }
+// 	free(*Var);
+// 	*Var = NULL;
+	
+// 	return;
+// }
 function Create_function(Token *token){
 
     function newPtr = malloc(sizeof(struct Function));//zkontrolovat úspěšnost operace 
