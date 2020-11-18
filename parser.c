@@ -19,7 +19,7 @@ int main(){
     printf("%-10s      <-%d\n", token->data, token->type);
    
     SymTab *S = declaration(S);
-    symTab_for_inbuilt_func(helper,S);
+    symTab_for_inbuilt_func(S);
 
     Print_func(S->func);
     Token *func, *arg_name, *arg_type;
@@ -48,20 +48,13 @@ int main(){
     get_and_set_token();
     arg_type = token;
     addInputArguments(func, arg_name, arg_type, S->func);
-    addOutputArguments(func, arg_type, S->func);
-
-//     printf("- %d\n", S->func->LPtr->input_params->next->type);
-//     printf("- %d\n", S->func->LPtr->output_params->next->type);
-    
+    addOutputArguments(func, arg_type, S->func);    
 
    Print_func(S->func);
 
     int deep = 0; 
     get_and_set_token();
-    printf("- %s toooooken\n", token->data);
     int type = token->type;
-    int types  = 3;
-    printf("- %d TYYYYPE\n", token->type);
     get_and_set_token();
     Token *find_check;
     int find_deep_check = -1;
@@ -74,8 +67,6 @@ int main(){
         if (i == 2){
             find_deep_check = deep;
             find_check = token;
-      //      printf("- %s QWQWQWQWQW\n", token->data);
-            Print_var(S->var);
         }
         if(i % 4 == 0){
             deep++;
@@ -146,32 +137,15 @@ int main(){
 
     // ПОПРОБОВАТЬ С РАЗНЫМИ ЗНАЧЕНИЯМИ: ПЕРЕМЕННАЯ С ПЕРЕМЕННОЙ, ПЕРЕМЕННАЯ С ТИПОМ И ПЕРЕМЕННАЯ БЕЗ ТИПА, РАЗНЫЕ КОМБИНАЦИИ ТИПОВ
 
-    //get_and_set_token();
     int check = compareTwoVariables(find_check, token, deep, S->var);
     printf(" token %s    Result of compareTwoVariables: %d\n", token->data, check);
 
     printf("----------------------------------------------------MY OPERATIONS ENDS\n");
 
-//     // freeVariablesLastLabel(&(S->var));
-//     // freeVariablesLastLabel(&(S->var));
-//     // freeVariablesLastLabel(&(S->var));
-//     // freeVariablesLastLabel(&(S->var));
-//     // freeVariablesLastLabel(&(S->var));
-//     // freeVariablesLastLabel(&(S->var));
-    
+    // freeVariablesLastLabel(&(S->var));
     freeAllVariables(&(S->var));
     freeFunctions(&(S->func));
 
-    // if(S->var == NULL)
-    //     printf("S->var = NULL\n\n");
-    // else {
-    //     printf("S->var is NOT NULL\n\n");
-    //     variable tmp = S->var;
-    //     while (tmp != NULL){
-    //         Print_var(tmp);
-    //         tmp = tmp->prevTree;
-    //     }
-    //  }
     free(S);
     dtor(start);
     dtor(first);

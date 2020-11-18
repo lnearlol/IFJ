@@ -1,5 +1,4 @@
 #include "symtable.h"
-//#include "tokens.c"
 
 SymTab *declaration(SymTab *SymTable){
 
@@ -13,12 +12,10 @@ SymTab *declaration(SymTab *SymTable){
 
     return SymTable;
  }
-
 // ------------------------------------------------    P R I N T      T R E E   ------------------------------------------------
 
 void Print_func2(function TempTree, char* sufix, char fromdir)
 /* vykresli sktrukturu binarniho stromu */
-
 {
      if (TempTree != NULL)
      {
@@ -97,9 +94,6 @@ void Print_var(variable TempTree)
   printf("=================================================\n");
 } 
 
-
-
-
 // --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
 
  void insertVariable(Token *token, int deepVar, variable *Var){
@@ -173,7 +167,6 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 		return Var;
 }
 
-
 //------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
 
 // FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
@@ -207,9 +200,6 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
         return NULL;
 }
 
-
-
-
 //--------------------------------------
 
 bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
@@ -221,7 +211,6 @@ bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
         return true;
     }
 }
-
 
 // DELETE ONLY LAST LABEL   (2->1->0  =>  1->0)
 void freeVariablesLastLabel(variable *Var){
@@ -253,7 +242,6 @@ void freeAllVariables(variable *Var){
 //                                                a := b expression должен вернуть хотя бы  TOKOKEN_TYPE нужного типа
 //                                               нужна функция compare(token, token, deep) для двух переменных это
 //                                               findVar(a), findVar(b) записать их типы и сравнить на совместимость
-
 
 int compareTwoVariables(Token *var1, Token *var2, int deep, variable Var){
     int type1 = 0, type2 = 0;
@@ -291,8 +279,6 @@ int returnLiteralType(Token *token){
         return 0;
     }
 }
-
-
 
 // --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
 
@@ -340,10 +326,8 @@ void freeFunctions(function *Func){
         free((*Func)->output_params);
         (*Func)->output_params = otmp;
     }
-
 	free(*Func);
 	*Func = NULL;
-	
 	return;
 }
 
@@ -376,13 +360,10 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
     while(argument->next != NULL){
         argument = argument->next;
     }
-  //  printf("%s[%d] - > ", argument->name, argument->type);
-
     argument->next = malloc(sizeof(struct inParam));
     argument->next->next = NULL;
     argument->next->name = arg_name->data;
     argument->next->type = arg_type->type;
-   // printf("%s[%d]\n ", argument->next->name, argument->next->type);
 }
 void addOutputArguments(Token *func_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
@@ -390,24 +371,18 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func){
         Found->output_params = malloc(sizeof(struct outParam));
         Found->output_params->next = NULL;
         Found->output_params->type = arg_type->type;
-    //    printf("[%d] -> \n", Found->output_params->type);
         return;
     }
     outputParams argument = Found->output_params;
     while(argument->next != NULL){
- //       printf("[%d] -> ", argument->type);
         argument = argument->next;
     }
- //   printf("[%d] - > ", argument->type);
-
     argument->next = malloc(sizeof(struct outParam));
     argument->next->next = NULL;
     argument->next->type = arg_type->type;
- //   printf("[%d]\n ", argument->next->type);
 }
  Token *create_and_set_token(Token *helper){
     helper->next = malloc (sizeof(Token));
-  //  printf("[%s]\n ", helper->data);
     helper = helper->next;
     helper->next = NULL;
     return helper;
@@ -433,7 +408,6 @@ Token *get_inputi_token(Token *inputi){
     inputi->size = 7;
     inputi->data = malloc (inputi->size);
     strcpy(inputi->data,"inputi\0");
-    printf("%s\n", inputi->data);
     inputi->type =10;
     inputi->next = NULL;
     return inputi;
@@ -442,7 +416,6 @@ Token *get_inputf_token(Token *inputf){
     inputf->size = 7;
     inputf->data = malloc (inputf->size);
     strcpy(inputf->data,"inputf\0");
-    printf("%s\n", inputf->data);
     inputf->type = 10;
     inputf->next = NULL;
     return inputf;
@@ -467,7 +440,6 @@ Token *get_len_token(Token *len){
     len->size = 4;
     len->data = malloc (len->size);
     strcpy(len->data,"len\0");
-    printf("%s\n", len->data);
     len->type =10;
     len->next = NULL;
     return len;
@@ -499,7 +471,7 @@ Token *get_chr_token(Token *chr){
 Token *get_int_token(Token *integer){
     integer->size = 4;
     integer->data = malloc (integer->size);
-    strcpy(integer->data,"int");
+    strcpy(integer->data,"int\0");
     integer->type = 1;
     integer->next = NULL;
     return integer;
@@ -507,7 +479,7 @@ Token *get_int_token(Token *integer){
 Token *get_float_token(Token *floating){
     floating->size = 8;
     floating->data = malloc (floating->size);
-    strcpy(floating->data,"float64");
+    strcpy(floating->data,"float64\0");
     floating->type = 2;
     floating->next = NULL;
     return floating;
@@ -515,7 +487,7 @@ Token *get_float_token(Token *floating){
 Token *get_string_token(Token *string){
     string->size = 7;
     string->data = malloc (string->size);
-    strcpy(string->data,"string");
+    strcpy(string->data,"string\0");
     string->type = 3;
     string->next = NULL;
     return string;
@@ -523,7 +495,7 @@ Token *get_string_token(Token *string){
 Token *get_i_token(Token *i){
     i->size = 2;
     i->data = malloc (i->size);
-    strcpy(i->data,"i");
+    strcpy(i->data,"i\0");
     i->type = 0;
     i->next = NULL;
 return i;
@@ -531,7 +503,7 @@ return i;
 Token *get_f_token(Token *f){
     f->size = 2;
     f->data = malloc (f->size);
-    strcpy(f->data,"f");
+    strcpy(f->data,"f\0");
     f->type = 0;
     f->next = NULL;
 return f;
@@ -539,7 +511,7 @@ return f;
 Token *get_s_token(Token *s){
     s->size = 2;
     s->data = malloc (s->size);
-    strcpy(s->data,"s");
+    strcpy(s->data,"s\0");
     s->type = 0;
     s->next = NULL;
 return s;
@@ -547,18 +519,10 @@ return s;
 Token *get_n_token(Token *n){
     n->size = 2;
     n->data = malloc (n->size);
-    strcpy(n->data,"n");
+    strcpy(n->data,"n\0");
     n->type = 0;
     n->next = NULL;
 return n;
-}
-Token *get_term_token(Token *term){
-    term->size = 5;
-    term->data = malloc (term->size);
-    strcpy(term->data,"term");
-    term->type = 0;
-    term->next = NULL;
-return term;
 }
 Token *get_print_type_token(Token *print_type)
 {
@@ -569,28 +533,9 @@ Token *get_print_type_token(Token *print_type)
     print_type->next = NULL;
 return print_type;
 }
-void *symTab_for_inbuilt_func(Token *helper,SymTab *S)
-{
-    Token *prints;
-    Token *inputs;
-    Token *inputi;
-    Token *inputf;
-    Token *int2float;
-    Token *float2int;
-    Token *len;
-    Token *substr;
-    Token *ord;
-    Token *chr;
-    Token *integer;
-    Token *floating;
-    Token *string;
-    Token *i;
-    Token *f;
-    Token *s;
-    Token *n;
 
-    Token *term;
-    Token *print_type;
+void *symTab_for_inbuilt_func(SymTab *S){
+    Token *prints,*inputs,*inputi,*inputf,*int2float,*float2int,*len,*substr,*ord,*chr,*integer,*floating,*string,*i,*f,*s,*n,*helper,*print_type;
     
     helper = malloc (sizeof(Token));
     helper->next = NULL;
@@ -600,17 +545,12 @@ void *symTab_for_inbuilt_func(Token *helper,SymTab *S)
     prints = helper;
     insertFunction(prints, &(S->func));
     helper = create_and_set_token(helper);
-    helper = get_term_token(helper);
-    term = helper;
+    helper = get_i_token(helper);
+    i = helper;
     helper = create_and_set_token(helper);
     helper = get_print_type_token(helper);
     print_type = helper;
-    addInputArguments(prints, term, print_type, S->func);
-    addInputArguments(prints, term, print_type, S->func);
-    addInputArguments(prints, term, print_type, S->func);
-    addInputArguments(prints, term, print_type, S->func);
-
-    //S->func->input_params->next = S->func->input_params;
+    addInputArguments(prints, i, print_type, S->func);
     helper = create_and_set_token(helper);
     helper = get_inputs_token(helper);
     inputs = helper;
@@ -645,9 +585,6 @@ void *symTab_for_inbuilt_func(Token *helper,SymTab *S)
     helper = get_int2float_token(helper);
     int2float = helper;
     insertFunction(int2float, &(S->func));
-    helper = create_and_set_token(helper);
-    helper = get_i_token(helper);
-    i = helper;
     addInputArguments(int2float, i, integer, S->func);
     addOutputArguments(int2float, floating, S->func);
 
@@ -700,19 +637,4 @@ void *symTab_for_inbuilt_func(Token *helper,SymTab *S)
     addInputArguments(chr, i, integer, S->func);
     addOutputArguments(chr, string, S->func);
     addOutputArguments(chr, integer, S->func);
-
-   // Print_func(S->func);
-    // int z = 0;
-    // while(start){
-    //     printf("%s ",start->data);
-    //     start= start->next;
-    //     z++;}
-    //     printf("%d\n",z);
-   
-   // return S;
 }
-
-
-
-
-

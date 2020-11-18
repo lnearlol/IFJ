@@ -1,5 +1,5 @@
 #include "token.h"
-    Token *helper;//token
+   //token
     Token *start;//first
 union Types
 {
@@ -73,7 +73,7 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var);
 int returnLiteralType(Token *token);
 int compareTwoVariables(Token *var1, Token *var2, int deep, variable Var);
 void createTokens(SymTab *SymTable);
-void *symTab_for_inbuilt_func(Token *helper,SymTab *S);
+void *symTab_for_inbuilt_func(SymTab *S);
 Token *create_and_set_token(Token *helper);
 
 Token *get_print_token(Token *helper);
