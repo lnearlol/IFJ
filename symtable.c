@@ -10,12 +10,9 @@ SymTab *declaration(SymTab *SymTable){
     }
     SymTable->func = NULL;
     SymTable->var = NULL;
-
+// FUNC()
     return SymTable;
- }
-
-
-
+}
 
 // ------------------------------------------------    P R I N T      T R E E   ------------------------------------------------
 
@@ -60,171 +57,247 @@ void Print_func(function TempTree)
 } 
 
 
+void Print_var2(variable TempTree, char* sufix, char fromdir)
+/* vykresli sktrukturu binarniho stromu */
+
+{
+     if (TempTree != NULL)
+     {
+	char* suf2 = (char*) malloc(strlen(sufix) + 4);
+	strcpy(suf2, sufix);
+        if (fromdir == 'L')
+	{
+	   suf2 = strcat(suf2, "  |");
+	   printf("%s\n", suf2);
+	}
+	else
+	   suf2 = strcat(suf2, "   ");
+	Print_var2(TempTree->RPtr, suf2, 'R');
+        printf("%s  +-[%s,%d,%d]\n", sufix, TempTree->name, TempTree->type, TempTree->deep);
+	strcpy(suf2, sufix);
+        if (fromdir == 'R')
+	   suf2 = strcat(suf2, "  |");	
+	else
+	   suf2 = strcat(suf2, "   ");
+	Print_var2(TempTree->LPtr, suf2, 'L');
+	if (fromdir == 'R') printf("%s\n", suf2);
+	free(suf2);
+    }
+}
+
+void Print_var(variable TempTree)
+{
+  printf("Struktura binarniho stromu:\n");
+  printf("\n");
+  if (TempTree != NULL)
+     Print_var2(TempTree, "", 'X');
+  else
+     printf("strom je prazdny\n");
+  printf("\n");
+  printf("=================================================\n");
+} 
 
 
 
 
 
-
-
-
-
-
-
-
-//   function Create_node_func(Token *token, int deep){
-
-//     function newPtr= malloc(sizeof(struct Function));
-//     newPtr->name = malloc(token->size);
-//     strcpy(newPtr->name, token->data);
-//     newPtr->Tparams = NULL;
-//     newPtr->next = NULL;
-//     newPtr->used = false;
-//     newPtr->declared = false;
-//     newPtr->length = token->size;
-//     return newPtr;
-//  }
-
-//  variable Create_node(Token *token, int deep){
-
-//     variable newPtr= malloc(sizeof(struct Variable));//zkontrolovat úspěšnost operace 
-//     newPtr->name = malloc(token->size);
-    
-//     strcpy(newPtr->name, token->data);
-//     newPtr->next = NULL;
-//     newPtr->deep = deep;
-//     newPtr->other_deep = NULL;
-//     newPtr->used = false;
-//     newPtr->declared = false;
-//     newPtr->length = token->size;
-//     return newPtr;
-//  }
-
-// void insert_var(Token *token, int deep, SymTab *SymTable){
-
-//     bool first = false;
-//     variable newVar;
-//     newVar = Create_node(token,deep);
-//     if (SymTable->var == NULL){
-//       //    SymTable->var = malloc(sizeof(struct Variable));
-//         SymTable->var = newVar;
-//   //        printf("its VAR \n");
-//         first = true;
-//     }
-//     variable search_in_var = SymTable->var;
-//     int i=0;
-
-//     if (!first){
-//         while(search_in_var->next!= NULL){
-//             printf("                 kak dela         \n");
-//             if(!strcmp(search_in_var->name,newVar->name)){  
-
-//                 while(search_in_var->other_deep!= NULL) {
-//                     search_in_var = search_in_var->other_deep;
-//                 }
-//                 search_in_var->other_deep = newVar;
-//                 return;
-//             }
-            
-//             search_in_var = search_in_var->next;
-//             i++;
-//             printf("koko\n");
-//             break;
-//         }
-//         if(!strcmp(search_in_var->name,newVar->name)){
-
-//             while(search_in_var->other_deep!= NULL){
-//                 search_in_var = search_in_var->other_deep;
-//             }
-//             search_in_var->other_deep = newVar;
-//         }
-
-//         printf("is not equal\n");
-//         search_in_var->next = newVar;
-//     }
-// }
-
-// bool find_var_in_sym_test(Token *token, int deep, SymTab*SymTable)
-// {
-//     bool finded = false;
-//     variable newVar = SymTable->var;
-//     while(newVar!= NULL){
-//         if(!strcmp(newVar->name, token->data)){  
-//             printf("FIND AHHHOJ\n"); 
-//             while(newVar != NULL){
-//                //     printf(" 1111 declaration\n");
-//                 if(newVar->deep == deep){
-//                     printf("Repeated declaration");
-//                     finded = true;
-//                     printf("zASE AHOJ\n");
-//                     return true;
-//                 }
-//                 newVar = newVar->other_deep ;
-//             }  
-//             return false;
-//         }
-//         newVar = newVar->next;
-//         }
-//         return false;
-// }
-
-// void delete_level(Token *token, SymTab *SymTable){
-//     bool finded = false;
-//     variable newVar = SymTable->var;
-//     variable delVar;
-//     variable delDeep;
-//     int o=0;
-//     int L=0;
-//     printf("HELLOOOO\n");
-//     if (newVar != NULL){
-//         printf("HELLO2\n");
-//         while(newVar->next!= NULL){
-//             printf("HELLLLLOOO3\n");
-//             printf("%s LALA\n",token->data);
-//             printf("%s %s %d %s %d %s %d QQQQ\n",newVar->name,newVar->next->name,newVar->next->deep,newVar->next->other_deep->name,newVar->next->other_deep->deep,newVar->next->next->name,newVar->next->next->deep);
-
-//             if(!strcmp(newVar->next->name, token->data)){  
-
-//                 printf("HELLLLLOOO4\n");
-//                 delVar = newVar->next;   
-//                 printf("%s QQQQ\n",delVar->name);
-//                 newVar->next = delVar->next;
-//                 if(delVar!=NULL){
-//                     while (delVar->other_deep!=NULL){
-//                         delDeep = delVar->other_deep;
-//                         delVar->other_deep = delDeep->other_deep;
-//                         free(delDeep);
-//                         delVar = delVar->other_deep ;
-//                         printf("FFFFFFFF\n"); 
-//                         L++;
-//                     }
-//                     printf("%d LLL\n",L);
-//                 }
-//                 free(delVar);
-//                 printf("FIND\n"); 
-//                 return;
-//             }
-//             printf("isssss not equal\n");
-//             newVar = newVar->next;
-//         }
-
-
-//     }
-// }
 
 
 // --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
 
+ void insertVariable(Token *token, int deepVar, variable *Var){
+    
+    if(*Var == NULL){
+		*Var = malloc(sizeof(struct Variable));
+		(*Var)->name = token->data;
+		(*Var)->length = token->size;
+		(*Var)->LPtr = NULL;
+		(*Var)->RPtr = NULL;
+        (*Var)->prevTree = NULL;
+        (*Var)->deep = deepVar;
+        (*Var)->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
+		return;
 
-function Create_function(Token *token){
+	} else if ((*Var != NULL) && ((*Var)->deep < deepVar)){  
+        variable tmp = malloc(sizeof(struct Variable));
+        tmp->LPtr = NULL;
+        tmp->RPtr = NULL;
+        tmp->prevTree = (*Var);
+        tmp->deep = deepVar;
+        tmp->name = token->data;
+        tmp->length = token->size;
+        tmp->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
+        *Var = tmp;   
+        return;
+    }
+    
+    else if(strcmp((*Var)->name, token->data) > 0) {
+		insertVariable(token, deepVar, &((*Var)->LPtr));
 
-    function newPtr = malloc(sizeof(struct Function));//zkontrolovat úspěšnost operace 
-    newPtr->name = token->data;
-    newPtr->RPtr = NULL;
-    newPtr->LPtr = NULL;
-    newPtr->length = token->size;
-    return newPtr;
- }
+	} else if(strcmp((*Var)->name, token->data) < 0) {
+		insertVariable(token, deepVar, &((*Var)->RPtr));
+
+	} else if(strcmp((*Var)->name, token->data) == 0) {
+        fprintf(stderr,"VARIABLE WITH THE SAME NAME ALREADY EXISTS!!!\n");
+        exit(1);
+		return;
+	}
+}
+
+// FIND VARIABLE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
+variable findVariable(Token *token, int deepVar, variable Var){
+    variable tmp = Var;
+    if(Var == NULL){
+        return NULL;
+    } if(deepVar < 0 || deepVar > Var->deep){
+        return NULL;
+    } else {
+        tmp = findVariableHelper(token, deepVar, tmp);
+        if(tmp != NULL){
+            return tmp;
+        }
+        else 
+            findVariable(token, deepVar-1, Var->prevTree);
+    }
+}
+
+
+variable findVariableHelper(Token *token, int deepVar, variable Var){
+    if (Var == NULL) {
+        return NULL;
+    } else if(strcmp(Var->name, token->data) < 0) {
+		findVariableHelper(token, deepVar, Var->RPtr);
+
+	} else if(strcmp(Var->name, token->data) > 0) {
+		findVariableHelper(token, deepVar, Var->LPtr);
+		
+	} else if(strcmp(Var->name, token->data) == 0) 
+		return Var;
+}
+
+
+//------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
+
+// FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
+variable findVariableWithType(Token *token, int deepVar, variable Var){
+    variable tmp = Var;
+    if(Var == NULL){
+        return NULL;
+    } if(deepVar < 0 || deepVar > Var->deep){
+        return NULL;
+    } else {
+        tmp = find_var_with_type_helper(token, deepVar, tmp);
+        if(tmp != NULL){
+            return tmp;
+        }
+        else 
+            findVariableWithType(token, deepVar-1, Var->prevTree);
+    }
+
+}
+
+variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
+    if (Var == NULL) {
+        return NULL;
+    } else if(strcmp(Var->name, token->data) < 0) {
+		find_var_with_type_helper(token, deepVar, Var->RPtr);
+	} else if(strcmp(Var->name, token->data) > 0) {
+		find_var_with_type_helper(token, deepVar, Var->LPtr);
+	} else if(strcmp(Var->name, token->data) == 0 && Var->type != VAR_TYPE_UNDEFINED) {
+		return Var;
+    } else if (strcmp(Var->name, token->data) == 0 && Var->type == VAR_TYPE_UNDEFINED)
+        return NULL;
+}
+
+
+
+
+//--------------------------------------
+
+bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
+    variable PutTypeVar = findVariable(token, deepVar, Var);
+    if(PutTypeVar == NULL || PutTypeVar->type != VAR_TYPE_UNDEFINED){
+        return false;
+    } else {
+        PutTypeVar->type = varType;
+        return true;
+    }
+}
+
+
+// DELETE ONLY LAST LABEL   (2->1->0  =>  1->0)
+void freeVariablesLastLabel(variable *Var){
+    if(*Var == NULL)
+		return;
+    else {
+        variable tmp = (*Var)->prevTree;
+        freeVariablesLastLabel(&(*Var)->LPtr);
+        freeVariablesLastLabel(&(*Var)->RPtr);
+        free(*Var);
+        *Var = tmp;
+        return;
+    }
+}
+
+// int RIGHT_SIDE_TYPE   для высчета правой стороны перенести в парсер (в expression)
+// сделать в expression(int previous_token) и закинуть -1, и каждый раз сравнивать если previous_token != -1 и делать compareTwoTokens
+//  и закидывать его результат в previous_token 
+//                                              и так до конца, и когда наткнулись на end_condition записать это дело в RIGHT_SIDE_TYPE
+
+// DELETE WHOLE SYMTABLE->VAR
+void freeAllVariables(variable *Var){
+
+    while(*Var != NULL)
+        freeVariablesLastLabel(Var);
+}
+
+// Для присваивания мне надо токен, токен, deep:  a := 2  <- a, 2, deep::::  addVar(a), check(right_side), set_type(a, 2, deep)
+//                                                a := b expression должен вернуть хотя бы  TOKOKEN_TYPE нужного типа
+//                                               нужна функция compare(token, token, deep) для двух переменных это
+//                                               findVar(a), findVar(b) записать их типы и сравнить на совместимость
+
+
+int compareTwoVariables(Token *var1, Token *var2, int deep, variable Var){
+    int type1 = 0, type2 = 0;
+
+    if(var1->type == TOKEN_TYPE_IDENTIFIER){
+        type1 = findVariableWithType(var1, deep, Var)->type;
+        printf("\n 1) type1: %d", type1);
+    } else {
+        type1 = returnLiteralType(var1);
+        printf("\n 2) type1: %d", type1);
+    }
+
+    if(var2->type == TOKEN_TYPE_IDENTIFIER){
+        type2 = findVariableWithType(var2, deep, Var)->type;
+        printf("\n 3) type2: %d\n", type2);
+    } else { 
+        type2 = returnLiteralType(var2);
+        printf("\n 4) type2: %d\n", type2);
+    }
+    if(type1 == type2)
+        return type1;
+    else 
+        return 0;
+}
+
+// HELPS compareTwoString
+int returnLiteralType(Token *token){
+    if(token->type == TOKEN_TYPE_LITERAL_INT){
+        return 1;
+    } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT){
+        return 2;
+    } else if(token->type == TOKEN_TYPE_LITERAL_STRING) {
+        return 3;
+    } else {
+        return 0;
+    }
+}
+
+
+
+// --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
+
 
 void insertFunction(Token *token, function *Func){
 
@@ -253,7 +326,7 @@ void insertFunction(Token *token, function *Func){
 
 
 void freeFunctions(function *Func){
-    	if(*Func == NULL){
+    if(*Func == NULL){
 		return;
 	}
 	freeFunctions(&(*Func)->LPtr);

@@ -1,21 +1,20 @@
 package main
 
 func main(){
-    a = (a+b-c)+4
-    
-
+    a = (z+b-c)+4
 }
 
 func o(i int, a float64){
-
 }
 
 func kek(promenna1 int, prom2 string){
-    o(a, b, c)
+    t, b := A, c
+
 }
 
 func cool(var float64, RomaSuper int) (int, float64, string){
-    b()
+    u = lol
+    p = a + b
+    lol = "lol"+a
+    return a+b*c, a*b
 }
-
-

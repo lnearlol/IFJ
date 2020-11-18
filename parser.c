@@ -54,6 +54,80 @@ void delete_from_else_stack(){
         printf("\n");
 }
 
+//  ------------------------------------ C O M P A R E    L I S T ------------------------------------
+
+void add_var_to_compare_list(Token *var){
+    printf("C O M P A R E   L I S T   1\n");
+    //variable newVariable = findVariable(var, deep, SymTable->var);
+    printf("C O M P A R E   L I S T   2\n");
+    if(varCompareList == NULL){
+        varCompareList = malloc(sizeof(variables_compare_list));
+        varCompareList->var = var;
+        varCompareList->next = NULL;
+        printf("C O M P A R E   L I S T   3\n");
+    } else {
+        printf("C O M P A R E   L I S T   else\n");
+        variables_compare_list *tmpList = malloc(sizeof(variables_compare_list));
+        tmpList->var = var;
+        tmpList->next = NULL;
+        variables_compare_list *cycleList = varCompareList;
+        while(cycleList->next != NULL){
+            cycleList = cycleList->next;
+        }
+        cycleList->next = tmpList;
+    }
+    printf("C O M P A R E   L I S T   4\n");
+    variables_compare_list *tmp = varCompareList;
+    printf("C O M P A R E   L I S T   5\n");
+    printf("\n\n\n");
+    while(tmp != NULL){
+        printf("tmp %s -> ", tmp->var->data);
+        tmp = tmp->next;
+    }
+    printf("\n\n\n");
+}
+
+void delete_var_from_compare_list(){
+    if(varCompareList != NULL){
+        variables_compare_list *tmpList = varCompareList->next;
+        free(varCompareList);
+        varCompareList = tmpList;
+    }
+}
+
+void add_type_to_compare_list(int type){
+    if(typeCompareList == NULL){
+        typeCompareList = malloc(sizeof(type_compare_list));
+        typeCompareList->type = type;
+        typeCompareList->next = NULL;
+    } else {
+        type_compare_list *tmpTypeList = malloc(sizeof(type_compare_list));
+        tmpTypeList->type = type;
+        tmpTypeList->next = NULL;
+        type_compare_list *cycleTypeList = typeCompareList;
+        while(cycleTypeList->next != NULL)
+            cycleTypeList = cycleTypeList->next;
+        cycleTypeList->next = tmpTypeList;
+    }
+
+    type_compare_list *tmp = typeCompareList;
+    printf("C O M P A R E   T Y P E   5\n");
+    printf("\n\n\n");
+    while(tmp != NULL){
+        printf("tmp %d -> ", tmp->type);
+        tmp = tmp->next;
+    }
+    printf("\n\n\n");
+}
+
+void delete_type_from_compare_list(){
+    if(typeCompareList != NULL){
+        type_compare_list *tmpList = typeCompareList->next;
+        free(typeCompareList);
+        typeCompareList = tmpList;
+    }
+}
+
 
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
 // package main \n func() EOF
@@ -95,8 +169,9 @@ bool function_check(){
             // A D D    F U N C T I O N S    T O    S Y M T A B L E
             if(PROGRAMM_RUN){          
                 insertFunction(token, &(SymTable->func));
-                saved_func_name = token;
-            }
+                Print_var(SymTable->var);
+            } 
+            saved_func_name = token; // save function name for working with arguments
             get_and_set_token();
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
                 get_and_set_token();
@@ -146,22 +221,27 @@ bool input_single_parameters(){
     bool input_single_parameter = false;
     if(token->type == TOKEN_TYPE_IDENTIFIER){
         if(PROGRAMM_RUN){
-            if(strcmp(saved_func_name->data, "main") == 0)      // I F    M A I N   H A S   I N P U T   P A R A M S
+            if(strcmp(saved_func_name->data, "main") == 0){      // I F    M A I N   H A S   I N P U T   P A R A M S
+                error_flag = 6;
                 return false;  // error_flag = 4to-to
-
-            saved_arg_name = token;
+            }   
         }
+        saved_arg_name = token; // foo(a int) -> saved_arg_name = a
+
         get_and_set_token();
         if(token->type == TOKEN_TYPE_INT || token->type == TOKEN_TYPE_FLOAT || token->type == TOKEN_TYPE_STRING){
-
+            saved_arg_type = token; // // foo(a int) -> saved_arg_type = int
             if(PROGRAMM_RUN){        // A D D   F U N C   A R G S    T O    S Y M T A B L E
-                saved_arg_type = token;
-                printf("INPUTS PARAMS -%s -%s -%s  -%s\n", saved_func_name->data, saved_arg_name->data, saved_arg_type->data, SymTable->func->name);
+                printf("INPUTS PARAMS -%s -%s -%s  strom->%s\n", saved_func_name->data, saved_arg_name->data, saved_arg_type->data, SymTable->func->name);
                 addInputArguments(saved_func_name, saved_arg_name, saved_arg_type, SymTable->func);
+            } else { // R U N 2,   C R E A T I N G    A R G U M E N T S   A S    Z E R O    L E V E L     V A R S
+                insertVariable(saved_arg_name, deep+1, &(SymTable->var));  // var
+                putTypeVariable(saved_arg_name, deep+1, saved_arg_type->type, SymTable->var);  // var_type
             }
             // input_single_parameter = true;
             get_and_set_token();
             if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
+                Print_var(SymTable->var);        // P R I N T    T R E E
                 return true;
             }
             else if (token->type == TOKEN_TYPE_COMMA){
@@ -239,6 +319,8 @@ bool function_body(){
     static bool empty_block = false;
     bool function_accept = false;
     if(token->type == TOKEN_TYPE_END_BLOCK){
+        if(SymTable->var != NULL && deep == SymTable->var->deep)
+            freeVariablesLastLabel(&(SymTable->var));
         deep--;
         if(empty_block){
             printf("                                 ITS EMPTY BLOCK\n");
@@ -423,16 +505,20 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
             
             // token
             // mov token->name, EAX
-            
+
             get_and_set_token();
+
+            allowed_eol(); //[ a := \n b] situation
             printf("                            DEFINE3 returns token %s\n", token->data);
             define_accept = count_operands(end_condition);
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
                         printf("                            DEFINE4 (EQUATING) returns token %s\n", token->data);
             get_and_set_token();
+            allowed_eol(); //[ a = \n b] situation
             define_accept = count_operands(end_condition);
         } else if (func && define_accept && token->type == TOKEN_TYPE_LEFT_BRACKET){
             get_and_set_token();
+            allowed_eol(); // func_name( \n args situation
             define_accept = expression_func_arguments();
             if (define_accept){
                 number_of_operands--;
@@ -454,6 +540,9 @@ bool define_operands(int func){
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_UNDERSCORE){
         number_of_operands++;
+
+        add_var_to_compare_list(token);
+
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
         printf("define ops   token->data = %s\n", token->data);
@@ -466,7 +555,7 @@ bool define_operands(int func){
                 operands_accept = true;
             else {
                 operands_accept = false;
-                error_flag = 3;   //  ERROR 3
+                error_flag = 3;   //  ERROR 3, not found function_name
             }
         } else {
             if(token->type == TOKEN_TYPE_COMMA){
@@ -490,7 +579,7 @@ bool count_operands(int end_condition){
     else
         current_end_condition = end_condition;
     
-    count_operands_accept = expression_including_string(current_end_condition);
+    count_operands_accept = expression(current_end_condition);
     printf("          count operands      ZASEL #%d   token [%s], counter [%d], accept [%d] \n", token_counter, token->data, number_of_operands, count_operands_accept);
 
     if(count_operands_accept && number_of_operands > 0){
@@ -516,57 +605,83 @@ bool count_operands(int end_condition){
 
 //  ------------------------------------ E X P R E S S I O N ------------------------------------
 
-bool expression_including_string(int end_condition){   // MAYBE WORKS
-    bool including_string_accept = false;
-    if(token->type == TOKEN_TYPE_LITERAL_STRING){   
-        get_and_set_token();
-        if(token->type == end_condition)
-            including_string_accept = true;
-    } else
-        including_string_accept = expression(end_condition);
+// bool expression_including_string(int end_condition){   // MAYBE WORKS
+//     bool including_string_accept = false;
+//     if(token->type == TOKEN_TYPE_LITERAL_STRING){   
+//         get_and_set_token();
+//         if(token->type == end_condition)
+//             including_string_accept = true;
+//     } else
+//         including_string_accept = expression(end_condition);
     
 
-    return including_string_accept;
-}
+//     return including_string_accept;
+// }
 
 bool expression(int end_condition){
     bool expression_accept = false;
     static int is_function = 1;
     static int bracket = 0;
     static int closed_bracket_counter = 0;
+    static int was_it_string = 0;
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         bracket++;
         is_function = 0;
         get_and_set_token();
         expression_accept = expression(end_condition);
          
-    } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_IDENTIFIER){
+    } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
+    || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING){
+
+        if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
+            was_it_string = 1;
 
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
 
         get_and_set_token();
     // CHECK CLOSED BRACKETS
+
         closed_bracket_counter = is_closed_bracket();
         if(closed_bracket_counter){
             bracket -= closed_bracket_counter;
         }
     // --
-
+        if(end_condition == RETURN_TYPE){      // ONLY FOR RETURN
+            if(token->type == TOKEN_TYPE_COMMA || token->type == TOKEN_TYPE_EOL){
+                expression_accept = true;
+                was_it_string = 0;
+                is_function = 1;
+                add_type_to_compare_list(1);
+            }
+        } 
         if(token->type == end_condition){
             expression_accept = true;
+            was_it_string = 0;
             is_function = 1;
+            add_type_to_compare_list(1);
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
+            if(was_it_string == 1){  // if used not '+' for string
+                if(strcmp(token->data, "+")){
+                    printf("WAS NOT PLUS FOR STR\n");
+                    return false;
+                }
+            }
+
             get_and_set_token();
             is_function = 0;
+            allowed_eol(); //[ a + \n b] situation
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && is_function){
             // S Y M T A B L E    L O G I C
             if(!findFunction(saved_func_name, SymTable->func)){
-                error_flag = 3;   //  ERROR 3
+                error_flag = 3;   //  ERROR 3, not found function_name
                 return false;
             }
             get_and_set_token();
+
+            allowed_eol(); // func_name( \n args situation
+
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
@@ -609,6 +724,10 @@ int is_closed_bracket(){
     return closed_bracket_counter;
 }
 
+void allowed_eol(){
+    if(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
+        get_and_set_token();
+}
 
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
 
@@ -618,17 +737,17 @@ bool expression_func_arguments(){
     // F U N C T I O N   A R G U M E N T S   L O G I C
     function arg_find = findFunction(saved_func_name, SymTable->func);
     if(!arg_find) {
-        error_flag = 3;
+        error_flag = 3;  // not found function
         return false;
     }
     inputParams args_check = arg_find->input_params;
 
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // LOGIC
-        if(args_check == NULL)
+        if(args_check == NULL)  // if after all arguments next argument in sym_table will be null  (except print)
             func_arguments_accept = true;
         else 
-            error_flag = 3;
+            error_flag = 6;
     } else {
         func_arguments_accept = expression_func_single_argument(args_check);
     }
@@ -645,19 +764,19 @@ bool expression_func_single_argument(inputParams args_check){
             // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
             if(token->type == TOKEN_TYPE_LITERAL_INT && args_check->type != TOKEN_TYPE_INT){
                 printf("             arg name - %s\n", args_check->name);
-                error_flag = 3;
+                error_flag = 6;
                 return false;
             } else if (token->type == TOKEN_TYPE_LITERAL_FLOAT && args_check->type != TOKEN_TYPE_FLOAT){
                 printf("             arg name - %s\n", args_check->name);
-                error_flag = 3;
+                error_flag = 6;
                 return false;            
             } else if (token->type == TOKEN_TYPE_LITERAL_STRING && args_check->type != TOKEN_TYPE_STRING){
                 printf("             arg name - %s\n", args_check->name);
-                error_flag = 3;
+                error_flag = 6;
                 return false;            
             }
         } else {
-            error_flag = 3;
+            error_flag = 6;
                 return false;     
         }
         // ---------
@@ -667,11 +786,12 @@ bool expression_func_single_argument(inputParams args_check){
             if(args_check->next == NULL)
                 func_single_argument = true;
             else {
-                error_flag = 3;
+                error_flag = 6;
                 func_single_argument = false;
             }
         } else if(token->type == TOKEN_TYPE_COMMA){
             get_and_set_token();
+            allowed_eol(); //[ a (c, \n b)] situation
             func_single_argument = expression_func_single_argument(args_check->next);
         }
     }
@@ -683,14 +803,18 @@ bool expression_func_single_argument(inputParams args_check){
 bool return_construction(){
     bool return_construction_accept = false;
 
-    return_construction_accept = expression_including_string(TOKEN_TYPE_EOL);
+    return_construction_accept = expression(RETURN_TYPE);
     printf("RETURN %d\n", return_construction_accept);
-    if(return_construction_accept){
+    // if(return_construction_accept){
+    //     get_and_set_token();
+    //     return_construction_accept = function_body();
+    // } else 
+    if(token->type == TOKEN_TYPE_EOL && return_construction_accept){
         get_and_set_token();
         return_construction_accept = function_body();
-    } else if(token->type == TOKEN_TYPE_EOL){
+    } else if(token->type == TOKEN_TYPE_COMMA && return_construction_accept){
         get_and_set_token();
-        return_construction_accept = function_body();
+        return_construction_accept = return_construction();
     }
     return return_construction_accept;
 }
@@ -750,6 +874,8 @@ int main(){
 
 
     Print_func(SymTable->func);
+
+    //Print_var(S->var);
     
     // int i = 0;
     // while(second_run != NULL){

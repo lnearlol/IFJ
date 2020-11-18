@@ -26,10 +26,13 @@ bool expression_func_single_argument(inputParams args_check);
 
 bool expression_including_string(int end_condition);
 bool define_func(int end_condition, int declare, int equating, bool func);
-bool define_operands();
+bool define_operands(int func);
 bool count_operands(int end_condition);
 bool start_block_new_line();
 bool return_construction();
+
+
+void allowed_eol();
 
 typedef struct elseStack {
     int deep;
@@ -45,3 +48,25 @@ else_stack *elseStack;
 #define SECOND_RUN 0
 SymTab *SymTable;
 Token *saved_func_name, *saved_arg_name, *saved_arg_type;
+
+typedef struct variablesCompareList{
+    Token *var;
+    struct variablesCompareList *next;
+} variables_compare_list;
+
+typedef struct typeCompareList{
+    int type;
+    struct typeCompareList *next;
+} type_compare_list;
+
+// C O M P A R E   L I S T
+void add_var_to_compare_list(Token *var);
+void add_type_to_compare_list(int type);
+
+void delete_var_from_compare_list();
+void delete_type_from_compare_list();
+
+variables_compare_list *varCompareList;
+type_compare_list *typeCompareList;
+
+#define RETURN_TYPE 77
