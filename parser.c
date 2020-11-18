@@ -14,18 +14,18 @@ int main(){
     token = malloc (sizeof(Token));
     token->next = NULL;
     Token *first = token;
+    
     get_token(token);
-    printf("%-10s       <-%d\n", token->data, token->type);
+    printf("%-10s      <-%d\n", token->data, token->type);
    
     SymTab *S = declaration(S);
+    S = symTab_for_inbuilt_func(helper,S);
 
-    
-
+    Print_func(S->func);
     Token *func, *arg_name, *arg_type;
 
-    
-    insertFunction(token, &(S->func));
-    get_and_set_token();
+      insertFunction(token, &(S->func));
+     get_and_set_token();
 
     insertFunction(token, &(S->func));
     func = token;
@@ -50,22 +50,20 @@ int main(){
     addInputArguments(func, arg_name, arg_type, S->func);
     addOutputArguments(func, arg_type, S->func);
 
-    printf("- %d\n", S->func->LPtr->input_params->next->type);
-    printf("- %d\n", S->func->LPtr->output_params->next->type);
+//     printf("- %d\n", S->func->LPtr->input_params->next->type);
+//     printf("- %d\n", S->func->LPtr->output_params->next->type);
     
 
-
-
-
-
-    Print_func(S->func);
+//   Print_func(S->func);
 
     int deep = 0; 
     get_and_set_token();
+    printf("- %s toooooken\n", token->data);
     int type = token->type;
     get_and_set_token();
     Token *find_check;
     int find_deep_check = -1;
+    printf("- %s toooooken\n", token->data);
 
     // просто каким-то циклом заполняем деревья
     for(int i = 0; i < 16; i++){
@@ -74,6 +72,7 @@ int main(){
         if (i == 2){
             find_deep_check = deep;
             find_check = token;
+            Print_var(S->var);
         }
         if(i % 4 == 0){
             deep++;
@@ -85,6 +84,7 @@ int main(){
 
     printf("----------------------------------------------------MY OPERATIONS STARTS\n");
     // 1: ИЩЕМ КАКУЮ-ТО ПЕРЕМЕННУЮ В ДЕРЕВЕ НА 3 УРОВНЕ
+    printf("%s\n\n",find_check->data);
     variable tmp1 = findVariable(find_check, 3, S->var);
     if(tmp1 != NULL)
         printf("\n 1:      - name: %s, deep: %d type: %d\n", tmp1->name, tmp1->deep, tmp1->type);
@@ -149,28 +149,29 @@ int main(){
 
     printf("----------------------------------------------------MY OPERATIONS ENDS\n");
 
-    // freeVariablesLastLabel(&(S->var));
-    // freeVariablesLastLabel(&(S->var));
-    // freeVariablesLastLabel(&(S->var));
-    // freeVariablesLastLabel(&(S->var));
-    // freeVariablesLastLabel(&(S->var));
-    // freeVariablesLastLabel(&(S->var));
-
+//     // freeVariablesLastLabel(&(S->var));
+//     // freeVariablesLastLabel(&(S->var));
+//     // freeVariablesLastLabel(&(S->var));
+//     // freeVariablesLastLabel(&(S->var));
+//     // freeVariablesLastLabel(&(S->var));
+//     // freeVariablesLastLabel(&(S->var));
+    
     freeAllVariables(&(S->var));
 
     freeFunctions(&(S->func));
 
-    if(S->var == NULL)
-        printf("S->var = NULL\n\n");
-    else {
-        printf("S->var is NOT NULL\n\n");
-        variable tmp = S->var;
-        while (tmp != NULL){
-            Print_var(tmp);
-            tmp = tmp->prevTree;
-        }
-    }
+    // if(S->var == NULL)
+    //     printf("S->var = NULL\n\n");
+    // else {
+    //     printf("S->var is NOT NULL\n\n");
+    //     variable tmp = S->var;
+    //     while (tmp != NULL){
+    //         Print_var(tmp);
+    //         tmp = tmp->prevTree;
+    //     }
+    //  }
     free(S);
+    dtor(start);
     dtor(first);
 
 

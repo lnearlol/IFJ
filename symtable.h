@@ -1,4 +1,6 @@
 #include "token.h"
+    Token *helper;
+    Token *start;
 union Types
 {
   int value;
@@ -47,7 +49,6 @@ typedef struct sym_tab
   variable var;//struct sym_tab* func;
   function func;//struct sym_tab* var;
 }SymTab;
-// SymTab *SymTable = NULL;
 
 
 SymTab *declaration(SymTab *SymTable);
@@ -74,7 +75,31 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var);
 
 int returnLiteralType(Token *token);
 int compareTwoVariables(Token *var1, Token *var2, int deep, variable Var);
+void createTokens(SymTab *SymTable);
+SymTab *symTab_for_inbuilt_func(Token *helper,SymTab *S );
+Token *create_and_set_token(Token *helper);
 
+Token *get_print_token(Token *helper);
+Token *get_inputs_token(Token *helper);
+Token *get_inputi_token(Token *helper);
+Token *get_inputf_token(Token *helper);
+Token *get_int2float_token(Token *helper);
+Token *get_float2int_token(Token *helper);
+Token *get_substr_token(Token *helper);
+Token *get_ord_token(Token *helper);
+Token *get_chr_token(Token *helper);
+Token *get_len_token(Token *helper);
+
+Token *get_int_token(Token *helper);
+Token *get_float_token(Token *helper);
+Token *get_string_token(Token *helper);
+Token *get_print_type_token(Token *helper);
+
+Token *get_i_token(Token *helper);
+Token *get_f_token(Token *helper);
+Token *get_s_token(Token *helper);
+Token *get_n_token(Token *helper);
+Token *get_term_token(Token *helper);
 
 
 // P R I N T
@@ -84,3 +109,5 @@ void Print_var2(variable TempTree, char* sufix, char fromdir);
 void Print_var(variable TempTree);
 
 #define VAR_TYPE_UNDEFINED -1
+#define TOKEN_TYPE_PRINT 99
+

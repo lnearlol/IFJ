@@ -1,5 +1,5 @@
 #include "symtable.h"
-
+//#include "tokens.c"
 
 SymTab *declaration(SymTab *SymTable){
 
@@ -14,7 +14,17 @@ SymTab *declaration(SymTab *SymTable){
     return SymTable;
  }
 
-
+SymTab *declarationWithFunctions(SymTab *SymTable){
+ declaration(SymTable);
+    SymTable = malloc(sizeof(struct sym_tab));
+    if(SymTable == NULL){
+        fprintf(stderr,"SYMTABLE ALLOCATION ERROR!!!\n");
+        exit(1);
+    }
+    SymTable->func = NULL;
+    SymTable->var = NULL;
+    return SymTable;
+ }
 
 
 // ------------------------------------------------    P R I N T      T R E E   ------------------------------------------------
@@ -141,6 +151,7 @@ void Print_var(variable TempTree)
 		insertVariable(token, deepVar, &((*Var)->RPtr));
 
 	} else if(strcmp((*Var)->name, token->data) == 0) {
+        printf("%s SAAAAAME \n",(*Var)->name);
         fprintf(stderr,"VARIABLE WITH THE SAME NAME ALREADY EXISTS!!!\n");
         exit(1);
 		return;
@@ -308,11 +319,13 @@ void insertFunction(Token *token, function *Func){
 	if(*Func == NULL){
 		*Func = malloc(sizeof(struct Function));
 		(*Func)->name = token->data;
+     //   printf("%s NAME\n", (*Func)->name);
 		(*Func)->length = token->size;
         (*Func)->input_params = NULL;
         (*Func)->output_params = NULL;
 		(*Func)->LPtr = NULL;
 		(*Func)->RPtr = NULL;
+    //    printf(" *Func == NULL!!!\n");
 		return;
 
 	} else if(strcmp((*Func)->name, token->data) > 0) {
@@ -327,7 +340,6 @@ void insertFunction(Token *token, function *Func){
 		return;
 	}
 }
-
 
 void freeFunctions(function *Func){
     if(*Func == NULL){
@@ -359,7 +371,7 @@ function findFunction(Token *token, function Func){
     if(Func == NULL){
 		return NULL;
 	} else if(strcmp(Func->name, token->data) < 0) {
-		findFunction(token, Func->RPtr);
+         findFunction(token, Func->RPtr);
 
 	} else if(strcmp(Func->name, token->data) > 0) {
 		findFunction(token, Func->LPtr);
@@ -370,16 +382,23 @@ function findFunction(Token *token, function Func){
 }
 
 void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, function Func){
-    function Found = findFunction(func_name, Func);
+  //  printf("\n[%s] -> INPUTS \n ", func_name->data);
+   // printf("[%s] -> ", arg_name->data);
+   //  printf("[%s] -> ", arg_type->data);
+ //    printf("[%s] -> ", Func->name);
+ //     printf("INPUUUUUUT\n");
+     function Found = findFunction(func_name, Func);
 
     if(Found->input_params == NULL){
         Found->input_params = malloc(sizeof(struct inParam));
         Found->input_params->next = NULL;
         Found->input_params->name = arg_name->data;
         Found->input_params->type = arg_type->type;
+     //   printf("[%d] -> \n", Found->input_params->type);
+    //    printf("[%s] name -> \n", Found->input_params->name);
+      //   printf("OTHER INPUUT\n");
         return;
     }
-
     inputParams argument = Found->input_params;
     while(argument->next != NULL){
         printf("%s[%d] -> ", argument->name, argument->type);
@@ -393,18 +412,21 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
     argument->next->type = arg_type->type;
     printf("%s[%d]\n ", argument->next->name, argument->next->type);
 }
-
 void addOutputArguments(Token *func_name, Token *arg_type, function Func){
+//     printf("[%s] -> ", func_name->data);
+  //   printf("[%s] -> ", arg_type->data);
+ //    printf("[%s] -> ", Func->name);
      function Found = findFunction(func_name, Func);
-
     if(Found->output_params == NULL){
+    //    printf("creathhhhhe\n");
         Found->output_params = malloc(sizeof(struct outParam));
         Found->output_params->next = NULL;
         Found->output_params->type = arg_type->type;
+        printf("[%d] -> \n", Found->output_params->type);
         return;
     }
-
     outputParams argument = Found->output_params;
+//    printf("other output\n");
     while(argument->next != NULL){
         printf("[%d] -> ", argument->type);
         argument = argument->next;
@@ -416,3 +438,314 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func){
     argument->next->type = arg_type->type;
     printf("[%d]\n ", argument->next->type);
 }
+ Token *create_and_set_token(Token *helper){
+    helper->next = malloc (sizeof(Token));
+  //  printf("[%s]\n ", helper->data);
+    helper = helper->next;
+    helper->next = NULL;
+    return helper;
+}
+
+Token *get_inputs_token(Token *inputs){
+    inputs->size = 7;
+    inputs->data = malloc (inputs->size);
+    strcpy(inputs->data,"inputs");
+    inputs->type = 10;
+    inputs->next = NULL;
+    return inputs;
+}
+Token *get_string_token(Token *string){
+    string->size = 7;
+    string->data = malloc (string->size);
+    strcpy(string->data,"string");
+    string->type = 3;
+    string->next = NULL;
+    return string;
+}
+Token *get_int_token(Token *integer){
+    integer->size = 4;
+    integer->data = malloc (integer->size);
+    strcpy(integer->data,"int");
+    integer->type = 1;
+    integer->next = NULL;
+    return integer;
+}
+Token *get_print_token(Token *prints){
+    prints->size = 6;
+    prints->data = malloc (prints->size);
+    strcpy(prints->data,"print");
+    prints->type = 10 ;
+    prints->next = NULL;
+    return prints;
+}
+Token *get_float_token(Token *floating){
+    floating->size = 8;
+    floating->data = malloc (floating->size);
+    strcpy(floating->data,"float64");
+    floating->type = 2;
+    floating->next = NULL;
+    return floating;
+}
+Token *get_inputi_token(Token *inputi)
+{
+    inputi->size = 7;
+    inputi->data = malloc (inputi->size);
+    strcpy(inputi->data,"inputi\0");
+    printf("%s\n", inputi->data);
+    inputi->type =10;
+    inputi->next = NULL;
+    return inputi;
+}
+Token *get_inputf_token(Token *inputf)
+{
+    inputf->size = 7;
+    inputf->data = malloc (inputf->size);
+    strcpy(inputf->data,"inputf\0");
+    printf("%s\n", inputf->data);
+    inputf->type =10;
+    inputf->next = NULL;
+    return inputf;
+}
+Token *get_int2float_token(Token *int2float){
+    int2float->size = 10;
+    int2float->data = malloc (int2float->size);
+    strcpy(int2float->data,"int2float\0");
+    int2float->type = 10;
+    int2float->next = NULL;
+    return int2float;
+}
+Token *get_i_token(Token *i){
+    i->size = 2;
+    i->data = malloc (i->size);
+    strcpy(i->data,"i");
+    i->type = 0;
+    i->next = NULL;
+return i;
+}
+Token *get_f_token(Token *f){
+    f->size = 2;
+    f->data = malloc (f->size);
+    strcpy(f->data,"f");
+    f->type = 0;
+    f->next = NULL;
+return f;
+}
+Token*get_len_token(Token *len){
+    len->size = 4;
+    len->data = malloc (len->size);
+    strcpy(len->data,"len\0");
+    printf("%s\n", len->data);
+    len->type =10;
+    len->next = NULL;
+    return len;
+}
+Token *get_float2int_token(Token *float2int){
+    float2int->size = 10;
+    float2int->data = malloc (float2int->size);
+    strcpy(float2int->data,"float2int\0");
+    float2int->type = 10;
+    float2int->next = NULL;
+    return float2int;
+}
+Token *get_substr_token(Token *substr){
+    substr->size = 10;
+    substr->data = malloc (substr->size);
+    strcpy(substr->data,"substr\0");
+    substr->type = 10;
+    substr->next = NULL;
+    return substr;
+}
+Token *get_ord_token(Token *ord){
+    ord->size = 4;
+    ord->data = malloc (ord->size);
+    strcpy(ord->data,"ord\0");
+    ord->type = 10;
+    ord->next = NULL;
+    return ord;
+}
+Token *get_chr_token(Token *chr){
+    chr->size = 4;
+    chr->data = malloc (chr->size);
+    strcpy(chr->data,"chr\0");
+    chr->type = 10;
+    chr->next = NULL;
+    return chr;
+}
+Token *get_s_token(Token *s){
+    s->size = 2;
+    s->data = malloc (s->size);
+    strcpy(s->data,"s");
+    s->type = 0;
+    s->next = NULL;
+return s;
+}
+Token *get_n_token(Token *n){
+    n->size = 2;
+    n->data = malloc (n->size);
+    strcpy(n->data,"n");
+    n->type = 0;
+    n->next = NULL;
+return n;
+}
+Token *get_term_token(Token *term){
+    term->size = 5;
+    term->data = malloc (term->size);
+    strcpy(term->data,"term");
+    term->type = 0;
+    term->next = NULL;
+return term;
+}
+Token *get_print_type_token(Token *print_type)
+{
+    print_type->size = 11;
+    print_type->data = malloc (print_type->size);
+    strcpy(print_type->data,"print_type\0");
+    print_type->type = TOKEN_TYPE_PRINT;
+    print_type->next = NULL;
+return print_type;
+}
+SymTab *symTab_for_inbuilt_func(Token *helper,SymTab *S)
+{
+    Token *prints;
+    Token *inputs;
+    Token *inputi;
+    Token *inputf;
+    Token *int2float;
+    Token *float2int;
+    Token *len;
+    Token *substr;
+    Token *ord;
+    Token *chr;
+    Token *integer;
+    Token *floating;
+    Token *string;
+    Token *i;
+    Token *f;
+    Token *s;
+    Token *n;
+
+    Token *term;
+    Token *print_type;
+    
+    helper = malloc (sizeof(Token));
+    helper->next = NULL;
+    start = helper;
+    helper = get_print_token(helper);
+    prints = helper;
+    insertFunction(prints, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_term_token(helper);
+    term = helper;
+    helper = create_and_set_token(helper);
+    helper = get_print_type_token(helper);
+    print_type = helper;
+    addInputArguments(prints, term, print_type, S->func);
+    addInputArguments(prints, term, print_type, S->func);
+
+
+    //S->func->input_params->next = S->func->input_params;
+    helper = create_and_set_token(helper);
+    helper = get_inputs_token(helper);
+    inputs = helper;
+    insertFunction(inputs, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_string_token(helper);
+    string = helper;
+    helper = create_and_set_token(helper);
+    helper = get_int_token(helper);
+    integer = helper;
+    addOutputArguments(inputs, string, S->func);
+    addOutputArguments(inputs, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_inputi_token(helper);
+    inputi = helper;
+    insertFunction(inputi, &(S->func));
+    addOutputArguments(inputi, integer, S->func);
+    addOutputArguments(inputi, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_inputf_token(helper);
+    inputf = helper;
+    insertFunction(inputf, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_float_token(helper);
+    floating = helper;
+    addOutputArguments(inputf, floating, S->func);
+    addOutputArguments(inputf, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_int2float_token(helper);
+    int2float = helper;
+    insertFunction(int2float, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_i_token(helper);
+    i = helper;
+    addInputArguments(int2float, i, integer, S->func);
+    addOutputArguments(int2float, floating, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_float2int_token(helper);
+    float2int = helper;
+    insertFunction(float2int, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_f_token(helper);
+    f = helper;
+    addInputArguments(float2int, f, floating, S->func);
+    addOutputArguments(float2int, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_len_token(helper);
+    len = helper;
+    insertFunction(len, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_s_token(helper);
+    s = helper;
+    addInputArguments(len, s, string, S->func);
+    addOutputArguments(len, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_substr_token(helper);
+    substr = helper;
+    insertFunction(substr, &(S->func));
+    helper = create_and_set_token(helper);
+    helper = get_n_token(helper);
+    n = helper;
+    addInputArguments(substr, s, string, S->func);
+    addInputArguments(substr, i, integer, S->func);
+    addInputArguments(substr, n, integer, S->func);
+    addOutputArguments(substr, string, S->func);
+    addOutputArguments(substr, integer, S->func);
+
+    helper = create_and_set_token(helper);
+    helper = get_ord_token(helper);
+    ord = helper;
+    insertFunction(ord, &(S->func));
+    addInputArguments(ord, s, string, S->func);
+    addInputArguments(ord, i, integer, S->func);
+    addOutputArguments(ord, integer, S->func);
+    addOutputArguments(ord, integer, S->func);
+    
+    helper = create_and_set_token(helper);
+    helper = get_chr_token(helper);
+    chr = helper;
+    insertFunction(chr, &(S->func));
+    addInputArguments(chr, i, integer, S->func);
+    addOutputArguments(chr, string, S->func);
+    addOutputArguments(chr, integer, S->func);
+
+   // Print_func(S->func);
+    // int z = 0;
+    // while(start){
+    //     printf("%s ",start->data);
+    //     start= start->next;
+    //     z++;}
+    //     printf("%d\n",z);
+   
+    return S;
+}
+
+
+
+
+
