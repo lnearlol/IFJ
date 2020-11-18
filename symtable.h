@@ -1,6 +1,6 @@
 #include "token.h"
-    Token *helper;
-    Token *start;
+    Token *helper;//token
+    Token *start;//first
 union Types
 {
   int value;
@@ -41,9 +41,6 @@ typedef struct Function{
     outputParams output_params;
 } *function;
 
-
-
-
 typedef struct sym_tab
 {
   variable var;//struct sym_tab* func;
@@ -76,7 +73,7 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var);
 int returnLiteralType(Token *token);
 int compareTwoVariables(Token *var1, Token *var2, int deep, variable Var);
 void createTokens(SymTab *SymTable);
-SymTab *symTab_for_inbuilt_func(Token *helper,SymTab *S );
+void *symTab_for_inbuilt_func(Token *helper,SymTab *S);
 Token *create_and_set_token(Token *helper);
 
 Token *get_print_token(Token *helper);

@@ -19,13 +19,13 @@ int main(){
     printf("%-10s      <-%d\n", token->data, token->type);
    
     SymTab *S = declaration(S);
-    S = symTab_for_inbuilt_func(helper,S);
+    symTab_for_inbuilt_func(helper,S);
 
     Print_func(S->func);
     Token *func, *arg_name, *arg_type;
 
-      insertFunction(token, &(S->func));
-     get_and_set_token();
+    insertFunction(token, &(S->func));
+    get_and_set_token();
 
     insertFunction(token, &(S->func));
     func = token;
@@ -54,24 +54,27 @@ int main(){
 //     printf("- %d\n", S->func->LPtr->output_params->next->type);
     
 
-//   Print_func(S->func);
+   Print_func(S->func);
 
     int deep = 0; 
     get_and_set_token();
     printf("- %s toooooken\n", token->data);
     int type = token->type;
+    int types  = 3;
+    printf("- %d TYYYYPE\n", token->type);
     get_and_set_token();
     Token *find_check;
     int find_deep_check = -1;
-    printf("- %s toooooken\n", token->data);
 
     // просто каким-то циклом заполняем деревья
     for(int i = 0; i < 16; i++){
         insertVariable(token, deep, &(S->var));
+        Print_var(S->var);
         get_and_set_token();
         if (i == 2){
             find_deep_check = deep;
             find_check = token;
+      //      printf("- %s QWQWQWQWQW\n", token->data);
             Print_var(S->var);
         }
         if(i % 4 == 0){
@@ -157,7 +160,6 @@ int main(){
 //     // freeVariablesLastLabel(&(S->var));
     
     freeAllVariables(&(S->var));
-
     freeFunctions(&(S->func));
 
     // if(S->var == NULL)
@@ -174,8 +176,6 @@ int main(){
     dtor(start);
     dtor(first);
 
-
-    
     fclose(program_code);
     return 0;
 }
