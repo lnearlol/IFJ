@@ -15,11 +15,19 @@ void get_and_set_token(){
         token = token->next;
         token->next = NULL;
         if (get_token(token) == 1)
-            error_flag = 1;
+            changeErrorCode(1);
         token_counter++;  // delete later
     } else if (PROGRAMM_RUN == SECOND_RUN)
         token = token->next;
 }
+
+//  ------------------------------------ E R R O R    C O D E ------------------------------------
+
+void changeErrorCode(int code){
+    if(error_flag == 0)
+        error_flag = code;
+}
+
 
 //  ------------------------------------ E L S E    S T A C K ------------------------------------
 
@@ -118,7 +126,9 @@ void add_type_to_compare_list(int type){
 }
 
 void delete_type_from_compare_list(){
+
     if(typeCompareList != NULL){
+            printf("-------------------<HERE\n");
         type_compare_list *tmpList = typeCompareList->next;
         free(typeCompareList);
         typeCompareList = tmpList;
@@ -127,14 +137,30 @@ void delete_type_from_compare_list(){
 
 bool checkCompareLists(){
     if (typeCompareList != NULL  || varCompareList != NULL){
-        error_flag = 3;
+        changeErrorCode(3);
         return false;
     } else 
         return true;
 }
 
+// bool checkOneCompareList(type_compare_list *typeList){
+//     if (typeList != NULL){
+//         changeErrorCode(3);
+//         return false;
+//     } else 
+//         return true;
+// }
+
+// void freeOneCompareList(type_compare_list *typeList){
+//     while(typeList != NULL){
+//         delete_type_from_compare_list(typeList);
+//     }
+// }
+
 void freeBothCompareLists(){
     while(varCompareList != NULL || typeCompareList != NULL){
+        if(typeCompareList != NULL)
+            printf("-------------------> %d\n", typeCompareList->type);
         delete_type_from_compare_list();
         delete_var_from_compare_list();
     }
@@ -235,7 +261,8 @@ bool input_single_parameters(){
     if(token->type == TOKEN_TYPE_IDENTIFIER){
         if(PROGRAMM_RUN){
             if(strcmp(saved_func_name->data, "main") == 0){      // I F    M A I N   H A S   I N P U T   P A R A M S
-                error_flag = 6;
+                changeErrorCode(6);
+                printf("    ------------------------------->  PARAMETERS IN MAIN\n");
                 return false;  // error_flag = 4to-to
             }   
         }
@@ -431,7 +458,8 @@ bool function_body(){
         else if(out_params != NULL && token->type != TOKEN_TYPE_EOL)
             function_accept = return_construction(out_params);
         else {
-            error_flag = 6; // number of return args and function output args not the same
+            printf("---------------------------------> number of return args and function output args not the same \n");
+            changeErrorCode(6); // number of return args and function output args not the same
             return false;
         }
         
@@ -505,6 +533,9 @@ bool logic_expression(int end_condition){
             get_and_set_token();
             logic_expression = expression(end_condition); //right side + semicolon (for)
         }
+
+        freeBothCompareLists(); // free the logic list
+
     }
     return logic_expression;
 }
@@ -532,13 +563,14 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
 
             get_and_set_token();
 
-            allowed_eol(); //[ a := \n b] situation
+            allowed_eol(); // [ a := \n b] situation
             printf("                            DEFINE3 returns token %s\n", token->data);
             define_accept = count_operands(end_condition);
 
             // ЗАПИСЬ
             if(!check_declare_logic(deep)){
-                error_flag = 6;
+                printf("             --------------------------------------------------->  WRITE TO SYMPABLE  :=\n");
+                changeErrorCode(6);
                 return false;
             }
 
@@ -551,7 +583,8 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
             
             // C O M P A R E   T W O   L I S T S
             if(!check_define_logic(deep)){
-                error_flag = 6;
+                printf("             --------------------------------------------------->  COMPARE LISTS  =\n");
+                changeErrorCode(6);
                 return false;
             }
 
@@ -596,7 +629,8 @@ bool define_operands(int func){
                 operands_accept = true;
             else {
                 operands_accept = false;
-                error_flag = 3;   //  ERROR 3, not found function_name
+                printf("             --------------------------------------------------->  NOT FOUND FUNCTION NAME  =\n");
+                changeErrorCode(6);   //  ERROR 3, not found function_name
             }
         } else {
             if(token->type == TOKEN_TYPE_COMMA){
@@ -693,12 +727,18 @@ bool expression(int end_condition){
         //         expression_accept = true;
         //         was_it_string = 0;
         //         is_function = 1;
-        //         add_type_to_compare_list(1);
+        //         add_type_to_compare_list(typeCompareList, 1);
         //     }
         // }
 
 
         if(token->type == end_condition){
+            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                printf("                 --------------------> UNDEFINED VARIABLE\n");
+                changeErrorCode(3); // variable not defined 
+                return false;
+            }
+
             expression_accept = true;
             was_it_string = 0;
             is_function = 1;
@@ -707,6 +747,13 @@ bool expression(int end_condition){
 
 
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
+
+            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                printf("                 --------------------> UNDEFINED VARIABLE\n");
+                changeErrorCode(3); // variable not defined
+                return false;
+            }
+
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
                     printf("WAS NOT PLUS FOR STR\n");
@@ -721,7 +768,8 @@ bool expression(int end_condition){
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && is_function){
             // S Y M T A B L E    L O G I C
             if(!findFunction(saved_func_name, SymTable->func)){
-                error_flag = 3;   //  ERROR 3, not found function_name
+                printf("             --------------------------------------------------->  null arguments here, but more in symtable\n");
+                changeErrorCode(6);   //  ERROR 3, not found function_name
                 return false;
             }
             get_and_set_token();
@@ -783,7 +831,7 @@ bool expression_func_arguments(){
     // F U N C T I O N   A R G U M E N T S   L O G I C
     function arg_find = findFunction(saved_func_name, SymTable->func);
     if(!arg_find) {
-        error_flag = 3;  // not found function
+        changeErrorCode(3);  // not found function
         return false;
     }
     inputParams args_check = arg_find->input_params;
@@ -792,8 +840,10 @@ bool expression_func_arguments(){
         // LOGIC
         if(args_check == NULL)  // if after all arguments next argument in sym_table will be null  (except print)
             func_arguments_accept = true;
-        else 
-            error_flag = 6;
+        else {
+            printf("             --------------------------------------------------->  null arguments here, but more in symtable\n");
+            changeErrorCode(6);
+        }
     } else {
         func_arguments_accept = expression_func_single_argument(args_check);
     }
@@ -808,22 +858,19 @@ bool expression_func_single_argument(inputParams args_check){
         if(args_check != NULL){
             // F U N C T I O N   A R G U M E N T S   L O G I C  --   C H E C K    L I T E R A L    T Y P E
             // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
-            if(token->type == TOKEN_TYPE_LITERAL_INT && args_check->type != TOKEN_TYPE_INT){
-                printf("             arg name - %s\n", args_check->name);
-                error_flag = 6;
-                return false;
-            } else if (token->type == TOKEN_TYPE_LITERAL_FLOAT && args_check->type != TOKEN_TYPE_FLOAT){
-                printf("             arg name - %s\n", args_check->name);
-                error_flag = 6;
-                return false;            
-            } else if (token->type == TOKEN_TYPE_LITERAL_STRING && args_check->type != TOKEN_TYPE_STRING){
-                printf("             arg name - %s\n", args_check->name);
-                error_flag = 6;
-                return false;            
-            }
-        } else {
-            error_flag = 6;
+            if(args_check->type == 99){
+                if(token->type == TOKEN_TYPE_IDENTIFIER){
+                    if(!findVariableWithType(token, deep, SymTable->var)){
+                        printf("                 -------------------------------> PRINT:: NOT DEFINED VAR IN SINGLE_ARGUMENT\n");
+                        changeErrorCode(3); // not defined variable int printf
+                        return false;
+                    }
+                }
+            } else if(!compareTwoVariables(token, args_check->type, deep, SymTable->var)){
+                printf("                 -------------------------------> NOT COMPARABLE IN SINGLE_ARGUMENT\n");
+                changeErrorCode(6);
                 return false;     
+            }
         }
         // ---------
         get_and_set_token();
@@ -832,7 +879,8 @@ bool expression_func_single_argument(inputParams args_check){
             if(args_check->next == NULL)
                 func_single_argument = true;
             else {
-                error_flag = 6;
+                printf("                 -------------------------------> WRONG QUANTITY OF ARGUMENTS IN SINGLE_ARGUMENT\n");
+                changeErrorCode(6);
                 func_single_argument = false;
             }
         } else if(token->type == TOKEN_TYPE_COMMA){
@@ -849,12 +897,22 @@ bool expression_func_single_argument(inputParams args_check){
 bool return_construction(outputParams out_params){
     bool return_construction_accept = false;
     int return_end_condition = TOKEN_TYPE_EOL;
+
     if(out_params->next != NULL)
         return_end_condition = TOKEN_TYPE_COMMA;
 
     return_construction_accept = expression(return_end_condition);
     printf("RETURN %d\n", return_construction_accept);
     
+    // L O G I C :  C O M P A R E   T Y P E S   E X P R    A N D    O U T P U T    P A R A M
+    if(out_params->type == typeCompareList->type){  // segfault pri funkci
+        delete_type_from_compare_list();
+    } else {
+        printf("        ----------------------------------------->   DIFFERENT TYPES: EXPR AND OUTPUT PARAM\n");
+        changeErrorCode(6);
+        return false;
+    }
+
     // if(return_construction_accept){
     //     get_and_set_token();
     //     return_construction_accept = function_body();
@@ -862,13 +920,15 @@ bool return_construction(outputParams out_params){
     if(token->type == TOKEN_TYPE_EOL && return_construction_accept){
         get_and_set_token();
         // compare two lists with type
+        //compare_return_and_output_params_logic();
         freeBothCompareLists();
         return_construction_accept = function_body();
     } else if(token->type == TOKEN_TYPE_COMMA && return_construction_accept){
         get_and_set_token();
         return_construction_accept = return_construction(out_params->next);
     } else if( token->type == TOKEN_TYPE_COMMA || TOKEN_TYPE_EOL){
-        error_flag = 6;
+        changeErrorCode(6);
+        printf("                 ------------------------------->  != QUANTITY OF OUTPUT PARAMS AND RETURN PARAMS\n");
     }
     return return_construction_accept;
 }
@@ -892,24 +952,26 @@ bool start_block_new_line(){
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
 int main(){
+    
    // program_code = fopen ("file.ifj20", "r");
-   SymTable = declaration(SymTable);
+    SymTable = declaration(SymTable);
+    
     symTab_for_inbuilt_func(SymTable); // adding inbulid functions to symtable
     saved_func_name = saved_arg_name = saved_arg_type = NULL;
 
     token = malloc (sizeof(Token));
     token->next = NULL;
     Token *second_run = token;
-
     if(get_token(token) == 1)
-        error_flag = 1;
-
+        changeErrorCode(1);
+    
     if(error_flag == 0){
+        
         bool result = program_start();
 
         if(!result && error_flag == 0){
             printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
-            error_flag = 2;
+            changeErrorCode(2);
         } 
     }
      printf("\n\n                                                 PROGRAM FINISHED 1: [%d]\n", error_flag);
@@ -920,7 +982,7 @@ int main(){
 
         if(!result && error_flag == 0){
             printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
-            error_flag = 2;
+            changeErrorCode(2);
         } 
     printf("\n\n                                            PROGRAM FINISHED 2: [ERROR CODE %d]\n", error_flag);
     }
@@ -936,7 +998,8 @@ int main(){
     //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
     //     second_run = second_run->next;
     // }
-    //freeBothCompareLists();
+    freeAllVariables(&(SymTable->var));
+    freeBothCompareLists();
     freeFunctions(&(SymTable->func));
     dtor(startCommandFuncList);
     free(SymTable);

@@ -10,7 +10,7 @@ bool check_declare_logic(int deep){
         if(putTypeVariable(varCompareList->var, deep, typeCompareList->type, SymTable->var)){
             printf("CHECK DECLARED LOGIC 1\n");
             delete_var_from_compare_list();
-            delete_type_from_compare_list();
+            delete_type_from_compare_list(typeCompareList);
         } else 
             break;
     }
@@ -31,7 +31,7 @@ bool check_define_logic(int deep){
             // assembly
             printf("EQUATING LOGIC 2 [%d]\n", typeCompareList->type);
             delete_var_from_compare_list();
-            delete_type_from_compare_list();
+            delete_type_from_compare_list(typeCompareList);
         } else 
             break;
     } 
@@ -49,7 +49,7 @@ bool compare_return_and_output_params_logic(){
     function F = findFunction(current_function_name, SymTable->func);
     outputParams out_params = F->output_params;
     while(out_params != NULL && typeCompareList != NULL){
-        delete_type_from_compare_list();
+        delete_type_from_compare_list(typeCompareList);
         if(out_params->type != typeCompareList->type)
             return false;
         out_params = out_params->next;
@@ -60,3 +60,5 @@ bool compare_return_and_output_params_logic(){
     } else
         return true;
 }
+
+

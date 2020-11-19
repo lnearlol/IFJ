@@ -94,7 +94,7 @@ void Print_var(variable TempTree)
   printf("=================================================\n");
 } 
 
-// --------------------------------------   R O M A' SymTable     C H A N G E SymTable   --------------------------------------
+// --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
 
  void insertVariable(Token *token, int deepVar, variable *Var){
     
@@ -166,7 +166,7 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 		return Var;
 }
 
-//------------------- F I N D    E X I SymTable T I N G    V A R I A B L E    W I T H   T Y P E
+//------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
 
 // FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
 variable findVariableWithType(Token *token, int deepVar, variable Var){
@@ -283,7 +283,7 @@ int returnLiteralType(Token *token){
 
 
 
-// --------------------------------------------------  F  U  N  C  T  I  O  N  SymTable  ----------------------------------------------------
+// --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
 
 
 void insertFunction(Token *token, function *Func){

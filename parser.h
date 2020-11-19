@@ -68,8 +68,13 @@ void delete_type_from_compare_list();
 void freeBothCompareLists();
 bool checkCompareLists();
 
+void changeErrorCode(int code);
+// bool checkOneCompareList(type_compare_list *typeList);
+
+
 variables_compare_list *varCompareList;
 type_compare_list *typeCompareList;
+type_compare_list *retCompareList;
 
 #define RETURN_TYPE 77
 
