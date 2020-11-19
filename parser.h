@@ -65,8 +65,20 @@ void add_type_to_compare_list(int type);
 
 void delete_var_from_compare_list();
 void delete_type_from_compare_list();
+void freeBothCompareLists();
+bool checkCompareLists();
 
 variables_compare_list *varCompareList;
 type_compare_list *typeCompareList;
 
 #define RETURN_TYPE 77
+
+
+
+
+Token *current_function_name;
+
+
+bool check_define_logic(int deep);
+bool check_declare_logic(int deep);
+bool compare_return_and_output_params_logic();

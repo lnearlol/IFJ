@@ -1,20 +1,7 @@
 package main
 
-func main(){
-    a = (z+b-c)+4
-}
-
-func o(i int, a float64){
-}
-
-func kek(promenna1 int, prom2 string){
-    t, b := A, c
-
-}
-
-func cool(var float64, RomaSuper int) (int, float64, string){
-    u = lol
-    p = a + b
-    lol = "lol"+a
-    return a+b*c, a*b
+func main () {
+	if 0==1 {
+	} else 1>1 {
+	}
 }

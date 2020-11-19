@@ -1,12 +1,11 @@
 #include "parser.h"
+
 int token_counter = 1;  // delete later
 int deep = -1;
 int number_of_operands = 0;
 int PROGRAMM_RUN = FIRST_RUN;
 int error_flag = 0;
-
-
-
+// закинуть в боди аутпут аргументы функшн нейма и сравнивать аргумент с типом экспрешна через лист и перекидывать в ретурн_констракшн(аргумент->некст)
 
 
 
@@ -20,8 +19,6 @@ void get_and_set_token(){
         token_counter++;  // delete later
     } else if (PROGRAMM_RUN == SECOND_RUN)
         token = token->next;
-
-
 }
 
 //  ------------------------------------ E L S E    S T A C K ------------------------------------
@@ -128,6 +125,20 @@ void delete_type_from_compare_list(){
     }
 }
 
+bool checkCompareLists(){
+    if (typeCompareList != NULL  || varCompareList != NULL){
+        error_flag = 3;
+        return false;
+    } else 
+        return true;
+}
+
+void freeBothCompareLists(){
+    while(varCompareList != NULL || typeCompareList != NULL){
+        delete_type_from_compare_list();
+        delete_var_from_compare_list();
+    }
+}
 
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
 // package main \n func() EOF
@@ -166,11 +177,13 @@ bool function_check(){
     if(token->type == TOKEN_TYPE_FUNC){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_IDENTIFIER){
+
             // A D D    F U N C T I O N S    T O    S Y M T A B L E
             if(PROGRAMM_RUN){          
                 insertFunction(token, &(SymTable->func));
                 Print_var(SymTable->var);
-            } 
+            }
+            current_function_name = token; // saved name of current function
             saved_func_name = token; // save function name for working with arguments
             get_and_set_token();
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
@@ -410,7 +423,18 @@ bool function_body(){
     // R E T U R N
     } else if (token->type == TOKEN_TYPE_RETURN){
         get_and_set_token();
-        function_accept = return_construction();
+        function F = findFunction(current_function_name, SymTable->func);
+        outputParams out_params = F->output_params;      // C O M P A R E   R E T U R N   A N D   O U T   P A R A M S
+
+        if(token->type == TOKEN_TYPE_EOL && out_params == NULL)
+            function_accept = function_body();
+        else if(out_params != NULL && token->type != TOKEN_TYPE_EOL)
+            function_accept = return_construction(out_params);
+        else {
+            error_flag = 6; // number of return args and function output args not the same
+            return false;
+        }
+        
     }
     
 
@@ -511,11 +535,26 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
             allowed_eol(); //[ a := \n b] situation
             printf("                            DEFINE3 returns token %s\n", token->data);
             define_accept = count_operands(end_condition);
+
+            // ЗАПИСЬ
+            if(!check_declare_logic(deep)){
+                error_flag = 6;
+                return false;
+            }
+
+            // CHECKING TYPES FOR SYMTABLE
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
                         printf("                            DEFINE4 (EQUATING) returns token %s\n", token->data);
             get_and_set_token();
             allowed_eol(); //[ a = \n b] situation
             define_accept = count_operands(end_condition);
+            
+            // C O M P A R E   T W O   L I S T S
+            if(!check_define_logic(deep)){
+                error_flag = 6;
+                return false;
+            }
+
         } else if (func && define_accept && token->type == TOKEN_TYPE_LEFT_BRACKET){
             get_and_set_token();
             allowed_eol(); // func_name( \n args situation
@@ -523,6 +562,8 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
             if (define_accept){
                 number_of_operands--;
                 printf("                            DEFINE5 (FUNCTION) returns token %s\n", token->data);
+
+                freeBothCompareLists(); // L I S T   L O G I C
                 get_and_set_token();
                 define_accept = true;
             }
@@ -647,19 +688,24 @@ bool expression(int end_condition){
             bracket -= closed_bracket_counter;
         }
     // --
-        if(end_condition == RETURN_TYPE){      // ONLY FOR RETURN
-            if(token->type == TOKEN_TYPE_COMMA || token->type == TOKEN_TYPE_EOL){
-                expression_accept = true;
-                was_it_string = 0;
-                is_function = 1;
-                add_type_to_compare_list(1);
-            }
-        } 
+        // if(end_condition == RETURN_TYPE){      // ONLY FOR RETURN
+        //     if(token->type == TOKEN_TYPE_COMMA || token->type == TOKEN_TYPE_EOL){
+        //         expression_accept = true;
+        //         was_it_string = 0;
+        //         is_function = 1;
+        //         add_type_to_compare_list(1);
+        //     }
+        // }
+
+
         if(token->type == end_condition){
             expression_accept = true;
             was_it_string = 0;
             is_function = 1;
-            add_type_to_compare_list(1);
+            // result = Vlad()
+            add_type_to_compare_list(1); // result
+
+
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
@@ -799,22 +845,30 @@ bool expression_func_single_argument(inputParams args_check){
 }
 
 //  ------------------------------------ R E T U R N    C O N S T R U C T I O N ------------------------------------
-
-bool return_construction(){
+// FINISHED HERE
+bool return_construction(outputParams out_params){
     bool return_construction_accept = false;
+    int return_end_condition = TOKEN_TYPE_EOL;
+    if(out_params->next != NULL)
+        return_end_condition = TOKEN_TYPE_COMMA;
 
-    return_construction_accept = expression(RETURN_TYPE);
+    return_construction_accept = expression(return_end_condition);
     printf("RETURN %d\n", return_construction_accept);
+    
     // if(return_construction_accept){
     //     get_and_set_token();
     //     return_construction_accept = function_body();
     // } else 
     if(token->type == TOKEN_TYPE_EOL && return_construction_accept){
         get_and_set_token();
+        // compare two lists with type
+        freeBothCompareLists();
         return_construction_accept = function_body();
     } else if(token->type == TOKEN_TYPE_COMMA && return_construction_accept){
         get_and_set_token();
-        return_construction_accept = return_construction();
+        return_construction_accept = return_construction(out_params->next);
+    } else if( token->type == TOKEN_TYPE_COMMA || TOKEN_TYPE_EOL){
+        error_flag = 6;
     }
     return return_construction_accept;
 }
@@ -840,7 +894,7 @@ bool start_block_new_line(){
 int main(){
    // program_code = fopen ("file.ifj20", "r");
    SymTable = declaration(SymTable);
-
+    symTab_for_inbuilt_func(SymTable); // adding inbulid functions to symtable
     saved_func_name = saved_arg_name = saved_arg_type = NULL;
 
     token = malloc (sizeof(Token));
@@ -882,7 +936,9 @@ int main(){
     //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
     //     second_run = second_run->next;
     // }
+    //freeBothCompareLists();
     freeFunctions(&(SymTable->func));
+    dtor(startCommandFuncList);
     free(SymTable);
     dtor(second_run);
    // fclose(program_code);
