@@ -247,9 +247,9 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     if (var1 == NULL)
         return 0;
 
-    printf("COMPARE TWO VARIABLES 2222 %s %d\n", var1->data, var1->type);
+    printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
     if(var1->type == TOKEN_TYPE_IDENTIFIER){
-        printf("COMPARE TWO VARIABLES 2222 %s %d\n", var1->data, var1->type);
+        printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
         variable tmp = findVariableWithType(var1, deep, Var);
         if(!tmp)
             return 0;
@@ -262,9 +262,10 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
 
     type2 = var2;
     
-    if(type1 == type2)
+    if(type1 == type2){
+        printf(" ___ COMPARE TWO TYPES OK! ___\n");
         return type1;
-    else 
+    } else 
         return 0;
 }
 

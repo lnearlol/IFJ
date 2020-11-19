@@ -788,9 +788,11 @@ bool expression(int end_condition){
 
         // C O M M A N D    F U N C T I O N S
     } else if (token->type == TOKEN_TYPE_COMMAND_FUNCTION){
+                saved_func_name = token;
         get_and_set_token();
         if (token->type == TOKEN_TYPE_LEFT_BRACKET){
             get_and_set_token();
+            allowed_eol(); // func_name( \n args situation
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
@@ -824,7 +826,7 @@ void allowed_eol(){
 }
 
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
-
+// сейчас считаются внутренние аргументы функции, надо добавить аутпут аргументы
 bool expression_func_arguments(){
     bool func_arguments_accept = false;
     
@@ -835,22 +837,27 @@ bool expression_func_arguments(){
         return false;
     }
     inputParams args_check = arg_find->input_params;
+    outputParams args_output = arg_find->output_params;
+    printf("<--------------->  WRITING %s   <-------------->\n", arg_find->name);
 
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // LOGIC
-        if(args_check == NULL)  // if after all arguments next argument in sym_table will be null  (except print)
+        if(args_check == NULL){ // if after all arguments next argument in sym_table will be null  (except print)
             func_arguments_accept = true;
-        else {
+            // записать аутпуты в лист 
+
+
+        } else {
             printf("             --------------------------------------------------->  null arguments here, but more in symtable\n");
             changeErrorCode(6);
         }
     } else {
-        func_arguments_accept = expression_func_single_argument(args_check);
+        func_arguments_accept = expression_func_single_argument(args_check, args_output);
     }
     return func_arguments_accept;
 }
 
-bool expression_func_single_argument(inputParams args_check){
+bool expression_func_single_argument(inputParams args_check, outputParams args_output){
     bool func_single_argument = false;
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
@@ -876,9 +883,15 @@ bool expression_func_single_argument(inputParams args_check){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
             // L O G I C   C H E C K    [ args_check->next is NULL, it was the last parameter in SymTable->Func->InputParams ]
-            if(args_check->next == NULL)
+            if(args_check->next == NULL) {
                 func_single_argument = true;
-            else {
+                            
+                while(args_output != NULL){
+                printf("<--------------->  WRITING %d   <-------------->\n", args_output->type);
+                add_type_to_compare_list(args_output->type);
+                args_output = args_output->next;
+            }
+            } else {
                 printf("                 -------------------------------> WRONG QUANTITY OF ARGUMENTS IN SINGLE_ARGUMENT\n");
                 changeErrorCode(6);
                 func_single_argument = false;
@@ -886,7 +899,7 @@ bool expression_func_single_argument(inputParams args_check){
         } else if(token->type == TOKEN_TYPE_COMMA){
             get_and_set_token();
             allowed_eol(); //[ a (c, \n b)] situation
-            func_single_argument = expression_func_single_argument(args_check->next);
+            func_single_argument = expression_func_single_argument(args_check->next, args_output);
         }
     }
     return func_single_argument;

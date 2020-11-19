@@ -21,7 +21,7 @@ bool logic_expression(int end_condition);
 bool expression(int end_condition);
 int is_closed_bracket();
 bool expression_func_arguments();
-bool expression_func_single_argument(inputParams args_check);
+bool expression_func_single_argument(inputParams args_check, outputParams args_output);
 
 
 bool expression_including_string(int end_condition);
