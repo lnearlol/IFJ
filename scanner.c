@@ -24,10 +24,8 @@ int num(char state){
 
 char read_a_symbol(char state){
     state = fgetc(program_code);
-    if(!allowed_symbol(state)){
-        fprintf(stderr, "FORBIDDEN SYMBOL!\n");
-        exit(1);
-    }
+    if(!allowed_symbol(state))      //ERROR: FORBIDDEN SYMBOL
+        return '%';
     return state;
 }
 
@@ -78,7 +76,7 @@ void dtor(Token *first){
     }
 }
 
-void get_token(Token *token){
+int get_token(Token *token){
     static char state;
     static int state_flag = 0;
     token->size = 1;
@@ -92,15 +90,56 @@ void get_token(Token *token){
     
     if(state == TAB)
         state = first_non_TAB(state);
+    
+    if (state == '%')
+        return 1;
 
     if(state >= '0' && state <= '9')
         token->type = TOKEN_TYPE_LITERAL_INT;
     else if((state >= 'a' && state <= 'z') || (state >= 'A' && state <= 'Z'))
         token->type = TOKEN_TYPE_IDENTIFIER;
     else if(state == '+' || state == '*' || state == '-' || state == '/'){
-        token->type = TOKEN_TYPE_MATH_OPERATOR;
         data_append(token, state);
-        return;
+
+        if(state == '/'){
+            state = fgetc(program_code);
+            if(state != '/' && state != '*')
+                state_flag++;
+            else{
+                free(token->data);
+                if(state == '/'){
+                    while(state != '\n')
+                        state = fgetc(program_code);
+                }
+                else if(state == '*'){
+                    int comment_block_ending_flag = 0;
+                    while(state != EOF){
+                        state = fgetc(program_code);
+                        if(state == '*'){
+                            state = fgetc(program_code);
+                            if(state == '/'){
+                                comment_block_ending_flag++;
+                                break;
+                            }
+                        }
+                    }
+                    if(!comment_block_ending_flag)
+                        return 1;
+                }
+
+                state = first_non_EOL(state);
+                if (state == '%')
+                    return 1;
+                state_flag++;
+                if(get_token(token))
+                    return 1;
+
+                return 0;
+            }
+        }
+
+        token->type = TOKEN_TYPE_MATH_OPERATOR;
+        return 0;
     }
     else if(state == '>' || state == '<' || state == '!')
         token->type = TOKEN_TYPE_LOGICAL_OPERATOR;
@@ -109,8 +148,12 @@ void get_token(Token *token){
         state = '$';
         data_append(token, state);
         state = first_non_EOL(state);
+
+        if (state == '%')
+            return 1;
+
         state_flag++;
-        return;
+        return 0;
     }
     else if(state == '=')
         token->type = TOKEN_TYPE_EQUATING;
@@ -123,40 +166,42 @@ void get_token(Token *token){
     else  if(state == EOF){
        token->type = TOKEN_TYPE_EOFILE;
        data_append(token, state);
-       return;
+       return 0;
     }
     else if(state == '{'){
         token->type = TOKEN_TYPE_START_BLOCK;
         data_append(token, state);
-        return;
+        return 0;
     }
     else if(state == '}'){
         token->type = TOKEN_TYPE_END_BLOCK;
         data_append(token, state);
-        return;
+        return 0;
     }
     else if(state == '('){
         token->type = TOKEN_TYPE_LEFT_BRACKET;
         data_append(token, state);
-        return;
+        return 0;
     }
     else if(state == ')'){
         token->type = TOKEN_TYPE_RIGHT_BRACKET;
         data_append(token, state);
-        return;
+        return 0;
     }
     else if(state == ','){
         token->type = TOKEN_TYPE_COMMA;
         data_append(token, state);
-        return;
+        return 0;
     }
     else if(state == ';'){
         token->type = TOKEN_TYPE_SEMICOLON;
         data_append(token, state);
-        return;
-    } else {
-        printf("\n\nERROR!!!\n\n");
+        return 0;
     }
+    else if(state == '.')      //ERROR: EMPTY SEQUENCE OF NUMBERS BEFORE `.` IN AN INTEGER PART OF LITERAL FLOAT
+        return 1;
+    else if (state == '%')
+        return 1;
     
     if(token->type != TOKEN_TYPE_LITERAL_STRING)
         data_append(token, state);
@@ -170,27 +215,73 @@ void get_token(Token *token){
         if(cycle_flag == 0 && token->type != TOKEN_TYPE_LITERAL_STRING)
             state = read_a_symbol(state);
         
+        if (state == '%')
+            return 1;
+        
         cycle_flag = 0;
 
         if(token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_FLOAT){
             if(num(state)){
-                if(strcmp(token->data, "0") == 0 && state == '0'){
-                    fprintf(stderr, "EXCESS ZERO IN NUMERIC LITERAL\n");
-                    exit(1);
-                }
+                if(strcmp(token->data, "0") == 0)   //ERROR: EXCESS ZERO IN NUMERIC LITERAL
+                    return 1;
                 data_append(token, state);
             }
-            else if (state == '.'){
-                if(strstr(token->data, ".") != NULL){
-                    fprintf(stderr, "EXCESS DOT IN NUMERIC LITERAL\n");
-                    exit(1);
-                }
+            else if(state == '.'){
+                if(strstr(token->data, ".") != NULL)    //ERROR: EXCESS DOT IN NUMERIC LITERAL
+                    return 1;
                 data_append(token, state);
                 token->type = TOKEN_TYPE_LITERAL_FLOAT;
+                state = read_a_symbol(state);
+                if (state == '%')
+                    return 1;
+                if(state < '0' || state > '9')      //ERROR: EMPTY SEQUENCE OF NUMBERS AFTER `.` IN A FRACTIONAL PART OF LITERAL FLOAT
+                    return 1;
+                else{
+                    data_append(token, state);
+                }
+            }
+            else if(state == 'e' || state == 'E'){
+                data_append(token, state);
+                token->type = TOKEN_TYPE_LITERAL_FLOAT;
+                state = read_a_symbol(state);
+                if (state == '%')
+                    return 1;
+                if(state == '+' || state == '-'){
+                    data_append(token, state);
+                    state = read_a_symbol(state);
+
+                    if (state == '%')
+                        return 1;
+                    
+                    if(state >= '0' && state <= '9'){
+                        while(state >= '0' && state <= '9'){
+                            data_append(token, state);
+                            state = read_a_symbol(state);
+
+                            if (state == '%')
+                                return 1;
+                        }
+                    }
+                    else    //ERROR: EMPTY SEQUENCE OF NUMBERS AFTER `e` IN LITERAL FLOAT
+                        return 1;
+                }
+                else if(state >= '0' && state <= '9'){
+                    while(state >= '0' && state <= '9'){
+                        data_append(token, state);
+                        state = read_a_symbol(state);
+
+                        if (state == '%')
+                            return 1;
+                    }
+                }
+                else    //ERROR: EMPTY SEQUENCE OF NUMBERS AFTER `e` IN LITERAL FLOAT
+                    return 1;
+                state_flag++;
+                return 0;
             }
             else{
                 state_flag++;
-                return;
+                return 0;
             }
             continue;
         }
@@ -198,6 +289,10 @@ void get_token(Token *token){
             if(letter_or_num(state)){
                 data_append(token, state);
                 state = read_a_symbol(state);
+
+                if (state == '%')
+                    return 1;
+                
                 if(!strcmp(token->data, "func") && !letter_or_num(state))
                     token->type = TOKEN_TYPE_FUNC;
                 else if(!strcmp(token->data, "package") && !letter_or_num(state))
@@ -223,11 +318,11 @@ void get_token(Token *token){
                     continue;
                 }
                 state_flag++;
-                return;
+                return 0;
             }
             else{
                 state_flag++;
-                return;
+                return 0;
             }
         }
         else if (token->type == TOKEN_TYPE_EQUATING){
@@ -237,24 +332,22 @@ void get_token(Token *token){
                 token->type = TOKEN_TYPE_LOGICAL_OPERATOR;
                 data_append(token, state);
             }
-            return;
+            return 0;
         }
         else if (token->type == TOKEN_TYPE_DECLARE){
             if(state == '='){
                 data_append(token, state);
-                return;
+                return 0;
             }
-            else{
-                fprintf(stderr, "LEXICAL ERROR (':' NOT RELATED TO DECLARE)\n");
-                exit(1);
-            }
+            else    //LEXICAL ERROR (':' NOT RELATED TO DECLARE)
+                return 1;
         }
         else if (token->type == TOKEN_TYPE_LOGICAL_OPERATOR){
             if(state != '=')
                 state_flag++;
             else
                 data_append(token, state);
-            return;
+            return 0;
         }
         else if (token->type == TOKEN_TYPE_UNDERSCORE){
             if(!letter_or_num(state))
@@ -264,27 +357,32 @@ void get_token(Token *token){
                 data_append(token, state);
                 continue;
             }
-            return;
+            return 0;
         }
         else if (token->type == TOKEN_TYPE_LITERAL_STRING){
-            ///
-            ////
-            /////
-            //ERROR: \x USED WITH NO FOLLOWING HEX DIGITS
-            /////
-            ///////
-            //
             state = fgetc(program_code);
             
             if(state != '"' || Backslash_flag != 0){
-                if(state == '\n'){
-                    fprintf(stderr, "ERROR: MISSING TERMINATING\n");
-                    exit(1);
-                }
+                if(state == '\n')   //ERROR: MISSING TERMINATING
+                    return 1;
 
-                if(ASCII_code_flag !=0){
-                    printf("\n    hexa ==> %c\n", state);
-                    // data_append(token, state);
+                if(ASCII_code_flag != 0){
+                    if((state >= '0' && state <= '9') || (state >= 'A' && state <= 'F') || (state >= 'a' && state <= 'f')){
+                        char str[HEX_DIGITS_STRING_SIZE], *end;
+
+                        str[0] = state;
+                        state = fgetc(program_code);
+
+                        if((state >= '0' && state <= '9') || (state >= 'A' && state <= 'F') || (state >= 'a' && state <= 'f')){
+                            str[1] = state;
+                            state = strtol(str, &end, 16);
+                        }
+                        else    //ERROR: TOO FEW HEXADECIMAL DIGITS
+                            return 1;
+                    }
+                    else    //ERROR: \\x USED WITH NO FOLLOWING HEX DIGITS
+                        return 1;
+                    data_append(token, state);
                     ASCII_code_flag = 0;
                 }
                 else{
@@ -294,15 +392,13 @@ void get_token(Token *token){
                                 state = '\n';
                             else if(state == 't')
                                 state = TAB;
-                            /*else if(state == 'x'){
+                            else if(state == 'x'){
                                 ASCII_code_flag++;
                                 Backslash_flag = 0;
                                 continue;
-                            }*/
-                            else if(state != '"'){
-                                fprintf(stderr, "ERROR: UNKNOWN ESCAPE SEQUENCE\n");
-                                exit(1);
                             }
+                            else if(state != '"')   //ERROR: UNKNOWN ESCAPE SEQUENCE
+                                return 1;
                         }
                         data_append(token, state);
                         Backslash_flag = 0;
@@ -318,7 +414,7 @@ void get_token(Token *token){
                 }
                 continue;
             }
-            return;
+            return 0;
         }
     }
 }

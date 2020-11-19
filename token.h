@@ -43,5 +43,5 @@ typedef struct token {
     struct token *next;
 } Token;
 
-void get_token(Token *token);       //function of processing a program code
+int get_token(Token *token);       //function of processing a program code
 void dtor(Token *first);            //release the memory allocated for tokens

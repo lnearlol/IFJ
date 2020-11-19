@@ -2,6 +2,7 @@
 #define FUNCTIONS_ARRAY_SIZE 10         //length and quantity of strings in array of command functions
 #define TAB 9                           //horizontal tab ASCII code
 #define Backslash 92                    //Backslash ASCII code
+#define HEX_DIGITS_STRING_SIZE 2       //length of string of two hexadecimal digits following `\x`
  
 //input validation functions
 int allowed_symbol(char state);                     
