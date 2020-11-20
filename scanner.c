@@ -106,32 +106,31 @@ int get_token(Token *token){
             if(state != '/' && state != '*')
                 state_flag++;
             else{
+                int comment_ending_flag = 0;
                 free(token->data);
                 if(state == '/'){
                     while(state != '\n')
                         state = fgetc(program_code);
+                    comment_ending_flag = 1;
                 }
                 else if(state == '*'){
-                    int comment_block_ending_flag = 0;
                     while(state != EOF){
                         state = fgetc(program_code);
                         if(state == '*'){
                             state = fgetc(program_code);
                             if(state == '/'){
-                                comment_block_ending_flag++;
+                                comment_ending_flag = 1;
                                 break;
                             }
                         }
                     }
-                    if(!comment_block_ending_flag)
-                        return 1;
                 }
 
                 state = first_non_EOL(state);
                 if (state == '%')
                     return 1;
                 state_flag++;
-                if(get_token(token))
+                if(get_token(token) || !comment_ending_flag)
                     return 1;
 
                 return 0;
