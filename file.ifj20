@@ -1,16 +1,11 @@
+//
 package main
 
-func main () {
-	if 0==1 {
-	} else {
-	}
+func alpha () (int) {
+	return 6.7
 }
 
-func hi(hi int, lol int) (int, int){
-	i:= 1
-	for i=1; i < 10; {
-	a, b := 2, 3
-	v := float2int(1)
-	}
-	return 1, 2
+func main () {
+a := 2
+	a = 122
 }

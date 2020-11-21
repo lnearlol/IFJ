@@ -96,7 +96,7 @@ void Print_var(variable TempTree)
 
 // --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
 
- void insertVariable(Token *token, int deepVar, variable *Var){
+ bool insertVariable(Token *token, int deepVar, variable *Var){
     
     if(*Var == NULL){
 		*Var = malloc(sizeof(struct Variable));
@@ -107,7 +107,7 @@ void Print_var(variable TempTree)
         (*Var)->prevTree = NULL;
         (*Var)->deep = deepVar;
         (*Var)->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
-		return;
+		return true;
 
 	} else if ((*Var != NULL) && ((*Var)->deep < deepVar)){  
         variable tmp = malloc(sizeof(struct Variable));
@@ -119,7 +119,7 @@ void Print_var(variable TempTree)
         tmp->length = token->size;
         tmp->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
         *Var = tmp;   
-        return;
+        return true;
     }
     
     else if(strcmp((*Var)->name, token->data) > 0) {
@@ -130,8 +130,7 @@ void Print_var(variable TempTree)
 
 	} else if(strcmp((*Var)->name, token->data) == 0) {
         fprintf(stderr,"VARIABLE WITH THE SAME NAME ALREADY EXISTS!!!\n");
-        exit(1);
-		return;
+        return false;
 	}
 }
 
@@ -170,18 +169,39 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 
 // FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
 variable findVariableWithType(Token *token, int deepVar, variable Var){
+    printf("_________ HI FROM FIND_VAR_WITH_TYPE_1\n");
     variable tmp = Var;
+
     if(Var == NULL){
+        printf("_________ HI FROM FIND_VAR_WITH_TYPE_2\n");
         return NULL;
-    } if(deepVar < 0 || deepVar > Var->deep){
+    
+    }
+
+    if (deepVar > Var->deep) { 
+        printf("_________ HI FROM FIND_VAR_WITH_TYPE_CHANGED+\n");
+        while(deepVar != Var->deep)
+            --deepVar;
+    }
+
+     if(deepVar < 0 ){
+        printf("_________ HI FROM FIND_VAR_WITH_TYPE_3\n");
         return NULL;
-    } else {
+        
+    }  else {
+        printf("_________ HI FROM FIND_VAR_WITH_TYPE_4\n");
         tmp = find_var_with_type_helper(token, deepVar, tmp);
         if(tmp != NULL){
+            printf("_________ HI FROM FIND_VAR_WITH_TYPE_5\n");
             return tmp;
+            printf("_________ RETURNED_5\n");
         }
-        else 
+        else {
+            if(Var->prevTree == NULL)
+                return NULL;
+            printf("_________ HI FROM FIND_VAR_WITH_TYPE_6\n");
             findVariableWithType(token, deepVar-1, Var->prevTree);
+        }
     }
 }
 
@@ -242,7 +262,7 @@ void freeAllVariables(variable *Var){
 //                                               findVar(a), findVar(b) записать их типы и сравнить на совместимость
 
 int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
-    int type1 = 0, type2 = 0;
+    int type1 = 0, type2 = var2;
     printf("COMPARE TWO VARIABLES \n");
     if (var1 == NULL)
         return 0;
@@ -250,17 +270,25 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
     if(var1->type == TOKEN_TYPE_IDENTIFIER){
         printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
+        
         variable tmp = findVariableWithType(var1, deep, Var);
-        if(!tmp)
+
+        if(!tmp){
+            printf("_________Variable_not_found\n");
+            changeErrorCode(3);
             return 0;
+        }
+            printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", tmp->name, tmp->type, var2);
         type1 = tmp->type;
         printf("\n 1) type1: %d\n", type1);
+    } else if (var1->type == TOKEN_TYPE_UNDERSCORE) {
+        printf("RETURNED UNDERSCORE  [%s] %d - %d\n", var1->data, var1->type, type2);
+        return type2;
     } else {
         type1 = returnLiteralType(var1);
         printf("\n 2) type1: %d\n", type1);
     }
 
-    type2 = var2;
     
     if(type1 == type2){
         printf(" ___ COMPARE TWO TYPES OK! ___\n");
@@ -307,8 +335,7 @@ void insertFunction(Token *token, function *Func){
 
 	} else if(strcmp((*Func)->name, token->data) == 0) {
         fprintf(stderr,"FUNCTION WITH THE SAME NAME ALREADY EXISTS!!!\n");
-        exit(1);
-		return;
+        changeErrorCode(3);
 	}
 }
 

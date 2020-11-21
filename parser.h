@@ -21,7 +21,7 @@ bool logic_expression(int end_condition);
 bool expression(int end_condition);
 int is_closed_bracket();
 bool expression_func_arguments();
-bool expression_func_single_argument(inputParams args_check, outputParams args_output);
+bool expression_func_single_argument(inputParams args_check, outputParams args_outputFchan);
 
 
 bool expression_including_string(int end_condition);
@@ -43,6 +43,7 @@ void add_to_else_stack();
 void delete_from_else_stack();
 
 else_stack *elseStack;
+else_stack *forStack;
 
 #define FIRST_RUN 1
 #define SECOND_RUN 0
@@ -68,7 +69,7 @@ void delete_type_from_compare_list();
 void freeBothCompareLists();
 bool checkCompareLists();
 
-void changeErrorCode(int code);
+// void changeErrorCode(int code);
 // bool checkOneCompareList(type_compare_list *typeList);
 
 

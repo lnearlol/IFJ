@@ -48,6 +48,7 @@ typedef struct token {
 int get_token(Token *token);       //function of processing a program code
 //release the allocated memory created with malloc()
 void dtor(Token *first);
+void changeErrorCode(int code);
 
 
 

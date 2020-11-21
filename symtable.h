@@ -57,7 +57,7 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
 void addOutputArguments(Token *func_name, Token *arg_type, function Func);
 
 
-void insertVariable(Token *token, int deepVar, variable *Var);
+bool insertVariable(Token *token, int deepVar, variable *Var);
 void freeVariablesLastLabel(variable *Var);
 void freeAllVariables(variable *Var);
 variable findVariable(Token *token, int deepVar, variable Var);

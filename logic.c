@@ -6,7 +6,8 @@ bool check_declare_logic(int deep){
     printf("CHECK DECLARED LOGIC \n");
     while(varCompareList != NULL && typeCompareList != NULL){
         printf("CHECK DECLARED LOGIC 1\n");
-        insertVariable(varCompareList->var, deep, &(SymTable->var));
+        if(!insertVariable(varCompareList->var, deep, &(SymTable->var)))
+            changeErrorCode(3);
         if(putTypeVariable(varCompareList->var, deep, typeCompareList->type, SymTable->var)){
             printf("CHECK DECLARED LOGIC 1\n");
             delete_var_from_compare_list();
