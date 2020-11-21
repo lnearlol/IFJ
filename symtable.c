@@ -169,37 +169,29 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 
 // FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
 variable findVariableWithType(Token *token, int deepVar, variable Var){
-    printf("_________ HI FROM FIND_VAR_WITH_TYPE_1\n");
     variable tmp = Var;
 
     if(Var == NULL){
-        printf("_________ HI FROM FIND_VAR_WITH_TYPE_2\n");
         return NULL;
     
     }
 
     if (deepVar > Var->deep) { 
-        printf("_________ HI FROM FIND_VAR_WITH_TYPE_CHANGED+\n");
         while(deepVar != Var->deep)
             --deepVar;
     }
 
      if(deepVar < 0 ){
-        printf("_________ HI FROM FIND_VAR_WITH_TYPE_3\n");
         return NULL;
         
     }  else {
-        printf("_________ HI FROM FIND_VAR_WITH_TYPE_4\n");
         tmp = find_var_with_type_helper(token, deepVar, tmp);
         if(tmp != NULL){
-            printf("_________ HI FROM FIND_VAR_WITH_TYPE_5\n");
             return tmp;
-            printf("_________ RETURNED_5\n");
         }
         else {
             if(Var->prevTree == NULL)
                 return NULL;
-            printf("_________ HI FROM FIND_VAR_WITH_TYPE_6\n");
             findVariableWithType(token, deepVar-1, Var->prevTree);
         }
     }
