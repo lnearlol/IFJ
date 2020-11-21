@@ -1,11 +1,14 @@
 //
 package main
 
-func alpha () (int) {
-	return 6.7
+func alpha (i float64) (int, int, int) {
+	return 6.7, "afsakj",2121
 }
 
 func main () {
-a := 2
-	a = 122
+/*
+	alpha(2.1)
+	print(123, 132,1, 3123, "ffsfsd", "fes")
+
+return
 }

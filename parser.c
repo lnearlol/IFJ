@@ -405,8 +405,9 @@ bool first_run_body(){
             deep--;
         if(token->type == TOKEN_TYPE_START_BLOCK)
             deep++;
-        if(deep == -1)
+        if(deep == -1 || error_flag == 1)
             break;
+        printf("TOKEN VZYAL_________________\n");
         get_and_set_token();
     }
 
@@ -459,9 +460,11 @@ bool function_body(){
 
     // W O R K I N G    W I T H    F O R - S T A C K
     if(token->type == TOKEN_TYPE_END_BLOCK && forStack != NULL){
-        if(forStack->deep == deep)
-            deep--;
+        if(forStack->deep == deep){
             delete_from_for_stack();
+            freeVariablesLastLabel(&(SymTable->var));
+            deep--;
+        }
     } 
 
 
@@ -1114,7 +1117,13 @@ bool return_construction(outputParams out_params){
         return_end_condition = TOKEN_TYPE_COMMA;
 
     return_construction_accept = expression(return_end_condition);
-    printf("RETURN %d\n", return_construction_accept);
+    printf("RETURN 123 %d\n", return_construction_accept);
+
+    if(!return_construction_accept){
+       changeErrorCode(6);
+        printf("                 ------------------------------->  1!= QUANTITY OF OUTPUT PARAMS AND RETURN PARAMS\n");
+        return false;
+    }
     
     // L O G I C :  C O M P A R E   T Y P E S   E X P R    A N D    O U T P U T    P A R A M
     if(out_params->type == typeCompareList->type){  // segfault pri funkci

@@ -114,9 +114,7 @@ int get_token(Token *token){
                     comment_ending_flag = 1;
                 }
                 else if(state == '*'){
-                    while(state != EOF){
-                        if(state == EOF)
-                            break;
+                    while(!feof( stdin )/*state != EOF*/){
                         state = fgetc(stdin);
                         if(state == '*'){
                             state = fgetc(stdin);
@@ -132,9 +130,8 @@ int get_token(Token *token){
                 if (state == '%')
                     return 1;
                 state_flag++;
-
                 if(get_token(token) || !comment_ending_flag)
-                    changeErrorCode(1);
+                    return 1;
 
                 return 0;
             }
@@ -165,7 +162,7 @@ int get_token(Token *token){
         token->type = TOKEN_TYPE_UNDERSCORE;
     else if(state == ':')
         token->type = TOKEN_TYPE_DECLARE;
-    else  if(state == EOF){
+    else  if(feof( stdin )/*state == EOF*/){
        token->type = TOKEN_TYPE_EOFILE;
        data_append(token, state);
        return 0;
@@ -212,7 +209,7 @@ int get_token(Token *token){
     int Backslash_flag = 0;
     int ASCII_code_flag = 0;
     
-    while(state  != EOF){
+    while(!feof( stdin )/*state != EOF*/){
 
         if(cycle_flag == 0 && token->type != TOKEN_TYPE_LITERAL_STRING)
             state = read_a_symbol(state);
