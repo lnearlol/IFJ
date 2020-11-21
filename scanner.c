@@ -23,7 +23,7 @@ int num(char state){
 }
 
 char read_a_symbol(char state){
-    state = fgetc(program_code);
+    state = fgetc(stdin);
     if(!allowed_symbol(state))      //ERROR: FORBIDDEN SYMBOL
         return '%';
     return state;
@@ -102,7 +102,7 @@ int get_token(Token *token){
         data_append(token, state);
 
         if(state == '/'){
-            state = fgetc(program_code);
+            state = fgetc(stdin);
             if(state != '/' && state != '*')
                 state_flag++;
             else{
@@ -110,14 +110,14 @@ int get_token(Token *token){
                 free(token->data);
                 if(state == '/'){
                     while(state != '\n')
-                        state = fgetc(program_code);
+                        state = fgetc(stdin);
                     comment_ending_flag = 1;
                 }
                 else if(state == '*'){
-                    while(state != EOF){
-                        state = fgetc(program_code);
+                    while(!feof( stdin )/*state != EOF*/){
+                        state = fgetc(stdin);
                         if(state == '*'){
-                            state = fgetc(program_code);
+                            state = fgetc(stdin);
                             if(state == '/'){
                                 comment_ending_flag = 1;
                                 break;
@@ -162,7 +162,7 @@ int get_token(Token *token){
         token->type = TOKEN_TYPE_UNDERSCORE;
     else if(state == ':')
         token->type = TOKEN_TYPE_DECLARE;
-    else  if(state == EOF){
+    else  if(feof( stdin )/*state == EOF*/){
        token->type = TOKEN_TYPE_EOFILE;
        data_append(token, state);
        return 0;
@@ -209,7 +209,7 @@ int get_token(Token *token){
     int Backslash_flag = 0;
     int ASCII_code_flag = 0;
     
-    while(state  != EOF){
+    while(!feof( stdin )/*state != EOF*/){
 
         if(cycle_flag == 0 && token->type != TOKEN_TYPE_LITERAL_STRING)
             state = read_a_symbol(state);
@@ -359,7 +359,7 @@ int get_token(Token *token){
             return 0;
         }
         else if (token->type == TOKEN_TYPE_LITERAL_STRING){
-            state = fgetc(program_code);
+            state = fgetc(stdin);
             
             if(state != '"' || Backslash_flag != 0){
                 if(state == '\n')   //ERROR: MISSING TERMINATING
@@ -370,7 +370,7 @@ int get_token(Token *token){
                         char str[HEX_DIGITS_STRING_SIZE], *end;
 
                         str[0] = state;
-                        state = fgetc(program_code);
+                        state = fgetc(stdin);
 
                         if((state >= '0' && state <= '9') || (state >= 'A' && state <= 'F') || (state >= 'a' && state <= 'f')){
                             str[1] = state;

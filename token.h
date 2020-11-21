@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-FILE *program_code;
 
 typedef enum {
 TOKEN_TYPE_IDENTIFIER,
