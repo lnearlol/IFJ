@@ -745,7 +745,8 @@ bool define_operands(int func){
         
         if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET && (saved_func_name->type == TOKEN_TYPE_IDENTIFIER 
         || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION)){
-            if(findVariable(saved_func_name, deep, SymTable->var)){
+            printf("iiiiim heeeereee________________________ %s \n", saved_func_name->data);
+            if(findVariableWithType(saved_func_name, deep, SymTable->var)){
                 printf("             --------------------------------------------------->  function has the same name as var\n");
                 changeErrorCode(3);   //  ERROR 3, not found function_name
                 return false;
@@ -869,7 +870,8 @@ bool expression(int end_condition){
 
 
         if(token->type == end_condition){
-            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+            if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+            && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined 
                 return false;
@@ -886,7 +888,8 @@ bool expression(int end_condition){
             
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
-            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+            if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+            && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined
                 return false;
@@ -905,7 +908,7 @@ bool expression(int end_condition){
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
             // S Y M T A B L E    L O G I C
-            if(findVariable(saved_func_name, deep, SymTable->var)){
+            if(findVariableWithType(saved_func_name, deep, SymTable->var)){
                 printf("             --------------------------------------------------->  function has the same name as var\n");
                 changeErrorCode(3);   //  ERROR 3, not found function_name
                 return false;
@@ -953,47 +956,47 @@ bool expression(int end_condition){
                 }
             }
         }
-
-        // C O M M A N D    F U N C T I O N S
-    } else if (token->type == TOKEN_TYPE_COMMAND_FUNCTION){
-                saved_func_name = token;
-        get_and_set_token();
-        if (token->type == TOKEN_TYPE_LEFT_BRACKET){
-            get_and_set_token();
-            allowed_eol(); // func_name( \n args situation
-            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
-            if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
-                get_and_set_token();
-
-                // OPERANDS ANALYSIS
-                if(compareCompareLists() == 0){
-                    number_of_operands = 0;
-                    end_condition = TOKEN_TYPE_EOL;
-                } else if (compareCompareLists() == -1){
-                    printf("             --------------------------------------------------->  RUZNY POCET PARAMETRU LEVA STRANA != PRAVA STRANA\n");
-                    changeErrorCode(7);
-                    return false;
-                } else if (compareCompareLists() == 1){
-                    int tmp = number_of_operands;
-                    outputParams out_tmp = findFunction(saved_func_name, SymTable->func)->output_params;
-                    if(out_tmp == NULL){
-                        changeErrorCode(7); 
-                    printf("             --------------------------------------------------->  VOID FUNCTION IN EXPRESSION\n");
-                    } else {
-                        out_tmp = out_tmp->next;
-                        while(out_tmp != NULL){
-                            out_tmp = out_tmp->next;
-                            number_of_operands--;
-                        }
-                    }
-                }
-
-                if(token->type == end_condition){
-                    expression_accept = true;
-                }
-            }
-        }
     }
+    //     // C O M M A N D    F U N C T I O N S
+    //  else if (token->type == TOKEN_TYPE_COMMAND_FUNCTION){
+    //             saved_func_name = token;
+    //     get_and_set_token();
+    //     if (token->type == TOKEN_TYPE_LEFT_BRACKET){
+    //         get_and_set_token();
+    //         allowed_eol(); // func_name( \n args situation
+    //         expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
+    //         if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
+    //             get_and_set_token();
+
+    //             // OPERANDS ANALYSIS
+    //             if(compareCompareLists() == 0){
+    //                 number_of_operands = 0;
+    //                 end_condition = TOKEN_TYPE_EOL;
+    //             } else if (compareCompareLists() == -1){
+    //                 printf("             --------------------------------------------------->  RUZNY POCET PARAMETRU LEVA STRANA != PRAVA STRANA\n");
+    //                 changeErrorCode(7);
+    //                 return false;
+    //             } else if (compareCompareLists() == 1){
+    //                 int tmp = number_of_operands;
+    //                 outputParams out_tmp = findFunction(saved_func_name, SymTable->func)->output_params;
+    //                 if(out_tmp == NULL){
+    //                     changeErrorCode(7); 
+    //                 printf("             --------------------------------------------------->  VOID FUNCTION IN EXPRESSION\n");
+    //                 } else {
+    //                     out_tmp = out_tmp->next;
+    //                     while(out_tmp != NULL){
+    //                         out_tmp = out_tmp->next;
+    //                         number_of_operands--;
+    //                     }
+    //                 }
+    //             }
+
+    //             if(token->type == end_condition){
+    //                 expression_accept = true;
+    //             }
+    //         }
+    //     }
+    // }
 
 
     if(bracket != 0){
@@ -1033,6 +1036,13 @@ bool expression_func_arguments(){
     outputParams args_output = arg_find->output_params;
     printf("<--------------->  WRITING %s   <-------------->\n", arg_find->name);
 
+    // ADDING OUTPUT ARGS TO TYPE LIST
+            while(args_output != NULL){
+                    printf("<--------------->  WRITING %d   <-------------->\n", args_output->type);
+                    add_type_to_compare_list(args_output->type);
+                    args_output = args_output->next;
+                }
+
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // LOGIC
         
@@ -1048,6 +1058,9 @@ bool expression_func_arguments(){
     } else {
         printf("lololsfdofldso\n");
         func_arguments_accept = expression_func_single_argument(args_check, args_output);
+        
+
+
     }
     return func_arguments_accept;
 }
@@ -1087,11 +1100,11 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             if(args_check->next == NULL) {
                 func_single_argument = true;
                             
-                while(args_output != NULL){
-                    printf("<--------------->  WRITING %d   <-------------->\n", args_output->type);
-                    add_type_to_compare_list(args_output->type);
-                    args_output = args_output->next;
-                }
+                // while(args_output != NULL){
+                //     printf("<--------------->  WRITING %d   <-------------->\n", args_output->type);
+                //     add_type_to_compare_list(args_output->type);
+                //     args_output = args_output->next;
+                // }
             } else {
                 printf("                 -------------------------------> WRONG QUANTITY OF ARGUMENTS IN SINGLE_ARGUMENT\n");
                 changeErrorCode(6);
