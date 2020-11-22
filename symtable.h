@@ -8,7 +8,7 @@ union Types
   char *string;
 };
 
-/*typedef struct Variable{
+typedef struct Variable{
     char *name;
     int type;
     //union Types value;
@@ -17,7 +17,7 @@ union Types
     struct Variable *RPtr;
     struct Variable *LPtr;
     struct Variable *prevTree;
-} *variable;*/
+} *variable;
 
 
 typedef struct outParam{
@@ -65,7 +65,7 @@ variable findVariableHelper(Token *token, int deepVar, variable Var);
 bool putTypeVariable(Token *token, int deepVar, int varType, variable Var);
 
 //--
-//variable findVariableWithType(Token *token, int deepVar, variable Var);
+variable findVariableWithType(Token *token, int deepVar, variable Var);
 variable find_var_with_type_helper(Token *token, int deepVar, variable Var);
 
 
