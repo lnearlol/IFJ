@@ -894,12 +894,15 @@ bool expression(int end_condition){
 
             int result = sort_to_postfix(expr, deep, SymTable->var);
             printf("\n type of result is %d\n", result);
+
             add_type_to_compare_list(result); // result
+
 
 
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
+
 
 
 
@@ -920,7 +923,9 @@ bool expression(int end_condition){
 
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
+
                     changeErrorCode(7);
+
                     sort_to_postfix(expr, deep, SymTable->var);
                     printf("WAS NOT PLUS FOR STR\n");
                     return false;
