@@ -88,43 +88,45 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         implode(stack);
         int result = 0;
 
-        int i = 0;
-        for (i; i < stack->size; i++) {
+        printf("\nREADING OF EXPRESSION: ");
+        for (int i = 0; i < stack->size; i++) {
                 Token token = stack->data[i];
                 printf("%s ", token.data);
-                if (token.type == TOKEN_TYPE_LITERAL_FLOAT || token.type == TOKEN_TYPE_LITERAL_INT || token.type == TOKEN_TYPE_IDENTIFIER) {
+                if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
+                    token.type == TOKEN_TYPE_LITERAL_INT ||
+                    token.type == TOKEN_TYPE_IDENTIFIER ||
+                    token.type == TOKEN_TYPE_LITERAL_STRING) {
+
                         push(res, token);
 
+                        if (token.type == TOKEN_TYPE_IDENTIFIER) {
+                            if (!findVariableWithType(&token, deepVar, Var))
+                                changeErrorCode(3);
+                                result = -1;
+                                break;
+                        }
+
                         if (result == 0) {
-                                result = token.type;
+                            if (token.type == TOKEN_TYPE_IDENTIFIER)
+                                result = findVariableWithType(&token, deepVar, Var)->type;
+                            else
+                                result = returnLiteralType(&token);
                         }
-                        else if (result == TOKEN_TYPE_LITERAL_FLOAT) {
-                                if (token.type == TOKEN_TYPE_LITERAL_INT) {
-                                        result = -1;
-                                        changeErrorCode(5);
-                                        break;
+                        else if (result != 0) {
+                            if (token.type == TOKEN_TYPE_IDENTIFIER) {
+                                if (result != findVariableWithType(&token, deepVar, Var)->type) {
+                                    changeErrorCode(5);
+                                    result = -1;
+                                    break;
                                 }
-                                else if (token.type == TOKEN_TYPE_IDENTIFIER) {
-                                        variable tmp = findVariableWithType(&token, deepVar, Var);
-                                        if (tmp->type != TOKEN_TYPE_LITERAL_FLOAT) {
-                                                result = -1;
-                                                changeErrorCode(5);
-                                                break;
-                                        }
+                             }
+                             else {
+                                if (result != returnLiteralType(&token)) {
+                                    changeErrorCode(5);
+                                    result = -1;
+                                    break;
                                 }
-                        }
-                        else if (result == TOKEN_TYPE_LITERAL_INT) {
-                                if (token.type == TOKEN_TYPE_LITERAL_FLOAT) {
-                                        result = -1;
-                                        changeErrorCode(5);
-                                        break;
-                                } else if (token.type == TOKEN_TYPE_IDENTIFIER) {
-                                        variable tmp = findVariableWithType(&token, deepVar, Var);
-                                        if (tmp->type != TOKEN_TYPE_LITERAL_INT) {
-                                                result = -1;
-                                                break;
-                                        }
-                                }
+                             }
                         }
                 } else if (token.type == TOKEN_TYPE_LEFT_BRACKET) {
                         push(opstack, token);
@@ -144,7 +146,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                 }
                 else break;
         } printf("\n");
-        printf("result %d\n", result);
+        printf("TYPE OF EXPRESSION: %d\n", result);
         Token *tmp;
         if (result != -1) {
                 while (opstack->top > 0) {
@@ -156,9 +158,9 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         deleteStack(&opstack);
         deleteStack(&stack);
 
-        for (int i = 0; i < res->top - 1; i++) {
+        /*for (int i = 0; i < res->top - 1; i++) {
                 printf("%s ", res->data[i].data);
-        } printf("\n");
+        } printf("\n");*/
 
         if (result != -1) makeBT(res);
 
@@ -172,11 +174,15 @@ void makeBT (Stack_t *stack) {
         BTStack_t* BTstack = createBTStack();
 
         BTNodePtr nodePtr;
+
         for (int i = 0; i < stack->top-1; i++) {
                 Token token = stack->data[i];
                 BTInit (&nodePtr);
                 setBTData(&nodePtr, token);
-                if (token.type == TOKEN_TYPE_LITERAL_FLOAT || token.type == TOKEN_TYPE_LITERAL_INT || token.type == TOKEN_TYPE_IDENTIFIER) {
+                if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
+                    token.type == TOKEN_TYPE_LITERAL_INT ||
+                    token.type == TOKEN_TYPE_IDENTIFIER ||
+                    token.type == TOKEN_TYPE_LITERAL_STRING) {
                         pushBTStack(BTstack, nodePtr);
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
                         BTNodePtr rightChild = popBTStack(BTstack);
