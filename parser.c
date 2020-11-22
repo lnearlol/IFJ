@@ -838,6 +838,18 @@ bool expression(int end_condition){
     static int bracket = 0;
     static int closed_bracket_counter = 0;
     static int was_it_string = 0;
+
+
+ // ----------------  a d d   [ M I N U S ]    t o    e x p r e s s i o n
+
+    if(!strcmp(token->data, "-") && was_it_string == 0){
+        push(expr, *token);
+        can_be_function = 0;
+        get_and_set_token();
+        expression_accept = expression(end_condition);
+    }
+// ----------------  e n d    a d d i n g    [ M I N U S ]    t o    e x p r e s s i o n
+    
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 1
         push(expr, *token);
@@ -850,7 +862,7 @@ bool expression(int end_condition){
     || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING){
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
-            was_it_string = 1;
+            was_it_string = 1; 
 
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
@@ -862,15 +874,6 @@ bool expression(int end_condition){
         if(closed_bracket_counter){
             bracket -= closed_bracket_counter;
         }
-    // --
-        // if(end_condition == RETURN_TYPE){      // ONLY FOR RETURN
-        //     if(token->type == TOKEN_TYPE_COMMA || token->type == TOKEN_TYPE_EOL){
-        //         expression_accept = true;
-        //         was_it_string = 0;
-        //         can_be_function = 1;
-        //         add_type_to_compare_list(typeCompareList, 1);
-        //     }
-        // }
 
 
         if(token->type == end_condition){
@@ -891,29 +894,44 @@ bool expression(int end_condition){
 
             int result = sort_to_postfix(expr, deep, SymTable->var);
             printf("\n type of result is %d\n", result);
-            add_type_to_compare_list(1); // result
+
+            add_type_to_compare_list(result); // result
+
 
 
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
-            push(expr, *token);
-            if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
-            && !findVariableWithType(saved_func_name, deep, SymTable->var)){
-                sort_to_postfix(expr, deep, SymTable->var);
-                printf("                 --------------------> UNDEFINED VARIABLE\n");
-                changeErrorCode(3); // variable not defined
-                return false;
+
+
+
+
+
+            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
+                printf("                ____________________________________ id = %s, %d\n", saved_func_name->data, findVariableWithType(saved_func_name, deep, SymTable->var)->type);
+                if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
+                    sort_to_postfix(expr, deep, SymTable->var);
+                    printf("                 --------------------> UNDEFINED VARIABLE\n");
+                    changeErrorCode(3); // variable not defined
+                    return false;
+                } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
+                    printf("                ____________________________________ id = %s\n", saved_func_name->data);
+                    was_it_string = 1;
+                }
+
             }
 
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
+
+                    changeErrorCode(7);
+
                     sort_to_postfix(expr, deep, SymTable->var);
                     printf("WAS NOT PLUS FOR STR\n");
                     return false;
                 }
             }
-
+            push(expr, *token);
             get_and_set_token();
             can_be_function = 0;
             allowed_eol(); //[ a + \n b] situation
