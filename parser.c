@@ -876,6 +876,7 @@ bool expression(int end_condition){
         if(token->type == end_condition){
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                sort_to_postfix(expr, deep, SymTable->var);
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined 
                 return false;
@@ -899,6 +900,7 @@ bool expression(int end_condition){
             push(expr, *token);
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                sort_to_postfix(expr, deep, SymTable->var);
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined
                 return false;
@@ -906,6 +908,7 @@ bool expression(int end_condition){
 
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
+                    sort_to_postfix(expr, deep, SymTable->var);
                     printf("WAS NOT PLUS FOR STR\n");
                     return false;
                 }
@@ -918,6 +921,7 @@ bool expression(int end_condition){
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
             // S Y M T A B L E    L O G I C
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
+
                 printf("             --------------------------------------------------->  function has the same name as var\n");
                 changeErrorCode(3);   //  ERROR 3, not found function_name
                 return false;
@@ -931,10 +935,10 @@ bool expression(int end_condition){
 
             allowed_eol(); // func_name( \n args situation
 
-            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
+            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
-                
+
 
                 // OPERANDS ANALYSIS
                 if(compareCompareLists() == 0){

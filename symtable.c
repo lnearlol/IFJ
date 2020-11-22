@@ -173,17 +173,15 @@ variable findVariableWithType(Token *token, int deepVar, variable Var){
 
     if(Var == NULL){
         return NULL;
-    
     }
 
-    if (deepVar > Var->deep) { 
+    if (deepVar > Var->deep) {
         while(deepVar != Var->deep)
             --deepVar;
     }
 
      if(deepVar < 0 ){
         return NULL;
-        
     }  else {
         tmp = find_var_with_type_helper(token, deepVar, tmp);
         if(tmp != NULL){
