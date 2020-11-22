@@ -88,16 +88,16 @@ void delete_from_else_stack(){
 //  ------------------------------------ C O M P A R E    L I S T ------------------------------------
 
 void add_var_to_compare_list(Token *var){
-    printf("C O M P A R E   L I S T   1\n");
+    //printf("C O M P A R E   L I S T   1\n");
     //variable newVariable = findVariable(var, deep, SymTable->var);
-    printf("C O M P A R E   L I S T   2\n");
+    //printf("C O M P A R E   L I S T   2\n");
     if(varCompareList == NULL){
         varCompareList = malloc(sizeof(variables_compare_list));
         varCompareList->var = var;
         varCompareList->next = NULL;
-        printf("C O M P A R E   L I S T   3\n");
+      //  printf("C O M P A R E   L I S T   3\n");
     } else {
-        printf("C O M P A R E   L I S T   else\n");
+       // printf("C O M P A R E   L I S T   else\n");
         variables_compare_list *tmpList = malloc(sizeof(variables_compare_list));
         tmpList->var = var;
         tmpList->next = NULL;
@@ -107,12 +107,12 @@ void add_var_to_compare_list(Token *var){
         }
         cycleList->next = tmpList;
     }
-    printf("C O M P A R E   L I S T   4\n");
+    //printf("C O M P A R E   L I S T   4\n");
     variables_compare_list *tmp = varCompareList;
-    printf("C O M P A R E   L I S T   5\n");
-    printf("\n\n\n");
+    //printf("C O M P A R E   L I S T   5\n");
+    //printf("\n\n\n");
     while(tmp != NULL){
-        printf("tmp %s -> ", tmp->var->data);
+        //printf("tmp %s -> ", tmp->var->data);
         tmp = tmp->next;
     }
     printf("\n\n\n");
@@ -265,7 +265,7 @@ bool function_check(){
                 func = input_parameters();
                 if(func){
                     get_and_set_token();
-                    printf("HAI HAI_______________\n");
+                    //printf("HAI HAI_______________\n");
                     func = output_parameters();
                     if(func){
                         if(token->type == TOKEN_TYPE_START_BLOCK){
@@ -407,7 +407,7 @@ bool first_run_body(){
             deep++;
         if(deep == -1 || error_flag == 1)
             break;
-        printf("TOKEN VZYAL_________________\n");
+        //printf("TOKEN VZYAL_________________\n");
         get_and_set_token();
     }
 
@@ -559,17 +559,17 @@ bool for_construction(){
     bool for_accept = false;
     deep++;
     add_to_for_stack();
-    printf("            HI FROM FOR_CONSTRUCTION %s\n", token->data);
+    //printf("            HI FROM FOR_CONSTRUCTION %s\n", token->data);
     if(!define_func(TOKEN_TYPE_SEMICOLON, 1, 1, false)){
-            printf("            here 1 token - %s\n", token->data);
+            //printf("            here 1 token - %s\n", token->data);
         return false;
     }
     get_and_set_token();
     if(!logic_expression(TOKEN_TYPE_SEMICOLON)){
-        printf("            here 2\n");
+        //printf("            here 2\n");
         return false;
     }
-    printf("SREEEEEDINA    IIIIF\n");
+    //printf("SREEEEEDINA    IIIIF\n");
     get_and_set_token();
     if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
         printf("            here 3\n");
@@ -627,9 +627,11 @@ bool logic_expression(int end_condition){
     if(token->type == end_condition)
         logic_expression = true;
     else {
+        expr = createStack();
         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
         if(logic_expression){
             get_and_set_token();
+            expr = createStack();
             logic_expression = expression(end_condition); //right side + semicolon (for)
         }
 
@@ -647,14 +649,14 @@ bool logic_expression(int end_condition){
 
 bool define_func(int end_condition, int declare, int equating, bool func){
     bool define_accept = false;
-printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
+//printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
     if(token->type == end_condition)
         define_accept = true;
     else {
         
-        printf("                            DEFINE1 returns token [%d] %s\n", end_condition, token->data);
+        //printf("                            DEFINE1 returns token [%d] %s\n", end_condition, token->data);
         define_accept = define_operands(func);
-        printf("                            DEFINE2 returns token %s, %d\n", token->data, define_accept);
+        //printf("                            DEFINE2 returns token %s, %d\n", token->data, define_accept);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
             
             // token
@@ -663,7 +665,7 @@ printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
             get_and_set_token();
 
             allowed_eol(); // [ a := \n b] situation
-            printf("                            DEFINE3 returns token %s\n", token->data);
+            //printf("                            DEFINE3 returns token %s\n", token->data);
             define_accept = count_operands(end_condition);
 
             // ЗАПИСЬ
@@ -780,7 +782,8 @@ bool count_operands(int end_condition){
         current_end_condition = TOKEN_TYPE_COMMA;
     else
         current_end_condition = end_condition;
-    
+
+    expr = createStack();
     count_operands_accept = expression(current_end_condition);
     printf("          count operands      ZASEL #%d   token [%s], counter [%d], accept [%d] \n", token_counter, token->data, number_of_operands, count_operands_accept);
 
@@ -835,22 +838,35 @@ bool expression(int end_condition){
     static int bracket = 0;
     static int closed_bracket_counter = 0;
     static int was_it_string = 0;
+
+
+ // ----------------  a d d   [ M I N U S ]    t o    e x p r e s s i o n
+
+    if(!strcmp(token->data, "-") && was_it_string == 0){
+        push(expr, *token);
+        can_be_function = 0;
+        get_and_set_token();
+        expression_accept = expression(end_condition);
+    }
+// ----------------  e n d    a d d i n g    [ M I N U S ]    t o    e x p r e s s i o n
+    
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 1
+        push(expr, *token);
         bracket++;
         can_be_function = 0;
         get_and_set_token();
         expression_accept = expression(end_condition);
-         
+
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
     || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING){
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
-            was_it_string = 1;
+            was_it_string = 1; 
 
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
-
+        push(expr, *token);
         get_and_set_token();
     // CHECK CLOSED BRACKETS
 
@@ -858,20 +874,12 @@ bool expression(int end_condition){
         if(closed_bracket_counter){
             bracket -= closed_bracket_counter;
         }
-    // --
-        // if(end_condition == RETURN_TYPE){      // ONLY FOR RETURN
-        //     if(token->type == TOKEN_TYPE_COMMA || token->type == TOKEN_TYPE_EOL){
-        //         expression_accept = true;
-        //         was_it_string = 0;
-        //         can_be_function = 1;
-        //         add_type_to_compare_list(typeCompareList, 1);
-        //     }
-        // }
 
 
         if(token->type == end_condition){
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                sort_to_postfix(expr, deep, SymTable->var);
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined 
                 return false;
@@ -880,28 +888,45 @@ bool expression(int end_condition){
             expression_accept = true;
             was_it_string = 0;
             can_be_function = 1;
-            // result = Vlad()
-            add_type_to_compare_list(1); // result
+
+            for (int i = 0; i < expr->size; i++) {
+        } printf("\n ");
+
+            int result = sort_to_postfix(expr, deep, SymTable->var);
+            printf("\n type of result is %d\n", result);
+            add_type_to_compare_list(result); // result
 
 
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
-            
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
-            if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
-            && !findVariableWithType(saved_func_name, deep, SymTable->var)){
-                printf("                 --------------------> UNDEFINED VARIABLE\n");
-                changeErrorCode(3); // variable not defined
-                return false;
+
+
+
+
+            if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
+                printf("                ____________________________________ id = %s, %d\n", saved_func_name->data, findVariableWithType(saved_func_name, deep, SymTable->var)->type);
+                if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
+                    sort_to_postfix(expr, deep, SymTable->var);
+                    printf("                 --------------------> UNDEFINED VARIABLE\n");
+                    changeErrorCode(3); // variable not defined
+                    return false;
+                } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
+                    printf("                ____________________________________ id = %s\n", saved_func_name->data);
+                    was_it_string = 1;
+                }
+
             }
 
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
+                    changeErrorCode(7);
+                    sort_to_postfix(expr, deep, SymTable->var);
                     printf("WAS NOT PLUS FOR STR\n");
                     return false;
                 }
             }
-
+            push(expr, *token);
             get_and_set_token();
             can_be_function = 0;
             allowed_eol(); //[ a + \n b] situation
@@ -909,6 +934,7 @@ bool expression(int end_condition){
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
             // S Y M T A B L E    L O G I C
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
+
                 printf("             --------------------------------------------------->  function has the same name as var\n");
                 changeErrorCode(3);   //  ERROR 3, not found function_name
                 return false;
@@ -922,10 +948,10 @@ bool expression(int end_condition){
 
             allowed_eol(); // func_name( \n args situation
 
-            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА  
+            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
-                
+
 
                 // OPERANDS ANALYSIS
                 if(compareCompareLists() == 0){
@@ -1011,6 +1037,7 @@ int is_closed_bracket(){
     while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 4 (token)
         get_and_set_token();
+        push(expr, *token);
         closed_bracket_counter++;
     }
     return closed_bracket_counter;
@@ -1128,9 +1155,9 @@ bool return_construction(outputParams out_params){
 
     if(out_params->next != NULL)
         return_end_condition = TOKEN_TYPE_COMMA;
-
+    expr = createStack();
     return_construction_accept = expression(return_end_condition);
-    printf("RETURN 123 %d\n", return_construction_accept);
+    //printf("RETURN 123 %d\n", return_construction_accept)
 
     if(!return_construction_accept){
        changeErrorCode(6);
@@ -1192,7 +1219,6 @@ bool start_block_new_line(){
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
 int main(){
-    
    // program_code = fopen ("file.ifj20", "r");
     SymTable = declaration(SymTable);
     
@@ -1206,9 +1232,7 @@ int main(){
         changeErrorCode(1);
     
     if(error_flag == 0){
-        
         bool result = program_start();
-
         if(!result && error_flag == 0){
             printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
             changeErrorCode(2);
@@ -1246,5 +1270,6 @@ int main(){
     free(SymTable);
     dtor(second_run);
    // fclose(program_code);
+    //deleteStack(&expr);
     return error_flag;
 }

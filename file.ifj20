@@ -1,10 +1,9 @@
-//
+//ad
 package main
 
-func alpha () (int) {
-	return 6.7
-}
 
 func main () {
-	_ = alpha()
+
+	a := -1 + 2
+
 }
