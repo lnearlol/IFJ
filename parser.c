@@ -1041,8 +1041,9 @@ int is_closed_bracket(){
     int closed_bracket_counter = 0;
     while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 4 (token)
-        get_and_set_token();
         push(expr, *token);
+
+        get_and_set_token();
         closed_bracket_counter++;
     }
     return closed_bracket_counter;
@@ -1267,6 +1268,7 @@ int main(){
     //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
     //     second_run = second_run->next;
     // }
+    deleteStack(&expr);
     freeAllVariables(&(SymTable->var));
     freeBothCompareLists();
     dtor(startCommandFuncList);
