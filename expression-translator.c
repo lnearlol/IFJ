@@ -77,6 +77,7 @@ int prec(Token token) {
 }
 
 int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
+
         if (stack->top == 0) {
                 deleteStack(&stack);
                 return 0;
@@ -133,8 +134,15 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         push(opstack, token);
                 } else if (token.type == TOKEN_TYPE_RIGHT_BRACKET) {
                         for (Token poped_token = pop(opstack); poped_token.type != TOKEN_TYPE_LEFT_BRACKET; poped_token = pop(opstack)) {
+                                printf("\n opstack->top %ld \n", opstack->top);
+                                if (opstack->top == 0) {
+                                    result = -1;
+                                    changeErrorCode(2);
+                                    break;
+                                }
                                 push(res, poped_token);
                         }
+                        if (result == -1) break;
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
                         while (opstack->top > 0 && prec(peek(opstack)) >= prec(token)) {
                                 if (prec(peek(opstack)) >= prec(token)) {
@@ -150,7 +158,14 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         printf("TYPE OF EXPRESSION: %d\n", result);
         Token *tmp;
         if (result != -1) {
-                while (opstack->top > 0) {
+                for (int i = 0; opstack->top > 0; i++) {
+                        if(opstack->data[i].type == TOKEN_TYPE_LEFT_BRACKET || opstack->data[i].type == TOKEN_TYPE_RIGHT_BRACKET){
+                                deleteStack(&opstack);
+                                deleteStack(&stack);
+                                deleteStack(&res);
+                                changeErrorCode(2);
+                                return -1;
+                        }
                         push(res, pop(opstack));
                 }
                 push(res, pop(stack));
@@ -159,9 +174,9 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         deleteStack(&opstack);
         deleteStack(&stack);
 
-        /*for (int i = 0; i < res->top - 1; i++) {
+        for (int i = 0; i < res->top - 1; i++) {
                 printf("%s ", res->data[i].data);
-        } printf("\n");*/
+        } printf("\n");
 
         if (result != -1) makeBT(res);
 
