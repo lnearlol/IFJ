@@ -32,16 +32,19 @@ bool check_define_logic(int deep){
             // assembly
             printf("EQUATING LOGIC 2 [%d]\n", typeCompareList->type);
             delete_var_from_compare_list();
-            delete_type_from_compare_list(typeCompareList);
+            delete_type_from_compare_list();
         } else 
             break;
     } 
     printf("EQUATING LOGIC 3\n");
     if(varCompareList != NULL || typeCompareList != NULL){
         freeBothCompareLists();
+        printf("EQUATING LOGIC FALSE\n");
         return false;
-    } else
+    } else {
+        printf("EQUATING LOGIC TRUE\n");
         return true;
+    }
 }
 
 

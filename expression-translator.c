@@ -100,10 +100,11 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         push(res, token);
 
                         if (token.type == TOKEN_TYPE_IDENTIFIER) {
-                            if (!findVariableWithType(&token, deepVar, Var))
+                            if (findVariableWithType(&token, deepVar, Var) == NULL) {
                                 changeErrorCode(3);
-                                result = -1;
+                                result = 0;
                                 break;
+                            }
                         }
 
                         if (result == 0) {
@@ -116,14 +117,14 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                             if (token.type == TOKEN_TYPE_IDENTIFIER) {
                                 if (result != findVariableWithType(&token, deepVar, Var)->type) {
                                     changeErrorCode(5);
-                                    result = -1;
+                                    result = 0;
                                     break;
                                 }
                              }
                              else {
                                 if (result != returnLiteralType(&token)) {
                                     changeErrorCode(5);
-                                    result = -1;
+                                    result = 0;
                                     break;
                                 }
                              }

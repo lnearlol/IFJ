@@ -5,7 +5,7 @@
 #define HEX_DIGITS_STRING_SIZE 2       //length of string of two hexadecimal digits following `\x`
  
 //input validation functions
-int allowed_symbol(char state);                     
+int allowed_symbol(char state);
 int letter_or_num(char state);
 int num(char state);
 //reading a symbol from program code
