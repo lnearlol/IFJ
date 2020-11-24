@@ -1,5 +1,6 @@
 #include "parser.h"
 
+bool delete_expr_stack = false;
 int token_counter = 1;  // delete later
 int deep = -1;
 int number_of_operands = 0;
@@ -235,11 +236,10 @@ bool program_start(){
             }
         } else if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION)
             changeErrorCode(7);
-    }
+    } 
     if(program_start == false)
         printf("ERROR IN FIRST LINE OR THERE ARE NO (VALID) FUNCTIONS IN YOUR PROGRAM!\n");
-    if(!wasMainInProgram)
-        changeErrorCode(3);
+
     return program_start;
 }
 
@@ -268,6 +268,7 @@ bool function_check(){
                     //printf("HAI HAI_______________\n");
                     func = output_parameters();
                     if(func){
+                        func = false;
                         if(token->type == TOKEN_TYPE_START_BLOCK){
                             get_and_set_token();
                             if(token->type == TOKEN_TYPE_EOL){
@@ -356,8 +357,12 @@ bool output_parameters(){
         output_parameters = true;
     else if (token->type == TOKEN_TYPE_LEFT_BRACKET){
         get_and_set_token();
-        printf("____HAI_HAI_HAI_________\n");
-        output_parameters = output_single_parameters();
+        if (token->type == TOKEN_TYPE_RIGHT_BRACKET)
+            output_parameters = true;
+        else {
+            printf("____HAI_HAI_HAI_________\n");
+            output_parameters = output_single_parameters();
+        }
     }
     return output_parameters;
 }
@@ -407,7 +412,11 @@ bool first_run_body(){
             deep++;
         if(deep == -1 || error_flag == 1)
             break;
-        //printf("TOKEN VZYAL_________________\n");
+        if(token->type == TOKEN_TYPE_EOFILE){
+            changeErrorCode(2);
+            return false;
+        }
+        printf("TOKEN VZYAL_________________\n");
         get_and_set_token();
     }
 
@@ -426,6 +435,7 @@ bool function_body(){
     if(token->type == TOKEN_TYPE_END_BLOCK){
         if(SymTable->var != NULL && deep == SymTable->var->deep)
             freeVariablesLastLabel(&(SymTable->var));
+        
         deep--;
         if(empty_block){
             printf("                                 ITS EMPTY BLOCK\n");
@@ -462,7 +472,8 @@ bool function_body(){
     if(token->type == TOKEN_TYPE_END_BLOCK && forStack != NULL){
         if(forStack->deep == deep){
             delete_from_for_stack();
-            freeVariablesLastLabel(&(SymTable->var));
+            if(SymTable->var != NULL && deep == SymTable->var->deep)
+                freeVariablesLastLabel(&(SymTable->var));
             deep--;
         }
     } 
@@ -558,25 +569,27 @@ bool function_body(){
 bool for_construction(){
     bool for_accept = false;
     deep++;
-    add_to_for_stack();
     //printf("            HI FROM FOR_CONSTRUCTION %s\n", token->data);
     if(!define_func(TOKEN_TYPE_SEMICOLON, 1, 1, false)){
             //printf("            here 1 token - %s\n", token->data);
         return false;
     }
     get_and_set_token();
-    if(!logic_expression(TOKEN_TYPE_SEMICOLON)){
+
+    if(token->type != TOKEN_TYPE_SEMICOLON && !logic_expression(TOKEN_TYPE_SEMICOLON)){
         //printf("            here 2\n");
         return false;
     }
     //printf("SREEEEEDINA    IIIIF\n");
     get_and_set_token();
+
     if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
         printf("            here 3\n");
         return false;
     }
     if(token->type == TOKEN_TYPE_START_BLOCK){
         get_and_set_token();
+        add_to_for_stack();
         deep++;                                 
         if(token->type == TOKEN_TYPE_EOL){
             
@@ -624,20 +637,30 @@ bool if_construction()
 
 bool logic_expression(int end_condition){
     bool logic_expression = false;
-    if(token->type == end_condition)
-        logic_expression = true;
-    else {
+    
+        delete_expr_stack = true;
         expr = createStack();
+        
         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
+        
         if(logic_expression){
             get_and_set_token();
+            delete_expr_stack = true;
             expr = createStack();
+            
             logic_expression = expression(end_condition); //right side + semicolon (for)
+
+            printf("______________________________ 1 expr = %d\n", typeCompareList->type);
+            printf("______________________________ 2 expr = %d\n", typeCompareList->next->type);
+            if(typeCompareList->type != typeCompareList->next->type){
+                changeErrorCode(5);
+                logic_expression = false;
+            }
+
         }
 
         freeBothCompareLists(); // free the logic list
-
-    }
+    
     return logic_expression;
 }
 
@@ -649,6 +672,7 @@ bool logic_expression(int end_condition){
 
 bool define_func(int end_condition, int declare, int equating, bool func){
     bool define_accept = false;
+    number_of_operands = 0;
 //printf("                            IIIIIIIN DEEEFINE  FUNC %s\n", token->data);
     if(token->type == end_condition)
         define_accept = true;
@@ -681,11 +705,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             get_and_set_token();
             allowed_eol(); //[ a = \n b] situation
             define_accept = count_operands(end_condition);
-
-
-
-
-
+            printf("DEEEEEEEEEEEEFFFFFFFFFFFINEEEEE ACCEPT := %d", define_accept);
             // JUST PRINTF
             
             printf("---------------------------------------------------------------------------------------\n");
@@ -706,6 +726,9 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 changeErrorCode(6);
                 return false;
             }
+
+
+
 
         } else if (func && define_accept && token->type == TOKEN_TYPE_LEFT_BRACKET){
             
@@ -783,11 +806,19 @@ bool count_operands(int end_condition){
     else
         current_end_condition = end_condition;
 
+    
+    delete_expr_stack = true;
     expr = createStack();
-    count_operands_accept = expression(current_end_condition);
     printf("          count operands      ZASEL #%d   token [%s], counter [%d], accept [%d] \n", token_counter, token->data, number_of_operands, count_operands_accept);
 
+    count_operands_accept = expression(current_end_condition);
+    if(delete_expr_stack){
+        deleteStack(&expr);
+        delete_expr_stack = false;
+    }
+    printf("          count operands      ZASEL #%d   token [%s], counter [%d], accept [%d] \n", token_counter, token->data, number_of_operands, count_operands_accept);
 
+    
 
 
 
@@ -840,15 +871,7 @@ bool expression(int end_condition){
     static int was_it_string = 0;
 
 
- // ----------------  a d d   [ M I N U S ]    t o    e x p r e s s i o n
 
-    if(!strcmp(token->data, "-") && was_it_string == 0){
-        push(expr, *token);
-        can_be_function = 0;
-        get_and_set_token();
-        expression_accept = expression(end_condition);
-    }
-// ----------------  e n d    a d d i n g    [ M I N U S ]    t o    e x p r e s s i o n
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 1
@@ -859,26 +882,29 @@ bool expression(int end_condition){
         expression_accept = expression(end_condition);
 
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
-    || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING){
+    || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
             was_it_string = 1; 
 
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
-        push(expr, *token);
         get_and_set_token();
+        if(token->type != TOKEN_TYPE_LEFT_BRACKET);
+            push(expr, *saved_func_name);
     // CHECK CLOSED BRACKETS
 
         closed_bracket_counter = is_closed_bracket();
         if(closed_bracket_counter){
             bracket -= closed_bracket_counter;
         }
+        printf("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIITS     F U N C T T I O N    %d\n", can_be_function);
 
 
         if(token->type == end_condition){
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
+                delete_expr_stack = false;
                 sort_to_postfix(expr, deep, SymTable->var);
                 printf("                 --------------------> UNDEFINED VARIABLE\n");
                 changeErrorCode(3); // variable not defined 
@@ -889,9 +915,8 @@ bool expression(int end_condition){
             was_it_string = 0;
             can_be_function = 1;
 
-            for (int i = 0; i < expr->size; i++) {
-        } printf("\n ");
-
+           
+            delete_expr_stack = false;
             int result = sort_to_postfix(expr, deep, SymTable->var);
             printf("\n type of result is %d\n", result);
 
@@ -899,6 +924,8 @@ bool expression(int end_condition){
 
 
 
+        } else if(token->type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+            changeErrorCode(5);
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
@@ -910,6 +937,7 @@ bool expression(int end_condition){
             if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
                 printf("                ____________________________________ id = %s, %d\n", saved_func_name->data, findVariableWithType(saved_func_name, deep, SymTable->var)->type);
                 if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
+                    delete_expr_stack = false;
                     sort_to_postfix(expr, deep, SymTable->var);
                     printf("                 --------------------> UNDEFINED VARIABLE\n");
                     changeErrorCode(3); // variable not defined
@@ -924,9 +952,10 @@ bool expression(int end_condition){
             if(was_it_string == 1){  // if used not '+' for string
                 if(strcmp(token->data, "+")){
 
-                    changeErrorCode(7);
-
+                    changeErrorCode(5);
+                    delete_expr_stack = false;
                     sort_to_postfix(expr, deep, SymTable->var);
+                    
                     printf("WAS NOT PLUS FOR STR\n");
                     return false;
                 }
@@ -937,6 +966,7 @@ bool expression(int end_condition){
             allowed_eol(); //[ a + \n b] situation
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
+            printf("IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIITS     F U N C T T I O N\n");
             // S Y M T A B L E    L O G I C
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
 
@@ -981,6 +1011,7 @@ bool expression(int end_condition){
                     }
                 }
 
+                printf("TTOOOOOOOOOOOKKEN TYPE EXPR = %s\n", token->data);
                 if(token->type == end_condition){
                     expression_accept = true;
                     can_be_function = 1;
@@ -1033,6 +1064,10 @@ bool expression(int end_condition){
     if(bracket != 0){
         expression_accept = false;
     }
+    if(end_condition == TOKEN_TYPE_COMMA && token->type == TOKEN_TYPE_EOL)
+        changeErrorCode(6);
+    else if(!expression_accept)
+        changeErrorCode(2);
     return expression_accept;
 }
 
@@ -1057,6 +1092,10 @@ void allowed_eol(){
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
 // сейчас считаются внутренние аргументы функции, надо добавить аутпут аргументы
 bool expression_func_arguments(){
+
+    // D E L E T E    S T A C K     (  Q U E S T I O N  ??????????????????????)
+    // deleteStack(&expr);
+
     bool func_arguments_accept = false;
     
     // F U N C T I O N   A R G U M E N T S   L O G I C
@@ -1095,14 +1134,17 @@ bool expression_func_arguments(){
 
 
     }
+
+    
     return func_arguments_accept;
 }
 
 bool expression_func_single_argument(inputParams args_check, outputParams args_output){
     bool func_single_argument = false;
-
+    
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
     || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
+
         if(args_check != NULL){
             // F U N C T I O N   A R G U M E N T S   L O G I C  --   C H E C K    L I T E R A L    T Y P E
             // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
@@ -1128,11 +1170,16 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
             // L O G I C   C H E C K    [ args_check->next is NULL, it was the last parameter in SymTable->Func->InputParams ]
+            printf("HEEEEEEEEEEEEEEEEEERE\n");
+            if(args_check == NULL){
+                changeErrorCode(6);
+                return false;
+            }
+            
             if(args_check->type == 99)  // CONDITION FOR MAKE VALID PRINT WITH ANY QUANTITY OF PARAMETERS
                 args_check->next = NULL;
             if(args_check->next == NULL) {
                 func_single_argument = true;
-                            
                 // while(args_output != NULL){
                 //     printf("<--------------->  WRITING %d   <-------------->\n", args_output->type);
                 //     add_type_to_compare_list(args_output->type);
@@ -1149,7 +1196,7 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             func_single_argument = expression_func_single_argument(args_check->next, args_output);
         }
     }
-        args_check->next = NULL;
+        // args_check->next = NULL;
     return func_single_argument;
 }
 
@@ -1161,6 +1208,7 @@ bool return_construction(outputParams out_params){
 
     if(out_params->next != NULL)
         return_end_condition = TOKEN_TYPE_COMMA;
+    delete_expr_stack = true;
     expr = createStack();
     return_construction_accept = expression(return_end_condition);
     //printf("RETURN 123 %d\n", return_construction_accept)
@@ -1243,6 +1291,8 @@ int main(){
             printf("\n\n                                                 PROGRAM FINISHED ERROR 2\n");
             changeErrorCode(2);
         } 
+        if(!wasMainInProgram)
+            changeErrorCode(3);
     }
      printf("\n\n                                                 PROGRAM FINISHED 1: [%d]\n", error_flag);
     PROGRAMM_RUN = SECOND_RUN;
@@ -1268,14 +1318,26 @@ int main(){
     //     printf("[%d] data: %s   number: %d \n", ++i, second_run->data, second_run->type);
     //     second_run = second_run->next;
     // }
-    deleteStack(&expr);
+
+
+    while(forStack != NULL){
+        printf("DOOOOOOOOOOOOOOOOOOOOOOOING\n");
+        delete_from_for_stack();
+    }
+
+    if(delete_expr_stack == true){
+                printf("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL\n");
+        deleteStack(&expr);
+    }
+
     freeAllVariables(&(SymTable->var));
     freeBothCompareLists();
-    dtor(startCommandFuncList);
-    freeFunctions(&(SymTable->func));
     
+    freeFunctions(&(SymTable->func));
+    dtor(startCommandFuncList);
     free(SymTable);
     dtor(second_run);
+
    // fclose(program_code);
     //deleteStack(&expr);
     return error_flag;
