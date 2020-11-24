@@ -265,12 +265,15 @@ bool function_check(){
                 func = input_parameters();
                 if(func){
                     get_and_set_token();
-                    //printf("HAI HAI_______________\n");
+
                     func = output_parameters();
                     if(func){
                         func = false;
+                                                printf("HAI HAI_______________ %s %d \n", token->data, token->type);
+
                         if(token->type == TOKEN_TYPE_START_BLOCK){
                             get_and_set_token();
+                            
                             if(token->type == TOKEN_TYPE_EOL){
                                 get_and_set_token();
                                 deep++;    // when first { is opened in function
@@ -357,13 +360,14 @@ bool output_parameters(){
         output_parameters = true;
     else if (token->type == TOKEN_TYPE_LEFT_BRACKET){
         get_and_set_token();
-        if (token->type == TOKEN_TYPE_RIGHT_BRACKET)
+        if (token->type == TOKEN_TYPE_RIGHT_BRACKET){
+            get_and_set_token();
             output_parameters = true;
-        else {
-            printf("____HAI_HAI_HAI_________\n");
+        } else {
             output_parameters = output_single_parameters();
         }
     }
+     printf("____HAI_HAI_HAI______ %d ___\n", output_parameters);
     return output_parameters;
 }
 
@@ -619,6 +623,7 @@ bool if_construction()
 {
     bool if_accept = false;
     if_accept = logic_expression(TOKEN_TYPE_START_BLOCK);
+
     if (if_accept){
         if_accept = 0;
         add_to_else_stack();
@@ -644,20 +649,24 @@ bool logic_expression(int end_condition){
         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
         
         if(logic_expression){
+            printf("TAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADY");
             get_and_set_token();
             delete_expr_stack = true;
             expr = createStack();
             
             logic_expression = expression(end_condition); //right side + semicolon (for)
 
-            printf("______________________________ 1 expr = %d\n", typeCompareList->type);
-            printf("______________________________ 2 expr = %d\n", typeCompareList->next->type);
-            if(typeCompareList->type != typeCompareList->next->type){
-                changeErrorCode(5);
-                logic_expression = false;
+            if(typeCompareList != NULL && typeCompareList->next != NULL){
+                printf("______________________________ 1 expr = %d\n", typeCompareList->type);
+                printf("______________________________ 2 expr = %d\n", typeCompareList->next->type);
+                if(typeCompareList->type != typeCompareList->next->type){
+                    changeErrorCode(5);
+                    logic_expression = false;
+                }
             }
 
         }
+
 
         freeBothCompareLists(); // free the logic list
     
@@ -695,7 +704,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             // ЗАПИСЬ
             if(!check_declare_logic(deep)){
                 printf("             --------------------------------------------------->  WRITE TO SYMPABLE  :=\n");
-                changeErrorCode(6);
+                changeErrorCode(7);
                 return false;
             }
 
@@ -723,7 +732,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             // C O M P A R E   T W O   L I S T S
             if(!check_define_logic(deep)){
                 printf("             --------------------------------------------------->  COMPARE LISTS  =\n");
-                changeErrorCode(6);
+                changeErrorCode(7);
                 return false;
             }
 
@@ -1017,7 +1026,8 @@ bool expression(int end_condition){
                     can_be_function = 1;
                 }
             }
-        }
+        } else if(end_condition == TOKEN_TYPE_LOGICAL_OPERATOR)
+            changeErrorCode(5);
     }
     //     // C O M M A N D    F U N C T I O N S
     //  else if (token->type == TOKEN_TYPE_COMMAND_FUNCTION){
@@ -1062,6 +1072,13 @@ bool expression(int end_condition){
 
 
     if(bracket != 0){
+        
+        if(delete_expr_stack){
+            printf("HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEERE\n");
+
+            deleteStack(&expr);
+            delete_expr_stack = false;
+        }
         expression_accept = false;
     }
     if(end_condition == TOKEN_TYPE_COMMA && token->type == TOKEN_TYPE_EOL)
@@ -1320,16 +1337,21 @@ int main(){
     // }
 
 
+
     while(forStack != NULL){
         printf("DOOOOOOOOOOOOOOOOOOOOOOOING\n");
         delete_from_for_stack();
+    }
+
+    while(elseStack != NULL){
+        printf("DOOOOOOOOOOOOOOOOOOOOOOOING\n");
+        delete_from_else_stack();
     }
 
     if(delete_expr_stack == true){
                 printf("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL\n");
         deleteStack(&expr);
     }
-
     freeAllVariables(&(SymTable->var));
     freeBothCompareLists();
     
