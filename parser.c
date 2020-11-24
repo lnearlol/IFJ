@@ -1320,7 +1320,6 @@ int main(){
     // }
 
 
-
     while(forStack != NULL){
         printf("DOOOOOOOOOOOOOOOOOOOOOOOING\n");
         delete_from_for_stack();
@@ -1330,6 +1329,7 @@ int main(){
                 printf("LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL\n");
         deleteStack(&expr);
     }
+
     freeAllVariables(&(SymTable->var));
     freeBothCompareLists();
     
