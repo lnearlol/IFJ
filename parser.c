@@ -887,6 +887,13 @@ bool expression(int end_condition){
         //     return false;
         // }
        
+       if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+       && !findFunction(token, SymTable->func) && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
+            sort_to_postfix(expr, deep, SymTable->var);
+            changeErrorCode(3);
+            delete_expr_stack = false;
+            return false;
+       }
 
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
