@@ -12,89 +12,8 @@ SymTab *declaration(SymTab *SymTable){
 
     return SymTable;
 }
-// ------------------------------------------------    P R I N T      T R E E   ------------------------------------------------
 
-void Print_func2(function TempTree, char* sufix, char fromdir)
-/* vykresli sktrukturu binarniho stromu */
-{
-     if (TempTree != NULL)
-     {
-	char* suf2 = (char*) malloc(strlen(sufix) + 4);
-	strcpy(suf2, sufix);
-        if (fromdir == 'L')
-	{
-	   suf2 = strcat(suf2, "  |");
-	   printf("%s\n", suf2);
-	}
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_func2(TempTree->RPtr, suf2, 'R');
-        printf("%s  +-[%s,%d]\n", sufix, TempTree->name, TempTree->length);
-	strcpy(suf2, sufix);
-        if (fromdir == 'R')
-	   suf2 = strcat(suf2, "  |");	
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_func2(TempTree->LPtr, suf2, 'L');
-	if (fromdir == 'R') printf("%s\n", suf2);
-	free(suf2);
-    }
-}
-
-void Print_func(function TempTree)
-{
-  printf("Struktura binarniho stromu:\n");
-  printf("\n");
-  if (TempTree != NULL)
-     Print_func2(TempTree, "", 'X');
-  else
-     printf("strom je prazdny\n");
-  printf("\n");
-  printf("=================================================\n");
-} 
-
-
-void Print_var2(variable TempTree, char* sufix, char fromdir)
-/* vykresli sktrukturu binarniho stromu */
-
-{
-     if (TempTree != NULL)
-     {
-	char* suf2 = (char*) malloc(strlen(sufix) + 4);
-	strcpy(suf2, sufix);
-        if (fromdir == 'L')
-	{
-	   suf2 = strcat(suf2, "  |");
-	   printf("%s\n", suf2);
-	}
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_var2(TempTree->RPtr, suf2, 'R');
-        printf("%s  +-[%s,%d,%d]\n", sufix, TempTree->name, TempTree->type, TempTree->deep);
-	strcpy(suf2, sufix);
-        if (fromdir == 'R')
-	   suf2 = strcat(suf2, "  |");	
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_var2(TempTree->LPtr, suf2, 'L');
-	if (fromdir == 'R') printf("%s\n", suf2);
-	free(suf2);
-    }
-}
-
-void Print_var(variable TempTree)
-{
-  printf("Struktura binarniho stromu:\n");
-  printf("\n");
-  if (TempTree != NULL)
-     Print_var2(TempTree, "", 'X');
-  else
-     printf("strom je prazdny\n");
-  printf("\n");
-  printf("=================================================\n");
-} 
-
-// --------------------------------------   R O M A' S     C H A N G E S   --------------------------------------
+// --------------------------------------   V A R I A B L E S   --------------------------------------
 
  bool insertVariable(Token *token, int deepVar, variable *Var){
     
@@ -129,7 +48,6 @@ void Print_var(variable TempTree)
 		insertVariable(token, deepVar, &((*Var)->RPtr));
 
 	} else if(strcmp((*Var)->name, token->data) == 0) {
-        fprintf(stderr,"VARIABLE WITH THE SAME NAME ALREADY EXISTS!!!\n");
         return false;
 	}
 }
@@ -174,13 +92,11 @@ variable findVariableWithType(Token *token, int deepVar, variable Var){
     if(Var == NULL){
         return NULL;
     }
-
     if (deepVar > Var->deep) {
         while(deepVar != Var->deep)
             --deepVar;
     }
-
-     if(deepVar < 0 ){
+    if(deepVar < 0 ){
         return NULL;
     }  else {
         tmp = find_var_with_type_helper(token, deepVar, tmp);
@@ -234,11 +150,6 @@ void freeVariablesLastLabel(variable *Var){
     }
 }
 
-// int RIGHT_SIDE_TYPE   для высчета правой стороны перенести в парсер (в expression)
-// сделать в expression(int previous_token) и закинуть -1, и каждый раз сравнивать если previous_token != -1 и делать compareTwoTokens
-//  и закидывать его результат в previous_token 
-//                                              и так до конца, и когда наткнулись на end_condition записать это дело в RIGHT_SIDE_TYPE
-
 // DELETE WHOLE SYMTABLE->VAR
 void freeAllVariables(variable *Var){
 
@@ -246,42 +157,27 @@ void freeAllVariables(variable *Var){
         freeVariablesLastLabel(Var);
 }
 
-// Для присваивания мне надо токен, токен, deep:  a := 2  <- a, 2, deep::::  addVar(a), check(right_side), set_type(a, 2, deep)
-//                                                a := b expression должен вернуть хотя бы  TOKOKEN_TYPE нужного типа
-//                                               нужна функция compare(token, token, deep) для двух переменных это
-//                                               findVar(a), findVar(b) записать их типы и сравнить на совместимость
-
 int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     int type1 = 0, type2 = var2;
-    printf("COMPARE TWO VARIABLES \n");
     if (var1 == NULL)
         return 0;
 
-    printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
-    if(var1->type == TOKEN_TYPE_IDENTIFIER){
-        printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", var1->data, var1->type, var2);
-        
+    if(var1->type == TOKEN_TYPE_IDENTIFIER){      
         variable tmp = findVariableWithType(var1, deep, Var);
 
         if(!tmp){
-            printf("_________Variable_not_found\n");
             changeErrorCode(3);
             return 0;
         }
-            printf("COMPARE TWO VARIABLES  [%s] %d - %d\n", tmp->name, tmp->type, var2);
         type1 = tmp->type;
-        printf("\n 1) type1: %d\n", type1);
     } else if (var1->type == TOKEN_TYPE_UNDERSCORE) {
-        printf("RETURNED UNDERSCORE  [%s] %d - %d\n", var1->data, var1->type, type2);
         return type2;
     } else {
         type1 = returnLiteralType(var1);
-        printf("\n 2) type1: %d\n", type1);
     }
 
     
     if(type1 == type2){
-        printf(" ___ COMPARE TWO TYPES OK! ___\n");
         return type1;
     } else 
         return 0;
@@ -324,7 +220,6 @@ void insertFunction(Token *token, function *Func){
 		insertFunction(token, &((*Func)->RPtr));
 
 	} else if(strcmp((*Func)->name, token->data) == 0) {
-        fprintf(stderr,"FUNCTION WITH THE SAME NAME ALREADY EXISTS!!!\n");
         changeErrorCode(3);
 	}
 }

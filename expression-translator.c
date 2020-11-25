@@ -89,10 +89,8 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         implode(stack);
         int result = 0;
 
-        printf("\nREADING OF EXPRESSION: ");
         for (int i = 0; i < stack->size; i++) {
                 Token token = stack->data[i];
-                printf("%s ", token.data);
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
                     token.type == TOKEN_TYPE_LITERAL_INT ||
                     token.type == TOKEN_TYPE_IDENTIFIER ||
@@ -134,7 +132,6 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         push(opstack, token);
                 } else if (token.type == TOKEN_TYPE_RIGHT_BRACKET) {
                         for (Token poped_token = pop(opstack); poped_token.type != TOKEN_TYPE_LEFT_BRACKET; poped_token = pop(opstack)) {
-                                printf("\n opstack->top %ld \n", opstack->top);
                                 if (opstack->top == 0) {
                                     result = -1;
                                     changeErrorCode(2);
@@ -154,8 +151,8 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         break;
                 }
                 else break;
-        } printf("\n");
-        printf("TYPE OF EXPRESSION: %d\n", result);
+        } 
+
         Token *tmp;
         if (result != -1) {
                 for (int i = 0; opstack->top > 0; i++) {
@@ -173,10 +170,6 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
 
         deleteStack(&opstack);
         deleteStack(&stack);
-
-        for (int i = 0; i < res->top - 1; i++) {
-                printf("%s ", res->data[i].data);
-        } printf("\n");
 
         if (result != -1) makeBT(res);
 
@@ -213,7 +206,6 @@ void makeBT (Stack_t *stack) {
         }
         //BTDelete(&nodePtr);
         BTNodePtr RootPtr = popBTStack(BTstack);
-        Print_tree(RootPtr);
         deleteBTStack(&BTstack);
         BTDelete(&RootPtr);
         return;

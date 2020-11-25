@@ -8,18 +8,6 @@ union Types
   char *string;
 };
 
-/*typedef struct Variable{
-    char *name;
-    int type;
-    //union Types value;
-    int length;
-    int deep;
-    struct Variable *RPtr;
-    struct Variable *LPtr;
-    struct Variable *prevTree;
-} *variable;*/
-
-
 typedef struct outParam{
     int type;
     struct outParam *next;
@@ -99,12 +87,6 @@ Token *get_s_token(Token *helper);
 Token *get_n_token(Token *helper);
 Token *get_term_token(Token *helper);
 
-
-// P R I N T
-void Print_func2(function TempTree, char* sufix, char fromdir);
-void Print_func(function TempTree);
-void Print_var2(variable TempTree, char* sufix, char fromdir);
-void Print_var(variable TempTree);
 
 #define VAR_TYPE_UNDEFINED -1
 #define TOKEN_TYPE_PRINT 99

@@ -88,3 +88,13 @@ Token *current_function_name;
 bool check_define_logic(int deep);
 bool check_declare_logic(int deep);
 bool compare_return_and_output_params_logic();
+
+
+// A S E M B L Y
+
+void START_OF_FUNCTION(char *id_of_function);
+void END_OF_FUNCTION(char *id_of_function);
+void START_MAIN();
+void END_OF_MAIN();
+void CALL(char *id_of_function);
+void GENERATION_LEN();
