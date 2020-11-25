@@ -879,14 +879,21 @@ bool expression(int end_condition){
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
     || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
 
-        if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
-        && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
+        // if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+        // && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
+        //     sort_to_postfix(expr, deep, SymTable->var);
+        //     changeErrorCode(3);
+        //     delete_expr_stack = false;
+        //     return false;
+        // }
+       
+       if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+       && !findFunction(token, SymTable->func) && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
             sort_to_postfix(expr, deep, SymTable->var);
             changeErrorCode(3);
             delete_expr_stack = false;
             return false;
-        }
-       
+       }
 
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
@@ -1078,7 +1085,7 @@ bool expression(int end_condition){
         expression_accept = false;
     }
     if(end_condition == TOKEN_TYPE_COMMA && token->type == TOKEN_TYPE_EOL)
-        changeErrorCode(6);
+        changeErrorCode(7);
     else if(!expression_accept)
         changeErrorCode(2);
     return expression_accept;
