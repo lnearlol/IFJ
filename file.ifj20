@@ -1,8 +1,5 @@
 package main
 
-func return3() (int, int, int){
-  return 1, 2, 3
-}
-func main(){
-  foo := (2 + 3) *2 +4 -6 - (8+2) * 3 -4 *5
+func main () {
+    test := a
 }

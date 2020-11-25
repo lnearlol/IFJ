@@ -859,19 +859,6 @@ bool count_operands(int end_condition){
 
 //  ------------------------------------ E X P R E S S I O N ------------------------------------
 
-// bool expression_including_string(int end_condition){   // MAYBE WORKS
-//     bool including_string_accept = false;
-//     if(token->type == TOKEN_TYPE_LITERAL_STRING){   
-//         get_and_set_token();
-//         if(token->type == end_condition)
-//             including_string_accept = true;
-//     } else
-//         including_string_accept = expression(end_condition);
-    
-
-//     return including_string_accept;
-// }
-
 bool expression(int end_condition){
     bool expression_accept = false;
     static int can_be_function = 1;
@@ -883,7 +870,6 @@ bool expression(int end_condition){
 
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
-        // ЗАКИНУТЬ В СТЕК 1
         push(expr, *token);
         bracket++;
         can_be_function = 0;
@@ -892,6 +878,16 @@ bool expression(int end_condition){
 
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
     || token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_STRING || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
+
+        if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
+        && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
+            sort_to_postfix(expr, deep, SymTable->var);
+            changeErrorCode(3);
+            delete_expr_stack = false;
+            return false;
+        }
+       
+
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
             was_it_string = 1; 
