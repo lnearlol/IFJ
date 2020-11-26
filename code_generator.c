@@ -4,14 +4,14 @@ char framePrint[3];
 
  void GEN_START_MAIN(){
 	printf(".IFJcode20\n");
+    printf("GF@_\n");
 	printf("JUMP $$main\n");
 
  }
 
  void GEN_START_OF_FUNCTION(Token *token){
     if(strcmp(token->data, "main")){
-        printf("LABEL $");
-        printf("%s\n", token->data);
+        printf("LABEL $%s\n", token->data);
         printf("PUSHFRAME \n\n");
     } else {
         printf("LABEL $$main\n");
