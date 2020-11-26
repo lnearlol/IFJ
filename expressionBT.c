@@ -57,47 +57,6 @@ void setBTRightChild (BTNodePtr *RootPtr, BTNodePtr *ChildPtr) {
     }
 }
 
-void Print_tree2(BTNodePtr TempTree, char* sufix, char fromdir)
-/* vykresli sktrukturu binarniho stromu */
-
-{
-     if (TempTree != NULL)
-     {
-	char* suf2 = (char*) malloc(strlen(sufix) + 4);
-	strcpy(suf2, sufix);
-        if (fromdir == 'L')
-	{
-	   suf2 = strcat(suf2, "  |");
-	   printf("%s\n", suf2);
-	}
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_tree2(TempTree->RPtr, suf2, 'R');
-        printf("%s  +-[%s]\n", sufix, TempTree->token.data);
-	strcpy(suf2, sufix);
-        if (fromdir == 'R')
-	   suf2 = strcat(suf2, "  |");
-	else
-	   suf2 = strcat(suf2, "   ");
-	Print_tree2(TempTree->LPtr, suf2, 'L');
-	if (fromdir == 'R') printf("%s\n", suf2);
-	free(suf2);
-    }
-}
-
-void Print_tree(BTNodePtr TempTree)
-{
-  printf("===================== EXPRESSION TREE ======================\n");
-  printf("\n");
-  if (TempTree != NULL)
-     Print_tree2(TempTree, "", 'X');
-  else
-     printf("strom je prazdny\n");
-  printf("\n");
-  printf("============================================================\n");
-}
-
-
 BTStack_t* createBTStack() {
     BTStack_t *out = NULL;
     out = malloc(sizeof(BTStack_t));
