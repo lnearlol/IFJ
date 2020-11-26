@@ -206,8 +206,9 @@ bool program_start(){
                     get_and_set_token();  // when we return this function as valid we should get next token to compare with EOF
                 }
             }
-        } else if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION)
+        } else if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
             changeErrorCode(7);
+        }
     } 
 
     return program_start;
@@ -527,11 +528,13 @@ bool for_construction(){
         return false;
     }
     get_and_set_token();
-
+    expr = createStack();
     if(token->type != TOKEN_TYPE_SEMICOLON && !expression(TOKEN_TYPE_SEMICOLON)){
         return false;
     }
     get_and_set_token();
+    WAS_CONDITION = false;
+    freeBothCompareLists();
 
     if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
         return false;
@@ -802,7 +805,6 @@ bool expression(int end_condition){
 
 
         if(token->type == end_condition){
-            printf("ErrorCode %d\n", error_flag);
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 delete_expr_stack = false;
@@ -1045,7 +1047,6 @@ bool return_construction(outputParams out_params){
     delete_expr_stack = true;
     expr = createStack();
     return_construction_accept = expression(return_end_condition);
-    //printf("RETURN 123 %d\n", return_construction_accept)
 
     if(!return_construction_accept){
        changeErrorCode(6);
