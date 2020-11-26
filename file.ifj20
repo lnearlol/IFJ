@@ -1,13 +1,8 @@
 //
 
-<<<<<<< HEAD
-func main () {
-a := 3.0 + 4
-=======
 package main
 func main(){
 	if 2 != 1 {
         a := 10
     }
->>>>>>> b9976d15e723fcb2b4080301d82f93a7b209fc88
 }
