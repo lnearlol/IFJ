@@ -101,7 +101,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         if (token.type == TOKEN_TYPE_IDENTIFIER) {
                             if (findVariableWithType(&token, deepVar, Var) == NULL) {
                                 changeErrorCode(3);
-                                result = 0;
+                                result = -1;
                                 break;
                             }
                         }
@@ -116,14 +116,14 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                             if (token.type == TOKEN_TYPE_IDENTIFIER) {
                                 if (result != findVariableWithType(&token, deepVar, Var)->type) {
                                     changeErrorCode(5);
-                                    result = 0;
+                                    result = -1;
                                     break;
                                 }
                              }
                              else {
                                 if (result != returnLiteralType(&token)) {
                                     changeErrorCode(5);
-                                    result = 0;
+                                    result = -1;
                                     break;
                                 }
                              }
@@ -151,7 +151,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         break;
                 }
                 else break;
-        } 
+        }
 
         Token *tmp;
         if (result != -1) {
@@ -171,14 +171,50 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         deleteStack(&opstack);
         deleteStack(&stack);
 
-        if (result != -1) makeBT(res);
+        if (result != -1) generateCode(res, deepVar, result);
 
         deleteStack(&res);
         return result;
 
 }
 
-void makeBT (Stack_t *stack) {
+void generateCode(Stack_t *stack, int deepVar, int type) {
+        for (int i = 0; i < stack->top - 1; i++) {
+                 Token token = stack->data[i];
+                if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
+                    token.type == TOKEN_TYPE_LITERAL_INT ||
+                    token.type == TOKEN_TYPE_IDENTIFIER ||
+                    token.type == TOKEN_TYPE_LITERAL_STRING) {
+                            printf("PUSHS ");
+                            GEN_WRITE_VAR_LITERAL(&token, deepVar);
+                            printf("\n");
+                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
+                        if (strcmp(token.data, "/") == 0) {
+                            if(type == 1) {
+                                printf("IDIVS\n");
+                            }
+                            else if (type == 2) {
+                                printf("DIVS\n");
+                            }
+                        }
+                        else if (strcmp(token.data, "*") == 0) {
+                            printf("MULS\n");
+                        }
+                        else if (strcmp(token.data, "+") == 0) {
+                            printf("ADDS\n");
+                        }
+                        else if (strcmp(token.data, "-") == 0) {
+                            printf("SUBS\n");
+                        }
+
+                } else if (token.type == TOKEN_TYPE_EOL) {
+                        break;
+                }
+                else break;
+        } printf("\n");
+}
+
+/*void makeBT (Stack_t *stack) {
 
         BTStack_t* BTstack = createBTStack();
 
@@ -209,4 +245,4 @@ void makeBT (Stack_t *stack) {
         deleteBTStack(&BTstack);
         BTDelete(&RootPtr);
         return;
-}
+}*/
