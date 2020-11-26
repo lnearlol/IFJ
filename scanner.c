@@ -80,7 +80,7 @@ int get_token(Token *token){
     static char state;
     static int state_flag = 0;
     token->size = 1;
-
+    token->type = WRONG_DATA_TOKEN_TYPE;
     token->data = malloc(token->size);
     token->data[0] = '\0';
 
@@ -109,12 +109,12 @@ int get_token(Token *token){
                 int comment_ending_flag = 0;
                 free(token->data);
                 if(state == '/'){
-                    while(state != '\n')
+                    while(state != '\n' && !feof( stdin ))
                         state = fgetc(stdin);
                     comment_ending_flag = 1;
                 }
                 else if(state == '*'){
-                    while(!feof( stdin )/*state != EOF*/){
+                    while(!feof( stdin )){
                         state = fgetc(stdin);
                         if(state == '*'){
                             state = fgetc(stdin);
@@ -162,7 +162,7 @@ int get_token(Token *token){
         token->type = TOKEN_TYPE_UNDERSCORE;
     else if(state == ':')
         token->type = TOKEN_TYPE_DECLARE;
-    else  if(feof( stdin )/*state == EOF*/){
+    else  if(feof( stdin )){
        token->type = TOKEN_TYPE_EOFILE;
        data_append(token, state);
        return 0;
@@ -209,7 +209,7 @@ int get_token(Token *token){
     int Backslash_flag = 0;
     int ASCII_code_flag = 0;
     
-    while(!feof( stdin )/*state != EOF*/){
+    while(!feof( stdin )){
 
         if(cycle_flag == 0 && token->type != TOKEN_TYPE_LITERAL_STRING)
             state = read_a_symbol(state);

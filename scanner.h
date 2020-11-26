@@ -2,10 +2,11 @@
 #define FUNCTIONS_ARRAY_SIZE 10         //length and quantity of strings in array of command functions
 #define TAB 9                           //horizontal tab ASCII code
 #define Backslash 92                    //Backslash ASCII code
-#define HEX_DIGITS_STRING_SIZE 2       //length of string of two hexadecimal digits following `\x`
- 
+#define HEX_DIGITS_STRING_SIZE 2        //length of string of two hexadecimal digits following `\x`
+#define WRONG_DATA_TOKEN_TYPE -1        //type of token for wrong data
+
 //input validation functions
-int allowed_symbol(char state);
+int allowed_symbol(char state);                     
 int letter_or_num(char state);
 int num(char state);
 //reading a symbol from program code
@@ -20,4 +21,3 @@ char first_non_EOL(char state);
 void data_append(Token *token, char state);
 //searching of command functions tokens
 int check_command_functions(Token *token);
-

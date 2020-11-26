@@ -189,12 +189,14 @@ void freeBothCompareLists(){
 // package main \n func() EOF
 bool program_start(){
     bool program_start = false;
+    allowed_eol();
     if(token->type == TOKEN_TYPE_PACKAGE){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_IDENTIFIER && !strcmp(token->data, "main")){
             get_and_set_token();
             if(token->type == TOKEN_TYPE_EOL){
                 get_and_set_token();
+                allowed_eol();
                 while(token->type != TOKEN_TYPE_EOFILE){
                     program_start = function_check();
                     if(program_start == false){
@@ -620,14 +622,13 @@ bool define_func(int end_condition, int declare, int equating, bool func){
 
             allowed_eol(); // [ a := \n b] situation
             define_accept = count_operands(end_condition);
-
             // ЗАПИСЬ
-            if(!check_declare_logic(deep)){
+            if(define_accept && !check_declare_logic(deep)){
                 changeErrorCode(7);
                 return false;
-            }
-
-            GEN_CREATE_LEFT_SIDE(deep);
+            } else if(define_accept){
+                GEN_CREATE_LEFT_SIDE(deep);
+        }
 
             // CHECKING TYPES FOR SYMTABLE
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
@@ -804,7 +805,9 @@ bool expression(int end_condition){
            
             delete_expr_stack = false;
             int result = sort_to_postfix(expr, deep, SymTable->var);
-
+            if(result == -1){ // SEGFAULT FIX
+                return false;
+            }
             add_type_to_compare_list(result); // result
 
 
@@ -919,7 +922,7 @@ int is_closed_bracket(){
 }
 
 void allowed_eol(){
-    if(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
+    while(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
         get_and_set_token();
 }
 
