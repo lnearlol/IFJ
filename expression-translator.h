@@ -5,3 +5,5 @@
 #define STACK_OVERFLOW  -100
 #define STACK_UNDERFLOW -101
 #define OUT_OF_MEMORY   -102
+
+void generateCode(Stack_t *stack, int deepVar, int type);
