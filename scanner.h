@@ -4,6 +4,7 @@
 #define Backslash 92                    //Backslash ASCII code
 #define HEX_DIGITS_STRING_SIZE 2        //length of string of two hexadecimal digits following `\x`
 #define WRONG_DATA_TOKEN_TYPE -1        //type of token for wrong data
+#define ASCII_CODE_ARRAY_SIZE 4         //length of string containing ASCII code of character from literal string
 
 //input validation functions
 int allowed_symbol(char state);                     
