@@ -2,7 +2,7 @@
 
 package main
 func main(){
-	if 2 != 1 {
-        a := 10
+	if 4 == 4 {
+        
     }
 }

@@ -554,6 +554,7 @@ bool for_construction(){
 
 bool if_construction()
 {
+    expr = createStack();
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
     if(if_accept){
@@ -562,6 +563,7 @@ bool if_construction()
     }
     if (if_accept && WAS_CONDITION){
         WAS_CONDITION = false;
+        get_and_set_token();
         if_accept = 0;
         freeBothCompareLists();
         if(token->type == TOKEN_TYPE_EOL){
