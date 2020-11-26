@@ -533,6 +533,10 @@ bool for_construction(){
         return false;
     }
     get_and_set_token();
+    if(!WAS_CONDITION){
+        changeErrorCode(5);
+        return false;
+    }
     WAS_CONDITION = false;
     freeBothCompareLists();
 
