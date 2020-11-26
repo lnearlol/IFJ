@@ -66,12 +66,14 @@ int prec(Token token) {
     switch (token.type) {
         case TOKEN_TYPE_MATH_OPERATOR:
                 if (strcmp(token.data, "/") == 0 || strcmp(token.data, "*") == 0)
-                        return 3;
+                        return 4;
                 else if (strcmp(token.data, "+") == 0 || strcmp(token.data, "-") == 0)
-                        return 2;
+                        return 3;
                 break;
         case TOKEN_TYPE_LEFT_BRACKET:
                 return 1;
+        case TOKEN_TYPE_LOGICAL_OPERATOR:
+                return 2;
                 break;
         }
 }
@@ -88,7 +90,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
 
         implode(stack);
         int result = 0;
-
+        bool logical_type_flag = false;
         for (int i = 0; i < stack->size; i++) {
                 Token token = stack->data[i];
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
@@ -140,7 +142,17 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                                 push(res, poped_token);
                         }
                         if (result == -1) break;
-                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
+                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR || token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                        if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                            if (!logical_type_flag)
+                                logical_type_flag = true;
+                            else {
+                                logical_type_flag = false;
+                                changeErrorCode(5);
+                                result = -1;
+                                break;
+                            }
+                        }
                         while (opstack->top > 0 && prec(peek(opstack)) >= prec(token)) {
                                 if (prec(peek(opstack)) >= prec(token)) {
                                         push(res, pop(opstack));
@@ -153,8 +165,10 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                 else break;
         }
 
-        Token *tmp;
         if (result != -1) {
+                if (logical_type_flag)
+                    result = 4;
+
                 for (int i = 0; opstack->top > 0; i++) {
                         if(opstack->data[i].type == TOKEN_TYPE_LEFT_BRACKET || opstack->data[i].type == TOKEN_TYPE_RIGHT_BRACKET){
                                 deleteStack(&opstack);
@@ -207,42 +221,33 @@ void generateCode(Stack_t *stack, int deepVar, int type) {
                             printf("SUBS\n");
                         }
 
-                } else if (token.type == TOKEN_TYPE_EOL) {
+                }
+                else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                        if (strcmp(token.data, "<") == 0) {
+                            printf("LTS\n");
+                        }
+                        else if (strcmp(token.data, "<=") == 0) {
+                            printf("GTS\n");
+                            printf("NOTS\n");
+                        }
+                        else if (strcmp(token.data, ">") == 0) {
+                            printf("GTS\n");
+                        }
+                        else if (strcmp(token.data, ">=") == 0) {
+                            printf("LTS\n");
+                            printf("NOTS\n");
+                        }
+                        else if (strcmp(token.data, "==") == 0) {
+                            printf("EQS\n");
+                        }
+                        else if (strcmp(token.data, "!=") == 0) {
+                            printf("EQS\n");
+                            printf("NOTS\n");
+                        }
+                }
+                else if (token.type == TOKEN_TYPE_EOL) {
                         break;
                 }
                 else break;
         } printf("\n");
 }
-
-/*void makeBT (Stack_t *stack) {
-
-        BTStack_t* BTstack = createBTStack();
-
-        BTNodePtr nodePtr;
-
-        for (int i = 0; i < stack->top-1; i++) {
-                Token token = stack->data[i];
-                BTInit (&nodePtr);
-                setBTData(&nodePtr, token);
-                if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
-                    token.type == TOKEN_TYPE_LITERAL_INT ||
-                    token.type == TOKEN_TYPE_IDENTIFIER ||
-                    token.type == TOKEN_TYPE_LITERAL_STRING) {
-                        pushBTStack(BTstack, nodePtr);
-                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
-                        BTNodePtr rightChild = popBTStack(BTstack);
-                        BTNodePtr leftChild = popBTStack(BTstack);
-                        setBTRightChild(&nodePtr, &rightChild);
-                        setBTLeftChild(&nodePtr, &leftChild);
-                        pushBTStack(BTstack, nodePtr);
-                } else if (token.type == TOKEN_TYPE_EOL) {
-                        break;
-                }
-                else break;
-        }
-        //BTDelete(&nodePtr);
-        BTNodePtr RootPtr = popBTStack(BTstack);
-        deleteBTStack(&BTstack);
-        BTDelete(&RootPtr);
-        return;
-}*/

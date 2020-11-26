@@ -8,9 +8,10 @@ int PROGRAMM_RUN = FIRST_RUN;
 int error_flag = 0;
 int return_in_function = true;
 bool wasMainInProgram = false;
+bool WAS_CONDITION = false;
 
 
-genFrameType GEN_FRAME = GLOBAL;
+genFrameType GEN_FRAME = LOCAL;
 
 int GET_GEN_FRAME(){
     return GEN_FRAME;
@@ -327,7 +328,7 @@ bool output_parameters(){
         } else {
             if(PROGRAMM_RUN == SECOND_RUN){
                 outputParams out = findFunction(saved_func_name, SymTable->func)->output_params;
-                GEN_RETVAL_CREATER(out);
+                // GEN_RETVAL_CREATER(out);
             }
             output_parameters = output_single_parameters();
         }
@@ -363,7 +364,7 @@ bool output_single_parameters(){
     return output_single_parameter;
 }
 
-// //  ------------------------------------  B O D Y    1    R U N  ------------------------------------
+//  ------------------------------------  B O D Y    1    R U N  ------------------------------------
 
 bool first_run_body(){
     bool first_run_accept = true;
@@ -500,7 +501,7 @@ bool function_body(){
         function F = findFunction(current_function_name, SymTable->func);
         outputParams out_params = F->output_params;      // C O M P A R E   R E T U R N   A N D   O U T   P A R A M S
 
-        GEN_RETVAL_RETURN(out_params); // A S S E M B L Y
+        // GEN_RETVAL_RETURN(out_params); // A S S E M B L Y
 
         if(token->type == TOKEN_TYPE_EOL && out_params == NULL)
             function_accept = function_body();
@@ -527,7 +528,7 @@ bool for_construction(){
     }
     get_and_set_token();
 
-    if(token->type != TOKEN_TYPE_SEMICOLON && !logic_expression(TOKEN_TYPE_SEMICOLON)){
+    if(token->type != TOKEN_TYPE_SEMICOLON && !expression(TOKEN_TYPE_SEMICOLON)){
         return false;
     }
     get_and_set_token();
@@ -553,51 +554,56 @@ bool for_construction(){
 
 bool if_construction()
 {
+    expr = createStack();
     bool if_accept = false;
-    if_accept = logic_expression(TOKEN_TYPE_START_BLOCK);
-
-    if (if_accept){
-        if_accept = 0;
+    if_accept = expression(TOKEN_TYPE_START_BLOCK);
+    if(if_accept){
         add_to_else_stack();
         deep++;
+    }
+    if (if_accept && WAS_CONDITION){
+        WAS_CONDITION = false;
         get_and_set_token();
+        if_accept = 0;
+        freeBothCompareLists();
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
             if_accept = function_body();
         }
     }
 
+
     return if_accept;
 }
 
 //  ------------------------------------ L O G I C    E X P R E S S I O N ------------------------------------
 
-bool logic_expression(int end_condition){
-    bool logic_expression = false;
+// bool logic_expression(int end_condition){
+//     bool logic_expression = false;
     
-        delete_expr_stack = true;
-        expr = createStack();
+//         delete_expr_stack = true;
+//         expr = createStack();
         
-        logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
+//         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
         
-        if(logic_expression){
-            get_and_set_token();
-            delete_expr_stack = true;
-            expr = createStack();
+//         if(logic_expression && WAS_CONDITION){
+//             get_and_set_token();
+//             delete_expr_stack = true;
+//             expr = createStack();
             
-            logic_expression = expression(end_condition); //right side + semicolon (for)
+//             logic_expression = expression(end_condition); //right side + semicolon (for)
 
-            if(typeCompareList != NULL && typeCompareList->next != NULL){
-                if(typeCompareList->type != typeCompareList->next->type){
-                    changeErrorCode(5);
-                    logic_expression = false;
-                }
-            }
-        }
-        freeBothCompareLists(); // free the logic list
+//             if(typeCompareList != NULL && typeCompareList->next != NULL){
+//                 if(typeCompareList->type != typeCompareList->next->type){
+//                     changeErrorCode(5);
+//                     logic_expression = false;
+//                 }
+//             }
+//         }
+//         freeBothCompareLists(); // free the logic list
     
-    return logic_expression;
-}
+//     return logic_expression;
+// }
 
 
 
@@ -723,6 +729,11 @@ bool count_operands(int end_condition){
         deleteStack(&expr);
         delete_expr_stack = false;
     }
+
+    if(WAS_CONDITION){  // WAS LOGICAL OPERATOR IN EXPRESSION
+        changeErrorCode(5);
+        return false;
+    }
   
 
     if(count_operands_accept && number_of_operands > 0){
@@ -756,6 +767,7 @@ bool expression(int end_condition){
 
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
+        
         push(expr, *token);
         bracket++;
         can_be_function = 0;
@@ -790,6 +802,7 @@ bool expression(int end_condition){
 
 
         if(token->type == end_condition){
+            printf("ErrorCode %d\n", error_flag);
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 delete_expr_stack = false;
@@ -810,11 +823,11 @@ bool expression(int end_condition){
             }
             add_type_to_compare_list(result); // result
 
+            if(result == 4){
+                WAS_CONDITION = true;
+            }
 
-
-        } else if(token->type == TOKEN_TYPE_LOGICAL_OPERATOR) {
-            changeErrorCode(5);
-        } else if (token->type == TOKEN_TYPE_MATH_OPERATOR){
+        } else if (token->type == TOKEN_TYPE_MATH_OPERATOR || token->type == TOKEN_TYPE_LOGICAL_OPERATOR){
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
 
@@ -858,8 +871,9 @@ bool expression(int end_condition){
             get_and_set_token();
 
             allowed_eol(); // func_name( \n args situation
-
+            GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
+            GEN_CALL(saved_func_name);
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
 
@@ -868,30 +882,32 @@ bool expression(int end_condition){
                 if(compareCompareLists() == 0){
                     number_of_operands = 0;
                     end_condition = TOKEN_TYPE_EOL;
-                } else if (compareCompareLists() == -1){
-                   changeErrorCode(7);
-                    return false;
-                } else if (compareCompareLists() == 1){
-                    int tmp = number_of_operands;
-                    outputParams out_tmp = findFunction(saved_func_name, SymTable->func)->output_params;
-                    if(out_tmp == NULL){
-                        changeErrorCode(7); 
-                    } else {
-                        out_tmp = out_tmp->next;
-                        while(out_tmp != NULL){
-                            out_tmp = out_tmp->next;
-                            number_of_operands--;
-                        }
-                    }
+                } else {
+                    changeErrorCode(7);
                 }
+                // } else if (compareCompareLists() == -1){
+                //    changeErrorCode(7);
+                //     return false;
+                // } else if (compareCompareLists() == 1){
+                //     int tmp = number_of_operands;
+                //     outputParams out_tmp = findFunction(saved_func_name, SymTable->func)->output_params;
+                //     if(out_tmp == NULL){
+                //         changeErrorCode(7); 
+                //     } else {
+                //         out_tmp = out_tmp->next;
+                //         while(out_tmp != NULL){
+                //             out_tmp = out_tmp->next;
+                //             number_of_operands--;
+                //         }
+                //     }
+                // }
 
                 if(token->type == end_condition){
                     expression_accept = true;
                     can_be_function = 1;
                 }
             }
-        } else if(end_condition == TOKEN_TYPE_LOGICAL_OPERATOR)
-            changeErrorCode(5);
+        }
     }
 
     if(bracket != 0){
@@ -914,6 +930,7 @@ int is_closed_bracket(){
     int closed_bracket_counter = 0;
     while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 4 (token)
+        
         push(expr, *token);
         get_and_set_token();
         closed_bracket_counter++;
@@ -986,6 +1003,8 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             } else if(!compareTwoVariables(token, args_check->type, deep, SymTable->var)){
                 changeErrorCode(6);
                 return false;     
+            } else {
+                MOVE_INTO_INPUT_PARAMETER(args_check, token, deep);
             }
         }
         // ---------

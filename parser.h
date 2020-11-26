@@ -99,6 +99,8 @@ void GEN_START_OF_FUNCTION(Token *token);
 void GEN_END_OF_FUNCTION(Token *token);
 void GEN_START_MAIN();
 void GEN_CALL(Token *token);
+void GEN_CREATE_FRAME_AND_SET_PARAMS(inputParams InParams);
+void MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep);
 void GEN_LEN();
 
 void GEN_WRITE_VAR_LITERAL(Token *token, int deep);
