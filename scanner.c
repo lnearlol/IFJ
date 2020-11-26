@@ -1,22 +1,5 @@
 #include "scanner.h"
 
-//////
-    //main()
-
-Token *token;
-
-int set_next_token();  //permute the current token to the next one
-int set_next_token(){
-    token->next = malloc (sizeof(Token));
-    token = token->next;
-    token->next = NULL;
-    if(get_token(token))
-        return 1;
-    return 0;
-}
-//////to delete
-
-
 int allowed_symbol(char state){
     if((state >= ' ' && state <= '"') || state == '\n' || state == TAB || state >= '(' && state <= '>' || 
     state >= 'A' && state <= 'Z' || state == '_' || state >= 'a' && state <= '{' || state == '}' || state == EOF)
@@ -126,7 +109,7 @@ int get_token(Token *token){
                 int comment_ending_flag = 0;
                 free(token->data);
                 if(state == '/'){
-                    while(state != '\n')
+                    while(state != '\n' && !feof( stdin ))
                         state = fgetc(stdin);
                     comment_ending_flag = 1;
                 }
@@ -433,44 +416,4 @@ int get_token(Token *token){
             return 0;
         }
     }
-}
-
-
-int main(){
-//FILE *program_code; was in the head of `token.h`
-//    program _code = fopen ("file.go", "r");
-
-    token = malloc(sizeof(Token));
-    token->next = NULL;
-    Token *first = token;
-
-    if(get_token(token)){
-        fprintf(stderr, "\n     ERROR!!\n\n");
-        // return 1;
-    }
-
-
-    for(int i = 0; ; i++) {
-        printf("#%d %-10s       <-%d\n", i, token->data, token->type);
-        if(token->type == TOKEN_TYPE_EOFILE)
-            break;
-        // token->next = malloc (sizeof(Token));
-        // token = token->next;
-        // token->next = NULL;
-        // get_token(token);
-        if(set_next_token()){
-            fprintf(stderr, "\n     ERROR!!\n\n");
-            // return 1;
-        }
-    }
-    
-    // while(first != NULL){
-    //     printf("prev-token: %s\n", first->data);
-    //     printf("TOKEN TYPE: %d\n", first->type);
-    //     first = first->next;
-    // }
-
-    dtor(first);
-    //fclose(program _code);
-    return 0;
 }
