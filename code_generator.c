@@ -29,10 +29,24 @@ char framePrint[3];
     }
  }
 
- void GEN_CALL(Token *token){
-   printf("CALL $");
-   printf("%s\n", token->data);
- }
+void GEN_CREATE_FRAME_AND_SET_PARAMS(inputParams InParams){
+    
+    printf("CREATEFRAME\n");
+    while(InParams != NULL){
+        printf("DEFVAR TF@%s$0\n", InParams->name);
+        InParams = InParams->next;
+    }
+}
+
+void MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep){
+    printf("MOVE TF@%s$0 ", InParam->name);
+    GEN_WRITE_VAR_LITERAL(value, deep);
+    printf("\n");
+}
+
+void GEN_CALL(Token *token){
+   printf("CALL $%s\n", token->data);
+}
 
 
 void GEN_SET_FRAME_TYPE(){
@@ -77,26 +91,26 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
 	}
 }
 
-void GEN_RETVAL_CREATER(outputParams outPut){
-    int retval_number = 0;
-    while(outPut != NULL){
-        printf("DEFVAR LF@retval%d\n", retval_number);
-        retval_number++;
-        outPut = outPut->next;
-    }
-}
+// void GEN_RETVAL_CREATER(outputParams outPut){
+//     int retval_number = 0;
+//     while(outPut != NULL){
+//         printf("DEFVAR LF@retval%d\n", retval_number);
+//         retval_number++;
+//         outPut = outPut->next;
+//     }
+// }
 
-void GEN_RETVAL_RETURN(outputParams outPut){
-    int retval_number = -1;
-    while(outPut != NULL){
-        retval_number++;
-        outPut = outPut->next;
-    }
-    while(retval_number >= 0){
-        printf("POPS LF@retval%d\n", retval_number);
-        retval_number--;
-    }
-}
+// void GEN_RETVAL_RETURN(outputParams outPut){
+//     int retval_number = -1;
+//     while(outPut != NULL){
+//         retval_number++;
+//         outPut = outPut->next;
+//     }
+//     while(retval_number >= 0){
+//         printf("POPS LF@retval%d\n", retval_number);
+//         retval_number--;
+//     }
+// }
 
 
 void GEN_CREATE_LEFT_SIDE(int deep){
