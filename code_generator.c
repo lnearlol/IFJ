@@ -1,43 +1,177 @@
 #include "parser.h"
 
+char framePrint[3];
 
+ void GEN_START_MAIN(){
+	printf(".IFJcode20\n");
+	printf("JUMP $$main\n");
 
- void START_OF_FUNCTION(Token *token){
-    if(!strcmp(token->data, "main")){
+ }
+
+ void GEN_START_OF_FUNCTION(Token *token){
+    if(strcmp(token->data, "main")){
         printf("LABEL $");
         printf("%s\n", token->data);
-        printf("PUSHFRAME \n");
+        printf("PUSHFRAME \n\n");
     } else {
-        printf("LABEL $main\n");
+        printf("LABEL $$main\n");
 	    printf("CREATEFRAME\n");
+        printf("PUSHFRAME\n\n");
     }
-
  }
 
-  void END_OF_FUNCTION(Token *token){
-    printf("POPFRAME \n");
-    printf("RETURN \n");
-    printf("LABEL $endof");
-    printf("%s\n", token->data);
+  void GEN_END_OF_FUNCTION(Token *token){
+    if(!strcmp(token->data, "main")){
+	    printf("POPFRAME\n\n");
+    } else {
+        printf("POPFRAME \n");
+        printf("RETURN \n\n");
+    }
  }
 
- void START_MAIN(){
-	printf(".IFJcode20\n");
-	printf("JUMP $main\n");
-
- }
-
-  void END_OF_MAIN(){
-	printf("POPFRAME\n");
-    printf("LABEL $endofmain\n");
- }
-
- void CALL(Token *token){
+ void GEN_CALL(Token *token){
    printf("CALL $");
    printf("%s\n", token->data);
  }
 
-void GENERATION_LEN(){
+
+void GEN_SET_FRAME_TYPE(){
+    genFrameType currentFrame = GET_GEN_FRAME();
+    
+    switch (currentFrame)
+    {
+        case GLOBAL:
+            strcpy(framePrint, "GF");
+            break;
+        case LOCAL:
+            strcpy(framePrint, "LF");
+            break;
+        case TEMPORARY:
+            strcpy(framePrint, "TF");    
+            break;
+    }
+}
+
+void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
+    GEN_SET_FRAME_TYPE();
+    switch (token->type)////if is a digit
+	{
+		case TOKEN_TYPE_LITERAL_INT:
+			printf("int@%s", token->data);
+			break;
+
+		case TOKEN_TYPE_LITERAL_FLOAT:
+			printf("float@%a", atof(token->data));
+			break;
+
+		case TOKEN_TYPE_LITERAL_STRING:
+			printf("string@%s", token->data);
+			break;
+
+        case TOKEN_TYPE_IDENTIFIER:
+            printf("%s@%s$%d", framePrint, token->data, findVariableWithType(token, deep, SymTable->var)->deep);
+            break;
+        
+        case TOKEN_TYPE_UNDERSCORE:
+            printf("GF@_");
+	}
+}
+
+void GEN_RETVAL_CREATER(outputParams outPut){
+    int retval_number = 0;
+    while(outPut != NULL){
+        printf("DEFVAR LF@retval%d\n", retval_number);
+        retval_number++;
+        outPut = outPut->next;
+    }
+}
+
+void GEN_RETVAL_RETURN(outputParams outPut){
+    int retval_number = -1;
+    while(outPut != NULL){
+        retval_number++;
+        outPut = outPut->next;
+    }
+    while(retval_number >= 0){
+        printf("POPS LF@retval%d\n", retval_number);
+        retval_number--;
+    }
+}
+
+
+void GEN_CREATE_LEFT_SIDE(int deep){
+    while(varStack != NULL){
+        if(varStack->token_stack->type == TOKEN_TYPE_UNDERSCORE)
+            changeErrorCode(3);
+        else {
+            printf("DEFVAR ");
+            GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
+            printf("\n");
+            printf("POPS ");
+            GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
+            printf("\n");
+        }
+        GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
+    }
+}
+
+void GEN_EQ_LEFT_SIDE(int deep){
+    while(varStack != NULL){
+        printf("POPS ");
+        GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
+        printf("\n"); 
+        GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
+    }
+}
+
+
+
+
+
+void GEN_ADD_VAR_TO_ASSEMBLY_STACK(Token *stack){
+    if(varStack == NULL){
+        varStack = malloc(sizeof(var_assembly_stack));
+        varStack->token_stack = stack;
+        varStack->next = NULL;
+    } else {
+        var_assembly_stack *tmpStack = malloc(sizeof(var_assembly_stack));
+        tmpStack->token_stack = stack;
+        tmpStack->next = varStack;
+        varStack = tmpStack;
+    }
+}
+
+
+void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK(){
+    if(varStack != NULL){
+        var_assembly_stack *tmpStack = varStack->next;
+        free(varStack);
+        varStack = tmpStack;
+    }
+}
+
+void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK(){
+    while(varStack != NULL)
+        GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void GEN_LEN(){
    printf("LABEL $length\n");
    printf("PUSHFRAME\n");
    printf("DEFVAR LF@%%retval\n");

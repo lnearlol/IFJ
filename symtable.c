@@ -112,6 +112,7 @@ variable findVariableWithType(Token *token, int deepVar, variable Var){
 }
 
 variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
+
     if (Var == NULL) {
         return NULL;
     } else if(strcmp(Var->name, token->data) < 0) {

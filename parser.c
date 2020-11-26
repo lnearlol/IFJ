@@ -9,6 +9,19 @@ int error_flag = 0;
 int return_in_function = true;
 bool wasMainInProgram = false;
 
+
+genFrameType GEN_FRAME = GLOBAL;
+
+int GET_GEN_FRAME(){
+    return GEN_FRAME;
+}
+
+void CHANGE_GEN_FRAME(int Frame){
+    GEN_FRAME = Frame;
+}
+
+
+
 void get_and_set_token(){
         if(PROGRAMM_RUN == FIRST_RUN){
         token->next = malloc (sizeof(Token));
@@ -209,7 +222,8 @@ bool function_check(){
             // A D D    F U N C T I O N S    T O    S Y M T A B L E
             if(PROGRAMM_RUN){          
                 insertFunction(token, &(SymTable->func));
-            }
+            } else 
+                GEN_START_OF_FUNCTION(token);
             current_function_name = token; // saved name of current function
             saved_func_name = token; // save function name for working with arguments
             get_and_set_token();
@@ -309,6 +323,10 @@ bool output_parameters(){
             get_and_set_token();
             output_parameters = true;
         } else {
+            if(PROGRAMM_RUN == SECOND_RUN){
+                outputParams out = findFunction(saved_func_name, SymTable->func)->output_params;
+                GEN_RETVAL_CREATER(out);
+            }
             output_parameters = output_single_parameters();
         }
     }
@@ -416,10 +434,11 @@ bool function_body(){
     // E N D    B L O C K   ( L A S T )
     if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1) {
         function_accept = true;
-    if(findFunction(current_function_name, SymTable->func)->output_params != NULL && return_in_function == true){ // was not return command
-            changeErrorCode(6); // number of return args and function output args not the same
-            return false;
-    }
+        if(findFunction(current_function_name, SymTable->func)->output_params != NULL && return_in_function == true){ // was not return command
+                changeErrorCode(6); // number of return args and function output args not the same
+                return false;
+        }
+        GEN_END_OF_FUNCTION(current_function_name);
     // E O L
     } else if(token->type == TOKEN_TYPE_EOL){
         get_and_set_token();
@@ -478,6 +497,8 @@ bool function_body(){
         get_and_set_token();
         function F = findFunction(current_function_name, SymTable->func);
         outputParams out_params = F->output_params;      // C O M P A R E   R E T U R N   A N D   O U T   P A R A M S
+
+        GEN_RETVAL_RETURN(out_params); // A S S E M B L Y
 
         if(token->type == TOKEN_TYPE_EOL && out_params == NULL)
             function_accept = function_body();
@@ -606,6 +627,8 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 return false;
             }
 
+            GEN_CREATE_LEFT_SIDE(deep);
+
             // CHECKING TYPES FOR SYMTABLE
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
             get_and_set_token();
@@ -618,7 +641,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 return false;
             }
 
-
+            GEN_EQ_LEFT_SIDE(deep);
 
 
         } else if (func && define_accept && token->type == TOKEN_TYPE_LEFT_BRACKET){
@@ -632,6 +655,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 get_and_set_token();
                 define_accept = true;
             }
+            GEN_CALL(saved_func_name);
         } else
             define_accept = false;
     }
@@ -647,6 +671,7 @@ bool define_operands(int func){
         number_of_operands++;
 
         add_var_to_compare_list(token);
+        GEN_ADD_VAR_TO_ASSEMBLY_STACK(token); // A S S E M B L Y
 
         // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
         saved_func_name = token;
@@ -746,7 +771,6 @@ bool expression(int end_condition){
             delete_expr_stack = false;
             return false;
        }
-
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
             was_it_string = 1; 
@@ -1058,7 +1082,7 @@ int main(){
     
     symTab_for_inbuilt_func(SymTable); // adding inbulid functions to symtable
     saved_func_name = saved_arg_name = saved_arg_type = NULL;
-
+    GEN_START_MAIN();
     token = malloc (sizeof(Token));
     token->next = NULL;
     Token *second_run = token;
@@ -1094,7 +1118,7 @@ int main(){
     
     freeAllVariables(&(SymTable->var));
     freeBothCompareLists();
-    
+    GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
     freeFunctions(&(SymTable->func));
     dtor(startCommandFuncList);
     free(SymTable);

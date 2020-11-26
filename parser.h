@@ -75,11 +75,9 @@ bool checkCompareLists();
 
 variables_compare_list *varCompareList;
 type_compare_list *typeCompareList;
-type_compare_list *retCompareList;
+
 
 #define RETURN_TYPE 77
-
-
 
 
 Token *current_function_name;
@@ -92,9 +90,30 @@ bool compare_return_and_output_params_logic();
 
 // A S E M B L Y
 
-void START_OF_FUNCTION(char *id_of_function);
-void END_OF_FUNCTION(char *id_of_function);
-void START_MAIN();
-void END_OF_MAIN();
-void CALL(char *id_of_function);
-void GENERATION_LEN();
+typedef enum {GLOBAL, LOCAL, TEMPORARY} genFrameType;
+int GET_GEN_FRAME();
+void CHANGE_GEN_FRAME(int Frame);
+
+
+void GEN_START_OF_FUNCTION(Token *token);
+void GEN_END_OF_FUNCTION(Token *token);
+void GEN_START_MAIN();
+void GEN_CALL(Token *token);
+void GEN_LEN();
+
+void GEN_WRITE_VAR_LITERAL(Token *token, int deep);
+void GEN_SET_FRAME_TYPE();
+void GEN_RETVAL_CREATER(outputParams outPut);
+void GEN_RETVAL_RETURN(outputParams outPut);
+
+typedef struct var_assembly_stack{
+    Token *token_stack;
+    struct var_assembly_stack *next;
+} var_assembly_stack;
+
+var_assembly_stack *varStack;
+void GEN_ADD_VAR_TO_ASSEMBLY_STACK(Token *stack);
+void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
+void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
+void GEN_CREATE_LEFT_SIDE(int deep);
+void GEN_EQ_LEFT_SIDE(int deep);
