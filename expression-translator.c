@@ -72,6 +72,8 @@ int prec(Token token) {
                 break;
         case TOKEN_TYPE_LEFT_BRACKET:
                 return 1;
+        case TOKEN_TYPE_LOGICAL_OPERATOR:
+                return 2;
                 break;
         case TOKEN_TYPE_LOGICAL_OPERATOR:
                 return 2;
@@ -235,6 +237,7 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                         else if (strcmp(token.data, "-") == 0) {
                             printf("SUBS\n");
                         }
+
                     }
                     else {
                         if (strcmp(token.data, "+") == 0) {
@@ -268,6 +271,7 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                         printf("EQS\n");
                         printf("NOTS\n");
                     }
+
                 }
                 else if (token.type == TOKEN_TYPE_EOL) {
                         break;
