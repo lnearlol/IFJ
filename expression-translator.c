@@ -72,8 +72,6 @@ int prec(Token token) {
                 break;
         case TOKEN_TYPE_LEFT_BRACKET:
                 return 1;
-        case TOKEN_TYPE_LOGICAL_OPERATOR:
-                return 2;
                 break;
         case TOKEN_TYPE_LOGICAL_OPERATOR:
                 return 2;
