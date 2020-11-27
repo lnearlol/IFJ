@@ -5,6 +5,20 @@ char framePrint[3];
  void GEN_START_MAIN(){
 	printf(".IFJcode20\n");
     printf("GF@_\n");
+
+    // Global variables for concatenation processing
+    printf("DEFVAR GF@str1\n");
+    printf("DEFVAR GF@str2\n");
+    printf("DEFVAR GF@strRes\n");
+
+    // If divide by zero
+    printf("DEFVAR GF@tmpDividingByZero\n");
+    printf("JUMP enderror9\n");
+    printf("LABEL error9\n");
+    printf("EXIT 9\n");
+    printf("LABEL enderror9\n");
+
+
 	printf("JUMP $$main\n");
 
  }

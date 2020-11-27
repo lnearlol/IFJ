@@ -867,7 +867,7 @@ bool expression(int end_condition){
             }
 
             if(was_it_string == 1){  // if used not '+' for string
-                if(strcmp(token->data, "+")){
+                if(strcmp(token->data, "+") && token->type != TOKEN_TYPE_LOGICAL_OPERATOR){
 
                     changeErrorCode(5);
                     delete_expr_stack = false;
