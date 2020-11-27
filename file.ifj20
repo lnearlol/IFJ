@@ -1,7 +1,6 @@
 package main
 func main(){
-i:= 1+2
-if(2!=2){
-print(i, 2)
-}
+a:= "hello "
+print(1.5, 2, a, "l o l")
+
 }
