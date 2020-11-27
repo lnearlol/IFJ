@@ -293,10 +293,10 @@ void GENERATION_CHR(){
     printf("RETURN\n");
 }
 
-void print(){
+void GENERATION_PRINT(){
     printf("LABEL $PRINT\n");
     printf("PUSHFRAME\n");
-    printf("WRITE LF@ ");///???????
+    printf("WRITE LF@ ");///??????????
     printf("POPFRAME\n");
     printf("RETURN\n");
 }
