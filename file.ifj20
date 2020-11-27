@@ -1,11 +1,7 @@
 package main
-func main(){
-	if "ads" > "asd" {
-		a:= 0.0
-	}
-}
-=======
-func main () {
-	for ;0!=0; {
-	}
+func main (){
+	s1 :="Totojenejakytext"
+	s1len := 0
+	s1len = len(s1)
+	print(s1len, "\n")
 }

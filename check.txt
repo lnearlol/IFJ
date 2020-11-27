@@ -1,0 +1,44 @@
+.IFJcode20
+DEFVAR GF@_
+DEFVAR GF@str1
+DEFVAR GF@str2
+DEFVAR GF@strRes
+DEFVAR GF@tmpDividingByZero
+JUMP enderror9
+LABEL error9
+EXIT int@9
+LABEL enderror9
+JUMP $$main
+LABEL $len
+PUSHFRAME
+DEFVAR LF@retval
+DEFVAR LF@param1
+MOVE LF@param1 LF@s$0
+STRLEN LF@retval LF@param1
+PUSHS LF@retval
+POPFRAME
+RETURN
+
+LABEL $$main
+CREATEFRAME
+PUSHFRAME
+
+PUSHS string@Totojenejakytext
+
+DEFVAR LF@s1$0
+POPS LF@s1$0
+PUSHS int@0
+
+DEFVAR LF@s1len$0
+POPS LF@s1len$0
+CREATEFRAME
+DEFVAR TF@s$0
+MOVE TF@s$0 LF@s1$0
+CALL $len
+POPS LF@s1len$0
+WRITE LF@s1len$0
+WRITE string@\010
+POPFRAME
+
+JUMP $END_OF_PROGRAM
+LABEL $END_OF_PROGRAM
