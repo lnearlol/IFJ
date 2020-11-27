@@ -1,9 +1,7 @@
-//compiler 2
-//
 package main
-
-func main () {
-	a:=0
-	for a=1;0!=0; {
-	}
+func main(){
+i:= 1+2
+if(2!=2){
+print(i, 2)
+}
 }

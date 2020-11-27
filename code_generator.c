@@ -4,14 +4,28 @@ char framePrint[3];
 
  void GEN_START_MAIN(){
 	printf(".IFJcode20\n");
+    printf("GF@_\n");
+
+    // Global variables for concatenation processing
+    printf("DEFVAR GF@str1\n");
+    printf("DEFVAR GF@str2\n");
+    printf("DEFVAR GF@strRes\n");
+
+    // If divide by zero
+    printf("DEFVAR GF@tmpDividingByZero\n");
+    printf("JUMP enderror9\n");
+    printf("LABEL error9\n");
+    printf("EXIT 9\n");
+    printf("LABEL enderror9\n");
+
+
 	printf("JUMP $$main\n");
 
  }
 
  void GEN_START_OF_FUNCTION(Token *token){
     if(strcmp(token->data, "main")){
-        printf("LABEL $");
-        printf("%s\n", token->data);
+        printf("LABEL $%s\n", token->data);
         printf("PUSHFRAME \n\n");
     } else {
         printf("LABEL $$main\n");
@@ -29,10 +43,24 @@ char framePrint[3];
     }
  }
 
- void GEN_CALL(Token *token){
-   printf("CALL $");
-   printf("%s\n", token->data);
- }
+void GEN_CREATE_FRAME_AND_SET_PARAMS(inputParams InParams){
+    
+    printf("CREATEFRAME\n");
+    while(InParams != NULL){
+        printf("DEFVAR TF@%s$0\n", InParams->name);
+        InParams = InParams->next;
+    }
+}
+
+void MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep){
+    printf("MOVE TF@%s$0 ", InParam->name);
+    GEN_WRITE_VAR_LITERAL(value, deep);
+    printf("\n");
+}
+
+void GEN_CALL(Token *token){
+   printf("CALL $%s\n", token->data);
+}
 
 
 void GEN_SET_FRAME_TYPE(){
@@ -54,6 +82,7 @@ void GEN_SET_FRAME_TYPE(){
 
 void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
     GEN_SET_FRAME_TYPE();
+    char *ASM_string = NULL;
     switch (token->type)////if is a digit
 	{
 		case TOKEN_TYPE_LITERAL_INT:
@@ -65,7 +94,8 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
 			break;
 
 		case TOKEN_TYPE_LITERAL_STRING:
-			printf("string@%s", token->data);
+			ASM_string = GEN_ASM_STRING(token, ASM_string);
+			printf("string@%s", ASM_string);
 			break;
 
         case TOKEN_TYPE_IDENTIFIER:
@@ -75,28 +105,61 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
         case TOKEN_TYPE_UNDERSCORE:
             printf("GF@_");
 	}
+    free(ASM_string);
 }
 
-void GEN_RETVAL_CREATER(outputParams outPut){
-    int retval_number = 0;
-    while(outPut != NULL){
-        printf("DEFVAR LF@retval%d\n", retval_number);
-        retval_number++;
-        outPut = outPut->next;
-    }
+
+char* ASM_DATA_APPEND(char* ASM_string, char state, int length){
+    ASM_string = realloc(ASM_string, length);
+    strncat(ASM_string, &state, 1);
+    return ASM_string;
 }
 
-void GEN_RETVAL_RETURN(outputParams outPut){
-    int retval_number = -1;
-    while(outPut != NULL){
-        retval_number++;
-        outPut = outPut->next;
+char *GEN_ASM_STRING(Token *token, char* ASM_string){
+    char state = token->data[0];
+    int length = 1;
+    ASM_string = malloc(length);
+    strcpy(ASM_string, "");
+
+    for(int i = 1; state != '\0'; i++){
+        if((state >= 0 && state <= 32) || state == 35 || state == 92){
+            char *ASCII_code=(char*)malloc(ASCII_CODE_ARRAY_SIZE);
+            sprintf(ASCII_code, "%03d", state);
+            state = Backslash;
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[0];
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[1];
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[2];
+            free(ASCII_code);
+        }
+        ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+        state = token->data[i];
     }
-    while(retval_number >= 0){
-        printf("POPS LF@retval%d\n", retval_number);
-        retval_number--;
-    }
+    return ASM_string;
 }
+
+// void GEN_RETVAL_CREATER(outputParams outPut){
+//     int retval_number = 0;
+//     while(outPut != NULL){
+//         printf("DEFVAR LF@retval%d\n", retval_number);
+//         retval_number++;
+//         outPut = outPut->next;
+//     }
+// }
+
+// void GEN_RETVAL_RETURN(outputParams outPut){
+//     int retval_number = -1;
+//     while(outPut != NULL){
+//         retval_number++;
+//         outPut = outPut->next;
+//     }
+//     while(retval_number >= 0){
+//         printf("POPS LF@retval%d\n", retval_number);
+//         retval_number--;
+//     }
+// }
 
 
 void GEN_CREATE_LEFT_SIDE(int deep){

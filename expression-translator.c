@@ -66,12 +66,15 @@ int prec(Token token) {
     switch (token.type) {
         case TOKEN_TYPE_MATH_OPERATOR:
                 if (strcmp(token.data, "/") == 0 || strcmp(token.data, "*") == 0)
-                        return 3;
+                        return 4;
                 else if (strcmp(token.data, "+") == 0 || strcmp(token.data, "-") == 0)
-                        return 2;
+                        return 3;
                 break;
         case TOKEN_TYPE_LEFT_BRACKET:
                 return 1;
+                break;
+        case TOKEN_TYPE_LOGICAL_OPERATOR:
+                return 2;
                 break;
         }
 }
@@ -88,7 +91,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
 
         implode(stack);
         int result = 0;
-
+        bool logical_type_flag = false;
         for (int i = 0; i < stack->size; i++) {
                 Token token = stack->data[i];
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
@@ -101,7 +104,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         if (token.type == TOKEN_TYPE_IDENTIFIER) {
                             if (findVariableWithType(&token, deepVar, Var) == NULL) {
                                 changeErrorCode(3);
-                                result = 0;
+                                result = -1;
                                 break;
                             }
                         }
@@ -116,14 +119,14 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                             if (token.type == TOKEN_TYPE_IDENTIFIER) {
                                 if (result != findVariableWithType(&token, deepVar, Var)->type) {
                                     changeErrorCode(5);
-                                    result = 0;
+                                    result = -1;
                                     break;
                                 }
                              }
                              else {
                                 if (result != returnLiteralType(&token)) {
                                     changeErrorCode(5);
-                                    result = 0;
+                                    result = -1;
                                     break;
                                 }
                              }
@@ -140,7 +143,17 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                                 push(res, poped_token);
                         }
                         if (result == -1) break;
-                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
+                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR || token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                        if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                            if (!logical_type_flag)
+                                logical_type_flag = true;
+                            else {
+                                logical_type_flag = false;
+                                changeErrorCode(5);
+                                result = -1;
+                                break;
+                            }
+                        }
                         while (opstack->top > 0 && prec(peek(opstack)) >= prec(token)) {
                                 if (prec(peek(opstack)) >= prec(token)) {
                                         push(res, pop(opstack));
@@ -151,10 +164,12 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                         break;
                 }
                 else break;
-        } 
+        }
 
-        Token *tmp;
         if (result != -1) {
+                if (logical_type_flag)
+                    result = 4;
+
                 for (int i = 0; opstack->top > 0; i++) {
                         if(opstack->data[i].type == TOKEN_TYPE_LEFT_BRACKET || opstack->data[i].type == TOKEN_TYPE_RIGHT_BRACKET){
                                 deleteStack(&opstack);
@@ -171,42 +186,94 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         deleteStack(&opstack);
         deleteStack(&stack);
 
-        if (result != -1) makeBT(res);
+        if (result != -1) generateCode(res, deepVar, Var, result);
 
         deleteStack(&res);
         return result;
 
 }
 
-void makeBT (Stack_t *stack) {
-
-        BTStack_t* BTstack = createBTStack();
-
-        BTNodePtr nodePtr;
-
-        for (int i = 0; i < stack->top-1; i++) {
+void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
+        int type = 0;
+        for (int i = 0; i < stack->top - 1; i++) {
                 Token token = stack->data[i];
-                BTInit (&nodePtr);
-                setBTData(&nodePtr, token);
+                if (type == 0) {
+                    if (token.type == TOKEN_TYPE_IDENTIFIER)
+                        type = findVariableWithType(&token, deepVar, Var)->type;
+                    else
+                        type = returnLiteralType(&token);
+                }
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
                     token.type == TOKEN_TYPE_LITERAL_INT ||
                     token.type == TOKEN_TYPE_IDENTIFIER ||
                     token.type == TOKEN_TYPE_LITERAL_STRING) {
-                        pushBTStack(BTstack, nodePtr);
+                            printf("PUSHS ");
+                            GEN_WRITE_VAR_LITERAL(&token, deepVar);
+                            printf("\n");
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
-                        BTNodePtr rightChild = popBTStack(BTstack);
-                        BTNodePtr leftChild = popBTStack(BTstack);
-                        setBTRightChild(&nodePtr, &rightChild);
-                        setBTLeftChild(&nodePtr, &leftChild);
-                        pushBTStack(BTstack, nodePtr);
-                } else if (token.type == TOKEN_TYPE_EOL) {
+                    if (type != 3) {
+                        if (strcmp(token.data, "/") == 0) {
+                            if(incomingType == 1) {
+                                printf("POPS GF@tmpDividingByZero\n");
+                                printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
+                                printf("PUSHS GF@tmpDividingByZero\n");
+                                printf("IDIVS\n");
+                            }
+                            else if (incomingType == 2) {
+                                printf("POPS GF@tmpDividingByZero\n");
+                                printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
+                                printf("PUSHS GF@tmpDividingByZero\n");
+                                printf("DIVS\n");
+                            }
+                        }
+                        else if (strcmp(token.data, "*") == 0) {
+                            printf("MULS\n");
+                        }
+                        else if (strcmp(token.data, "+") == 0) {
+                            printf("ADDS\n");
+                        }
+                        else if (strcmp(token.data, "-") == 0) {
+                            printf("SUBS\n");
+                        }
+
+                    }
+                    else {
+                        if (strcmp(token.data, "+") == 0) {
+                            printf("POPS GF@str2\n");
+                            printf("POPS GF@str1\n");
+                            printf("CONCAT GF@strRes GF@str1 GF@str2\n");
+                            printf("PUSHS GF@strRes\n");
+                        } else
+                            break;
+                    }
+                }
+                else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                    if (strcmp(token.data, "<") == 0) {
+                        printf("LTS\n");
+                    }
+                    else if (strcmp(token.data, "<=") == 0) {
+                        printf("GTS\n");
+                        printf("NOTS\n");
+                    }
+                    else if (strcmp(token.data, ">") == 0) {
+                        printf("GTS\n");
+                    }
+                    else if (strcmp(token.data, ">=") == 0) {
+                        printf("LTS\n");
+                        printf("NOTS\n");
+                    }
+                    else if (strcmp(token.data, "==") == 0) {
+                        printf("EQS\n");
+                    }
+                    else if (strcmp(token.data, "!=") == 0) {
+                        printf("EQS\n");
+                        printf("NOTS\n");
+                    }
+
+                }
+                else if (token.type == TOKEN_TYPE_EOL) {
                         break;
                 }
                 else break;
-        }
-        //BTDelete(&nodePtr);
-        BTNodePtr RootPtr = popBTStack(BTstack);
-        deleteBTStack(&BTstack);
-        BTDelete(&RootPtr);
-        return;
+        } printf("\n");
 }
