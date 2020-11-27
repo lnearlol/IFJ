@@ -528,15 +528,30 @@ bool for_construction(){
         return false;
     }
     get_and_set_token();
-    expr = createStack();
-    if(token->type != TOKEN_TYPE_SEMICOLON && !expression(TOKEN_TYPE_SEMICOLON)){
+
+
+    if(token->type != TOKEN_TYPE_SEMICOLON){
+
+
+        delete_expr_stack = true;
+        expr = createStack();
+
+        for_accept = expression(TOKEN_TYPE_SEMICOLON);
+        
+        if(token->type != TOKEN_TYPE_SEMICOLON && !for_accept){
+            return false;
+        }
+    } else {
+        changeErrorCode(2);
         return false;
     }
+    
     get_and_set_token();
-    if(!WAS_CONDITION){
+    if(!WAS_CONDITION && for_accept){
         changeErrorCode(5);
         return false;
     }
+    for_accept = false;
     WAS_CONDITION = false;
     freeBothCompareLists();
 
@@ -561,6 +576,7 @@ bool for_construction(){
 
 bool if_construction()
 {
+    delete_expr_stack = true;
     expr = createStack();
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
@@ -571,7 +587,7 @@ bool if_construction()
     if (if_accept && WAS_CONDITION){
         WAS_CONDITION = false;
         get_and_set_token();
-        if_accept = 0;
+        if_accept = false;
         freeBothCompareLists();
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
@@ -622,9 +638,10 @@ bool define_func(int end_condition, int declare, int equating, bool func){
     bool define_accept = false;
     number_of_operands = 0;
 
-    if(token->type == end_condition)
+    if(token->type == end_condition){
         define_accept = true;
-    else {
+        printf("HERE\n");
+    } else {
         define_accept = define_operands(func);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
             
@@ -771,7 +788,7 @@ bool expression(int end_condition){
     static int was_it_string = 0;
 
 
-
+    printf("token = %s\n", token->data);
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         
