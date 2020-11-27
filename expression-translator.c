@@ -72,7 +72,6 @@ int prec(Token token) {
                 break;
         case TOKEN_TYPE_LEFT_BRACKET:
                 return 1;
-                break;
         case TOKEN_TYPE_LOGICAL_OPERATOR:
                 return 2;
                 break;
@@ -186,23 +185,16 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         deleteStack(&opstack);
         deleteStack(&stack);
 
-        if (result != -1) generateCode(res, deepVar, Var, result);
+        if (result != -1) generateCode(res, deepVar, result);
 
         deleteStack(&res);
         return result;
 
 }
 
-void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
-        int type = 0;
+void generateCode(Stack_t *stack, int deepVar, int type) {
         for (int i = 0; i < stack->top - 1; i++) {
-                Token token = stack->data[i];
-                if (type == 0) {
-                    if (token.type == TOKEN_TYPE_IDENTIFIER)
-                        type = findVariableWithType(&token, deepVar, Var)->type;
-                    else
-                        type = returnLiteralType(&token);
-                }
+                 Token token = stack->data[i];
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
                     token.type == TOKEN_TYPE_LITERAL_INT ||
                     token.type == TOKEN_TYPE_IDENTIFIER ||
@@ -211,18 +203,11 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                             GEN_WRITE_VAR_LITERAL(&token, deepVar);
                             printf("\n");
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
-                    if (type != 3) {
                         if (strcmp(token.data, "/") == 0) {
-                            if(incomingType == 1) {
-                                printf("POPS GF@tmpDividingByZero\n");
-                                printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
-                                printf("PUSHS GF@tmpDividingByZero\n");
+                            if(type == 1) {
                                 printf("IDIVS\n");
                             }
-                            else if (incomingType == 2) {
-                                printf("POPS GF@tmpDividingByZero\n");
-                                printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
-                                printf("PUSHS GF@tmpDividingByZero\n");
+                            else if (type == 2) {
                                 printf("DIVS\n");
                             }
                         }
@@ -236,40 +221,29 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                             printf("SUBS\n");
                         }
 
-                    }
-                    else {
-                        if (strcmp(token.data, "+") == 0) {
-                            printf("POPS GF@str2\n");
-                            printf("POPS GF@str1\n");
-                            printf("CONCAT GF@strRes GF@str1 GF@str2\n");
-                            printf("PUSHS GF@strRes\n");
-                        } else
-                            break;
-                    }
                 }
                 else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
-                    if (strcmp(token.data, "<") == 0) {
-                        printf("LTS\n");
-                    }
-                    else if (strcmp(token.data, "<=") == 0) {
-                        printf("GTS\n");
-                        printf("NOTS\n");
-                    }
-                    else if (strcmp(token.data, ">") == 0) {
-                        printf("GTS\n");
-                    }
-                    else if (strcmp(token.data, ">=") == 0) {
-                        printf("LTS\n");
-                        printf("NOTS\n");
-                    }
-                    else if (strcmp(token.data, "==") == 0) {
-                        printf("EQS\n");
-                    }
-                    else if (strcmp(token.data, "!=") == 0) {
-                        printf("EQS\n");
-                        printf("NOTS\n");
-                    }
-
+                        if (strcmp(token.data, "<") == 0) {
+                            printf("LTS\n");
+                        }
+                        else if (strcmp(token.data, "<=") == 0) {
+                            printf("GTS\n");
+                            printf("NOTS\n");
+                        }
+                        else if (strcmp(token.data, ">") == 0) {
+                            printf("GTS\n");
+                        }
+                        else if (strcmp(token.data, ">=") == 0) {
+                            printf("LTS\n");
+                            printf("NOTS\n");
+                        }
+                        else if (strcmp(token.data, "==") == 0) {
+                            printf("EQS\n");
+                        }
+                        else if (strcmp(token.data, "!=") == 0) {
+                            printf("EQS\n");
+                            printf("NOTS\n");
+                        }
                 }
                 else if (token.type == TOKEN_TYPE_EOL) {
                         break;

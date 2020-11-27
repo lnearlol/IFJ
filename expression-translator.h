@@ -10,5 +10,4 @@ void     resize          (Stack_t *stack);
 Token    pop             (Stack_t *stack);
 Token    peek            (const Stack_t *stack);
 void     implode         (Stack_t *stack);
-
-void     generateCode    (Stack_t *stack, int deepVar, variable Var, int incomingType);
+void     generateCode    (Stack_t *stack, int deepVar, int type);

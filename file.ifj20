@@ -1,6 +1,0 @@
-package main
-func main(){
-a:= "hello "
-print(1.5, 2, a, "l o l")
-
-}

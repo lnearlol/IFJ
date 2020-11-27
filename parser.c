@@ -640,6 +640,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
 
     if(token->type == end_condition){
         define_accept = true;
+        printf("HERE\n");
     } else {
         define_accept = define_operands(func);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
@@ -678,9 +679,6 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             
             get_and_set_token();
             allowed_eol(); // func_name( \n args situation
-            if(strcmp(saved_func_name->data, "print"))
-                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
-
             define_accept = expression_func_arguments();
             if (define_accept){
                 number_of_operands--;
@@ -688,8 +686,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 get_and_set_token();
                 define_accept = true;
             }
-            if(strcmp(saved_func_name->data, "print"))
-                GEN_CALL(saved_func_name);
+            GEN_CALL(saved_func_name);
         } else
             define_accept = false;
     }
@@ -791,6 +788,7 @@ bool expression(int end_condition){
     static int was_it_string = 0;
 
 
+    printf("token = %s\n", token->data);
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         
@@ -896,11 +894,9 @@ bool expression(int end_condition){
             get_and_set_token();
 
             allowed_eol(); // func_name( \n args situation
-            if(strcmp(saved_func_name->data, "print"))
-                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
+            GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
-            if(strcmp(saved_func_name->data, "print"))
-                GEN_CALL(saved_func_name);
+            GEN_CALL(saved_func_name);
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
 
@@ -1018,8 +1014,6 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
             
             if(args_check->type == 99){ // PRINT INPUT PARAMETERS TYPE
-                // t u t   p r i n t
-                GEN_PRINT_WRITE(token, deep);
                 args_check->next = args_check; // print cloning output argument
                 if(token->type == TOKEN_TYPE_IDENTIFIER){
                     if(!findVariableWithType(token, deep, SymTable->var)){
@@ -1133,7 +1127,6 @@ int main(){
     symTab_for_inbuilt_func(SymTable); // adding inbulid functions to symtable
     saved_func_name = saved_arg_name = saved_arg_type = NULL;
     GEN_START_MAIN();
-    GEN_CALL_INBUILDS();
     token = malloc (sizeof(Token));
     token->next = NULL;
     Token *second_run = token;

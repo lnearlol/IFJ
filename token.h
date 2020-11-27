@@ -84,5 +84,4 @@ void     push            (Stack_t *stack, Token value);
 
 
 
-#define Backslash 92                    //Backslash ASCII code
-#define ASCII_CODE_ARRAY_SIZE 4         //length of string containing ASCII code of character from literal string
+FILE *program_code;

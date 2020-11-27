@@ -2,23 +2,41 @@
 
 char framePrint[3];
 
+
+char* ASM_DATA_APPEND(char* ASM_string, char state, int length){
+    ASM_string = realloc(ASM_string, length);
+    strncat(ASM_string, &state, 1);
+    return ASM_string;
+}
+
+char *GEN_ASM_STRING(Token *token, char* ASM_string){
+    char state = token->data[0];
+    int length = 1;
+    ASM_string = malloc(length);
+    strcpy(ASM_string, "");
+
+    for(int i = 1; state != '\0'; i++){
+        if((state >= 0 && state <= 32) || state == 35 || state == 92){
+            char *ASCII_code=(char*)malloc(ASCII_CODE_ARRAY_SIZE);
+            sprintf(ASCII_code, "%03d", state);
+            state = Backslash;
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[0];
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[1];
+            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+            state = ASCII_code[2];
+            free(ASCII_code);
+        }
+        ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
+        state = token->data[i];
+    }
+    return ASM_string;
+}
+
  void GEN_START_MAIN(){
 	printf(".IFJcode20\n");
-    printf("DEFVAR GF@_\n");
-
-    // Global variables for concatenation processing
-    printf("DEFVAR GF@str1\n");
-    printf("DEFVAR GF@str2\n");
-    printf("DEFVAR GF@strRes\n");
-
-    // If divide by zero
-    printf("DEFVAR GF@tmpDividingByZero\n");
-    printf("JUMP enderror9\n");
-    printf("LABEL error9\n");
-    printf("EXIT 9\n");
-    printf("LABEL enderror9\n");
-
-
+    printf("GF@_\n");
 	printf("JUMP $$main\n");
 
  }
@@ -82,7 +100,6 @@ void GEN_SET_FRAME_TYPE(){
 
 void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
     GEN_SET_FRAME_TYPE();
-    char *ASM_string = NULL;
     switch (token->type)////if is a digit
 	{
 		case TOKEN_TYPE_LITERAL_INT:
@@ -94,8 +111,7 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
 			break;
 
 		case TOKEN_TYPE_LITERAL_STRING:
-			ASM_string = GEN_ASM_STRING(token, ASM_string);
-			printf("string@%s", ASM_string);
+			printf("string@%s", token->data);
 			break;
 
         case TOKEN_TYPE_IDENTIFIER:
@@ -105,39 +121,6 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
         case TOKEN_TYPE_UNDERSCORE:
             printf("GF@_");
 	}
-    free(ASM_string);
-}
-
-
-char* ASM_DATA_APPEND(char* ASM_string, char state, int length){
-    ASM_string = realloc(ASM_string, length);
-    strncat(ASM_string, &state, 1);
-    return ASM_string;
-}
-
-char *GEN_ASM_STRING(Token *token, char* ASM_string){
-    char state = token->data[0];
-    int length = 1;
-    ASM_string = malloc(length);
-    strcpy(ASM_string, "");
-
-    for(int i = 1; state != '\0'; i++){
-        if((state >= 0 && state <= 32) || state == 35 || state == 92){
-            char *ASCII_code=(char*)malloc(ASCII_CODE_ARRAY_SIZE);
-            sprintf(ASCII_code, "%03d", state);
-            state = Backslash;
-            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
-            state = ASCII_code[0];
-            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
-            state = ASCII_code[1];
-            ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
-            state = ASCII_code[2];
-            free(ASCII_code);
-        }
-        ASM_string = ASM_DATA_APPEND(ASM_string, state, ++length);
-        state = token->data[i];
-    }
-    return ASM_string;
 }
 
 // void GEN_RETVAL_CREATER(outputParams outPut){
@@ -218,281 +201,153 @@ void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK(){
         GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
 }
 
-void GEN_PRINT_WRITE(Token *token, int deep){
-    printf("WRITE ");
-    GEN_WRITE_VAR_LITERAL(token, deep);
-    printf("\n");
-}
 
 
 
-// ---------------------------------   I N B U I L D   F U N C T I O N S   ---------------------------------
 
 
-void GEN_CALL_INBUILDS(){
-    GENERATION_INPUTS();
-    GENERATION_INPUTI();
-    GENERATION_INPUTF();
-    GENERATION_LEN();
-    GENERATION_FLOAT2INT();
-    GENERATION_INT2FLOAT();
-    GENERATION_SUBSTR();
-    GENERATION_ORD();
-    GENERATION_CHR();
-}
 
-void GENERATION_INPUTI(){
-    printf("LABEL $INPUTI\n");
-    printf("PUSHFRAME\n");
-    printf("DEFVAR LF@retval\n");
-    printf("READ LF@$retval int\n");
-    printf("DEFVAR LF@retval_check\n");
 
-    printf("TYPE LF@$retval_check LF@retval\n");
-    printf("JUMPIFEQ $INPUTI_END LF@$retval_check nil@nil\n");
 
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $END\n");
 
-	printf("LABEL $INPUTI_END\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
 
-    printf("LABEL $END\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
-}
-void GENERATION_INPUTS(){
-    printf("LABEL $INPUTS\n");
-    printf("PUSHFRAME\n");
-    printf("DEFVAR LF@retval\n");
-    printf("READ LF@$retval string\n");
-    printf("DEFVAR LF@retval_check\n");
 
-    printf("TYPE LF@$retval_check LF@retval\n");
-    printf("JUMPIFEQ $INPUTS_END LF@$retval_check  nil@nil\n");
 
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $END\n");
 
-	printf("LABEL $INPUTS_END\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
 
-    printf("LABEL $END\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
-}
-void GENERATION_INPUTF(){
-    printf("LABEL $INPUTF\n");
-    printf("PUSHFRAME\n");
-    printf("DEFVAR LF@retval\n");
-    printf("DEFVAR LF@retval_check\n");
-    printf("READ LF@$retval float\n");
 
-    printf("TYPE LF@$retval_check LF@retval\n");
-    printf("JUMPIFEQ $INPUTF_END LF@$retval_check nil@nil\n");
 
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $END\n");
-
-	printf("LABEL $INPUTF_END\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
-
-    printf("LABEL $END\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
-}
-
-void GENERATION_LEN(){
-   printf("LABEL $LENGTH\n");
+void GEN_LEN(){
+   printf("LABEL $length\n");
    printf("PUSHFRAME\n");
-   printf("DEFVAR LF@retval\n");
-   printf("DEFVAR LF@param1\n");
-   printf("MOVE LF@param1 LF@s$0\n");
-   printf("STRLEN LF@retval LF@param1\n");
+   printf("DEFVAR LF@%%retval\n");
+
+   printf("DEFVAR LF@%%param1\n");
+   printf("MOVE LF@param1 LF@%%1\n");
+   printf("DEFVAR LF@param1_type\n");
+   printf("STRLEN LF@%%retval LF@%%param1\n");
    printf("POPFRAME\n");
-   printf("RETURN\n\n");
+   printf("RETURN\n");
 }	
 
-void GENERATION_FLOAT2INT(){
-   printf("LABEL $FLOAT2INT\n");
-   printf("PUSHFRAME\n");
-   printf("DEFVAR LF@retval\n");
-   printf("DEFVAR LF@param$1\n");
-   printf("MOVE LF@param$1 LF@f$0\n");//f
-   printf("FLOAT2INT LF@retval LF@param$1\n");
-   printf("PUSHS LF@retval\n");
-   printf("POPFRAME\n");
-   printf("RETURN\n\n");
-}	
-
-void GENERATION_INT2FLOAT(){
-   printf("LABEL $INT2FLOAT\n");
-   printf("PUSHFRAME\n");
-   printf("DEFVAR LF@retval\n");
-   printf("DEFVAR LF@param$1\n");
-   printf("MOVE LF@param$1 LF@i$0\n");
-   printf("INT2FLOAT LF@retval LF@param$1\n");
-   printf("PUSHS LF@retval\n");
-   printf("POPFRAME\n");
-   printf("RETURN\n\n");
-}	
-
-void GENERATION_SUBSTR(){
-    printf("LABEL $SUBSTR\n");
+void generation_substr(){
+    printf("LABEL $substr\n");
     printf("PUSHFRAME\n");
-    printf("DEFVAR LF@retval\n");//string
-    printf("DEFVAR LF@retval$1\n");//int
-
-    printf("DEFVAR LF@string\n");
-    printf("DEFVAR LF@from\n");
+    printf("DEFVAR LF@%%retval\n");
+   //printf("MOVE LF@$retval string@\n");
     printf("DEFVAR LF@length_of_str\n");
-    printf("DEFVAR LF@length\n");
-
-    printf("DEFVAR LF@length_helper\n");
-    printf("DEFVAR LF@char\n");
-    printf("DEFVAR LF@new_strlen\n");
-
-    printf("MOVE LF@string LF@s$0\n");
-    printf("MOVE LF@start LF@i$0\n");
-    printf("MOVE LF@length_of_str LF@n$0\n");
-
-    printf("MOVE LF@lenght_helper int@0\n");
-
-    printf("STRLEN LF@length LF@strihg\n");//length = STRLEN(STRING)
-    printf("SUB LF@new_strlen LF@length int@1\n");//new_strlen = length - 1
+    // printf("CREATEFRAME\n");
+    // printf("DEFVAR TF@%%1\n");
+    // printf("MOVE TF@%%1 LF@%%1\n");
+    // printf("CALL $length\n");	
+    // printf("MOVE LF@length_of_str TF@%%retval\n");
+    printf("DEFVAR LF@%%param1\n");
+    printf("MOVE LF@param1 LF@%%1\n");
+    printf("STRLEN LF@%%length_of_str LF@%%param1\n");
 
     printf("DEFVAR LF@result\n");			
-    printf("LT LF@result LF@length_of_str int@0\n"); //n < O
-	printf("JUMPIFEQ $SUBSTR_END LF@result bool@true\n");
 
-    printf("EQ LF@result LF@length_of_str int@0\n"); //n == O
-	printf("JUMPIFEQ $SUBSTR_EMPTY LF@result bool@true\n");
+    printf(" EQ LF@result LF@length_of_str int@0\n");
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
+	printf(" LT LF@result LF@length_of_str int@0\n");
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
 
-    printf("LT LF@result LF@from int@0\n"); //i < O
-	printf("JUMPIFEQ $SUBSTR_END LF@result bool@true\n");
+	printf(" LT LF@result LF@%%2 int@0\n");
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
+	printf(" EQ LF@result LF@%%2 int@0\n");////////////////&??????
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
 
-    printf("GT LF@result LF@from LF@new_strlen\n");//i >= length - 1
-    printf("JUMPIFEQ $SUBSTR_END LF@result bool@true\n");
+	printf(" GT LF@result LF@%%2 LF@length_of_str\n");
+    printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
 
-    printf("ADD LF@length_helper LF@from\n");
-    printf("ADD LF@length_helper LF@length_of_str\n");//i + n
+	printf(" EQ LF@result LF@%%3 int@0\n");
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
+    printf(" LT LF@result LF@%%3 int@0\n");
+	printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
 
-    printf("GT LF@result LF@length_helper LF@length\n");//i + n > n ? n : i+n
-	printf("JUMPIFEQ $SUBSTR_LEN LF@result bool@true\n");
-    printf("JUMP $for_loop\n");
-	printf("LABEL $SUBSTR_LEN\n");
-	printf("MOV LF@length_helper LF@length\n");
+	printf(" GT LF@result LF@%%3 LF@length_of_str\n");
+    printf(" JUMPIFEQ $pop_ret LF@result bool@true\n");
 
-	printf("LABEL $for_loop\n");
-    printf("JUMPIFEQ $SUBSTR_RET_0 LF@length_helper LF@from\n");
-    printf("GETCHAR LF@char LF@string LF@from\n");
-    printf("CONCAT LF@$retval LF@$retval LF@char\n");
-    printf("ADD LF@from LF@from int@1\n");
-    printf("JUMP $for_loop\n");
+	printf(" DEFVAR LF@new_length\n");
+	printf(" MOVE LF@new_length LF@length_of_str\n");
+	printf(" SUB LF@new_length LF@new_length LF@%%2\n");
+	printf(" ADD LF@new_length LF@new_length int@1\n");
 
-    printf("LABEL $SUBSTR_RET_0\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $END\n");
+	// printf(" DEFVAR LF@edit_n_cond\n");
+	// printf(" GT LF@edit_n_cond LF@%2 LF@new_length\n");
+	// printf(" JUMPIFEQ $substr$edit_n LF@edit_n_cond bool@true\n");
 
-	printf("LABEL $SUBSTR_END\n");
-    printf("MOVE LF@retval nil@nil\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
+	// printf(" JUMP $substr$process\n");
+	// printf(" LABEL $substr$edit_n\n");
+	// printf(" MOVE LF@%2 LF@new_length\n");
+	// printf(" LABEL $substr$process\n");
+	// printf(" DEFVAR LF@index\n");
+	// printf(" MOVE LF@index LF@%%2\n");
+	// printf(" SUB LF@index LF@index int@1\n");
+	// printf(" DEFVAR LF@char\n");
+	// printf(" DEFVAR LF@process_loop_cond\n");
+	// printf(" LABEL $substr$process_loop\n");
+	// printf(" GETCHAR LF@char LF@%0 LF@index\n");
+	// printf(" CONCAT LF@%retval LF@%retval LF@char\n");
+	// printf(" ADD LF@index LF@index int@1\n");
+	// printf(" SUB LF@%2 LF@%2 int@1\n");
+	// printf(" GT LF@process_loop_cond LF@%2 int@0\n");
+	// printf(" JUMPIFEQ $substr$process_loop LF@process_loop_cond bool@true\n");
 
-    printf("LABEL $END\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
+	printf(" LABEL $pop_ret\n");
+	printf(" POPFRAME\n");
+	printf(" RETURN\n");
+	
 
-    printf("LABEL $SUBSTR_EMPTY\n");
-    printf("MOVE LF@retval string@\\000\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $END\n\n");
+}
+void print(){
+    printf("WRITE GF@");
 }
 
-void GENERATION_ORD(){
-    printf("LABEL $ORD\n");
-    printf("PUSHFRAME\n");
-    printf("DEFVAR LF@string\n");
-    printf("DEFVAR LF@int\n");
-    printf("DEFVAR LF@length\n");
-    printf("DEFVAR LF@right_int\n");
-    printf("DEFVAR LF@retval\n");//string
-    printf("DEFVAR LF@retval$1\n");//int
+// void float_2_int(){
+//    printf("LABEL $float_2_int\n");
+//    printf("PUSHFRAME\n");
+//    printf("DEFVAR LF@%retval\n");
+//    printf("FLOAT2INT LF@%retval LF@%1\n");
+//    printf("POPFRAME\n");
+//    printf("RETURN\n");
+// }
+// void int_2_float(){
+//    printf("LABEL $float_2_int\n");
+//    printf("PUSHFRAME\n");
+//    printf("DEFVAR LF@%retval\n");
+//    printf("FLOAT2INT LF@%retval LF@%1\n");
+//    printf("POPFRAME\n");
+//    printf("RETURN\n");
+// }
 
-    printf("MOVE LF@string LF@s$0\n");
-    printf("MOVE LF@int LF@i$0\n\n");
-
-    printf("STRLEN LF@length LF@string\n");
-    printf("SUB LF@length LF@length int@1\n");
-
-    printf("GT LF@right_int LF@int LF@length\n");
-    printf("JUMPIFEQ $ORD_END LF@right_int bool@true\n");//i > len(n)-1
-
-    printf("LT LF@right_int LF@int int@0\n");
-    printf("JUMPIFEQ $ORD_END LF@right_int bool@true\n");//i < 0
-
-    printf("STRI2INT LF@$retval LF@string LF@int\n");
-
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $ORD_RET\n");
-
-    printf("LABEL $ORD_END\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
-
-    printf("LABEL $ORD_RET\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
-}
-void GENERATION_CHR(){
-    printf("LABEL $CHR\n");
-    printf("PUSHFRAME\n");
-    printf("DEFVAR LF@int\n");
-    printf("DEFVAR LF@right_int\n");
-    printf("DEFVAR LF@retval\n");//string
-    printf("DEFVAR LF@retval$1\n");//int
-
-    printf("MOVE LF@int LF@i$0\n\n");
-
-    printf("LT LF@right_int LF@int int@0\n");
-    printf("JUMPIFEQ $CHR_END LF@right_int bool@true\n");//i < 0
-
-    printf("GT LF@right_int LF@int int@255\n");
-    printf("JUMPIFEQ $CHR_END LF@right_int bool@true\n");//i > len(n)-1
-
-    printf("INT2CHAR LF@$retval LF@int\n");
-
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@0\n");
-    printf("PUSHS LF@retval$1\n");
-    printf("JUMP $CHR_RET\n");
-
-    printf("LABEL $CHR_END\n");
-    printf("PUSHS LF@retval\n");
-    printf("MOVE LF@retval$1 int@1\n");
-    printf("PUSHS LF@retval$1\n");
-
-    printf("LABEL $CHR_RET\n");
-	printf("POPFRAME\n");
-	printf("RETURN\n\n");
+// void int2float{}
+// 	if (l_type == TYPE_INT && ret_type == TYPE_DOUBLE)
+// 	{
+// 		ADD_INST("FLOAT2R2EINT TF@%retval TF@%retval");
+// 	}
+// 	else if (l_type == TYPE_DOUBLE && ret_type == TYPE_INT)
+// 	{
+// 		ADD_INST("INT2FLOAT TF@%retval TF@%retval");
+// 	}				
+// void var_declare(char *var_id){
+// 	ptintf("DEFVAR LF@");
+//     printf("%s\n",var_id);
+// }f
+void generation_print(){
+        switch(token->type)
+        {
+            case 11:
+                printf( "WRITE int@%s\n",token->data);
+                break;
+            case 12:
+                printf("WRITE float@%s\n",token->data);
+                break;
+            case 13:
+                printf( "WRITE string@%s\n",token->data);
+                break;
+            default:
+                printf( "WRITE  LF@%s\n",token->data);
+                break;
+        }
 }
