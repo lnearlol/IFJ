@@ -206,8 +206,9 @@ bool program_start(){
                     get_and_set_token();  // when we return this function as valid we should get next token to compare with EOF
                 }
             }
-        } else if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION)
+        } else if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
             changeErrorCode(7);
+        }
     } 
 
     return program_start;
@@ -528,10 +529,31 @@ bool for_construction(){
     }
     get_and_set_token();
 
-    if(token->type != TOKEN_TYPE_SEMICOLON && !expression(TOKEN_TYPE_SEMICOLON)){
+
+    if(token->type != TOKEN_TYPE_SEMICOLON){
+
+
+        delete_expr_stack = true;
+        expr = createStack();
+
+        for_accept = expression(TOKEN_TYPE_SEMICOLON);
+        
+        if(token->type != TOKEN_TYPE_SEMICOLON && !for_accept){
+            return false;
+        }
+    } else {
+        changeErrorCode(2);
         return false;
     }
+    
     get_and_set_token();
+    if(!WAS_CONDITION && for_accept){
+        changeErrorCode(5);
+        return false;
+    }
+    for_accept = false;
+    WAS_CONDITION = false;
+    freeBothCompareLists();
 
     if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
         return false;
@@ -554,6 +576,7 @@ bool for_construction(){
 
 bool if_construction()
 {
+    delete_expr_stack = true;
     expr = createStack();
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
@@ -564,7 +587,7 @@ bool if_construction()
     if (if_accept && WAS_CONDITION){
         WAS_CONDITION = false;
         get_and_set_token();
-        if_accept = 0;
+        if_accept = false;
         freeBothCompareLists();
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
@@ -615,9 +638,10 @@ bool define_func(int end_condition, int declare, int equating, bool func){
     bool define_accept = false;
     number_of_operands = 0;
 
-    if(token->type == end_condition)
+    if(token->type == end_condition){
         define_accept = true;
-    else {
+        printf("HERE\n");
+    } else {
         define_accept = define_operands(func);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
             
@@ -729,6 +753,11 @@ bool count_operands(int end_condition){
         deleteStack(&expr);
         delete_expr_stack = false;
     }
+
+    if(WAS_CONDITION){  // WAS LOGICAL OPERATOR IN EXPRESSION
+        changeErrorCode(5);
+        return false;
+    }
   
 
     if(count_operands_accept && number_of_operands > 0){
@@ -759,9 +788,10 @@ bool expression(int end_condition){
     static int was_it_string = 0;
 
 
-
+    printf("token = %s\n", token->data);
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
+        
         push(expr, *token);
         bracket++;
         can_be_function = 0;
@@ -837,7 +867,7 @@ bool expression(int end_condition){
             }
 
             if(was_it_string == 1){  // if used not '+' for string
-                if(strcmp(token->data, "+")){
+                if(strcmp(token->data, "+") && token->type != TOKEN_TYPE_LOGICAL_OPERATOR){
 
                     changeErrorCode(5);
                     delete_expr_stack = false;
@@ -923,6 +953,7 @@ int is_closed_bracket(){
     int closed_bracket_counter = 0;
     while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // ЗАКИНУТЬ В СТЕК 4 (token)
+        
         push(expr, *token);
         get_and_set_token();
         closed_bracket_counter++;
@@ -1037,7 +1068,6 @@ bool return_construction(outputParams out_params){
     delete_expr_stack = true;
     expr = createStack();
     return_construction_accept = expression(return_end_condition);
-    //printf("RETURN 123 %d\n", return_construction_accept)
 
     if(!return_construction_accept){
        changeErrorCode(6);

@@ -1,8 +1,9 @@
+
 //
 
 package main
 func main(){
-	if 4 == 4 {
-        
-    }
+	if "ads" > "asd" {
+		a:= 0.0
+	}
 }
