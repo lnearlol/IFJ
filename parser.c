@@ -10,6 +10,7 @@ int return_in_function = true;
 bool wasMainInProgram = false;
 bool WAS_CONDITION = false;
 
+int if_else_counter = -1;
 
 genFrameType GEN_FRAME = LOCAL;
 
@@ -45,50 +46,39 @@ void changeErrorCode(int code){
 
 //  ------------------------------------ F O R   S T A C K ------------------------------------
 
-void add_to_for_stack(){
-    if (forStack == NULL){
-        forStack = malloc(sizeof(else_stack));
-        forStack->deep = deep;
-        forStack->next = NULL;
+stackContainer *declareContainer(stackContainer *myContainer){
+    myContainer = malloc(sizeof(struct stackContainer));
+    if(myContainer == NULL){
+        changeErrorCode(99);
+    }
+    myContainer->elseStack = NULL;
+    myContainer->forStack = NULL;
+    myContainer->endElseStack = NULL;
+    myContainer->jumpIfStack = NULL;
+    myContainer->jumpElseStack = NULL;
+    myContainer->jumpForStack = NULL;
+    return myContainer;
+}
+
+void add_to_for_if_stack(else_stack *changeStack, int deep){
+    
+    if (*changeStack == NULL){
+        (*changeStack) = malloc(sizeof(struct elseStack));
+        (*changeStack)->deep = deep;
+        (*changeStack)->next = NULL;
     } else {
-        else_stack *tmpforStack = forStack;
-        forStack = malloc(sizeof(else_stack));
-        forStack->deep = deep;
-        forStack->next = tmpforStack;
-        forStack->next->next = NULL;
+        else_stack tmpforStack = *changeStack;
+        *changeStack = malloc(sizeof(struct elseStack));
+        (*changeStack)->deep = deep;
+        (*changeStack)->next = tmpforStack;
     }
 }
 
-void delete_from_for_stack(){
-    if(forStack != NULL){
-        else_stack *tmpforStack = forStack->next;
-        free(forStack);
-        forStack = tmpforStack;
-    }
-}
-
-
-//  ------------------------------------ E L S E    S T A C K ------------------------------------
-
-void add_to_else_stack(){
-    if (elseStack == NULL){
-        elseStack = malloc(sizeof(else_stack));
-        elseStack->deep = deep;
-        elseStack->next = NULL;
-    } else {
-        else_stack *tmpElseStack = elseStack;
-        elseStack = malloc(sizeof(else_stack));
-        elseStack->deep = deep;
-        elseStack->next = tmpElseStack;
-        elseStack->next->next = NULL;
-    }
-}
-
-void delete_from_else_stack(){
-    if(elseStack != NULL){
-        else_stack *tmpElseStack = elseStack->next;
-        free(elseStack);
-        elseStack = tmpElseStack;
+void delete_from_for_if_stack(else_stack *changeStack){
+    if(*changeStack != NULL){
+        else_stack tmpforStack = (*changeStack)->next;
+        free(*changeStack);
+        *changeStack = tmpforStack;
     }
 }
 
@@ -233,6 +223,7 @@ bool function_check(){
             get_and_set_token();
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
                 get_and_set_token();
+                allowed_eol();
                 func = input_parameters();
                 if(func){
                     get_and_set_token();
@@ -250,7 +241,13 @@ bool function_check(){
                                 if(PROGRAMM_RUN == FIRST_RUN)
                                     func = first_run_body();
                                 else
-                                    func = function_body();
+                                    func = function_body(); // собираем инфу в дерево о инициализации всех возможных переменных всех глубин
+                                    // assembler function  выписать все DEFVAR'ы
+                                    // third run without defvars
+                                    // JUST DEREVO (NOT SEZNAM DEREV'VEV)
+                                    // save token linc on previous token and run body() again
+
+                                    // W E    N E E D    T H I R D    R U N !!!!!!!!!!!!!!!!!!!!!!
                                 if(func && token->type == TOKEN_TYPE_END_BLOCK){
                                     get_and_set_token();
                                     if(token->type == TOKEN_TYPE_EOL)
@@ -305,6 +302,7 @@ bool input_single_parameters(){
             }
             else if (token->type == TOKEN_TYPE_COMMA){
                 get_and_set_token();
+                allowed_eol();
                 input_single_parameter = input_single_parameters();
             } else {
                 input_single_parameter = false;
@@ -413,35 +411,68 @@ bool function_body(){
     }
 
     // W O R K I N G    W I T H    E L S E - S T A C K
-    if(token->type == TOKEN_TYPE_ELSE && elseStack != NULL){
-        if(elseStack->deep == deep)
+    if(token->type == TOKEN_TYPE_ELSE && Container->elseStack != NULL){
+        if(Container->elseStack->deep == deep)
             else_condition_flag = true;
-            delete_from_else_stack();
-    } else if (elseStack != NULL) {
-        if(elseStack->deep == deep && token->type != TOKEN_TYPE_END_BLOCK)
-            delete_from_else_stack();
-        else if (elseStack->deep > deep)
-            delete_from_else_stack();
+
+        add_to_for_if_stack(&(Container->jumpElseStack), Container->jumpIfStack->deep);
+        ////printf("-------------- else +, if - %d\n", Container->jumpIfStack->deep);
+        // jump2
+        GEN_JUMP(current_function_name, Container->jumpElseStack->deep, false);
+        // navěšti 1
+        GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+        delete_from_for_if_stack(&(Container->jumpIfStack));
+
+            delete_from_for_if_stack(&(Container->elseStack));
+    } else if (Container->elseStack != NULL) {
+        if(Container->elseStack->deep == deep && token->type != TOKEN_TYPE_END_BLOCK){
+            delete_from_for_if_stack(&(Container->elseStack));
+            ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
+            // navěšti 1
+            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+            delete_from_for_if_stack(&(Container->jumpIfStack));
+            
+        } else if (Container->elseStack->deep > deep){
+            delete_from_for_if_stack(&(Container->elseStack));
+            ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
+            // navěšti 1
+            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+            delete_from_for_if_stack(&(Container->jumpIfStack));
+        }
     }
 
     // W O R K I N G    W I T H    F O R - S T A C K
-    if(token->type == TOKEN_TYPE_END_BLOCK && forStack != NULL){
-        if(forStack->deep == deep){
-            delete_from_for_stack();
+    if(token->type == TOKEN_TYPE_END_BLOCK && Container->forStack != NULL){
+        if(Container->forStack->deep == deep){
+            delete_from_for_if_stack(&(Container->forStack));
             if(SymTable->var != NULL && deep == SymTable->var->deep)
                 freeVariablesLastLabel(&(SymTable->var));
             deep--;
         }
     } 
 
+    // W O R K I N G    W I T H    E N D   E L S E - S T A C K
+    if(token->type == TOKEN_TYPE_END_BLOCK && Container->endElseStack != NULL){
+        if(Container->endElseStack->deep == deep){
+            delete_from_for_if_stack(&(Container->endElseStack));
+            ////printf("-------------- else - %d\n", Container->jumpElseStack->deep);
+            // navěšti 2
+            GEN_SCOPE(current_function_name, Container->jumpElseStack->deep, false);
+            delete_from_for_if_stack(&(Container->jumpElseStack));
+        }
+    } 
+            //printf("------------------------------ deep = %d\n", deep);
+
 
     // E N D    B L O C K   ( L A S T )
-    if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1) {
+    if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1){
         function_accept = true;
+        //printf("------------------------------ IMMMMMMMMMMM HEEERE\n");
         if(findFunction(current_function_name, SymTable->func)->output_params != NULL && return_in_function == true){ // was not return command
                 changeErrorCode(6); // number of return args and function output args not the same
                 return false;
         }
+        
         GEN_END_OF_FUNCTION(current_function_name);
     // E O L
     } else if(token->type == TOKEN_TYPE_EOL){
@@ -477,6 +508,7 @@ bool function_body(){
     // E L S E
     } else if(token->type == TOKEN_TYPE_ELSE && else_condition_flag){
         get_and_set_token();
+        add_to_for_if_stack(&(Container->endElseStack), deep);
         function_accept = start_block_new_line();
 
     // I D E N T I F I E R    --   D E C L A R E,  E Q U A T I N G,  F U N C T I O N
@@ -560,7 +592,7 @@ bool for_construction(){
     }
     if(token->type == TOKEN_TYPE_START_BLOCK){
         get_and_set_token();
-        add_to_for_stack();
+        add_to_for_if_stack(&(Container->forStack), deep);
         deep++;                                 
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
@@ -581,7 +613,13 @@ bool if_construction()
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
     if(if_accept){
-        add_to_else_stack();
+        add_to_for_if_stack(&(Container->elseStack), deep);
+        // A S S E M B L Y
+        add_to_for_if_stack(&(Container->jumpIfStack), ++if_else_counter);
+        ////printf("------------------%d\n", if_else_counter);
+        // jump1
+        GEN_JUMP(current_function_name, Container->jumpIfStack->deep, true);
+
         deep++;
     }
     if (if_accept && WAS_CONDITION){
@@ -640,7 +678,6 @@ bool define_func(int end_condition, int declare, int equating, bool func){
 
     if(token->type == end_condition){
         define_accept = true;
-        printf("HERE\n");
     } else {
         define_accept = define_operands(func);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
@@ -676,9 +713,12 @@ bool define_func(int end_condition, int declare, int equating, bool func){
 
 
         } else if (func && define_accept && token->type == TOKEN_TYPE_LEFT_BRACKET){
-            
+            GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
             get_and_set_token();
             allowed_eol(); // func_name( \n args situation
+            if(strcmp(saved_func_name->data, "print"))
+                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
+
             define_accept = expression_func_arguments();
             if (define_accept){
                 number_of_operands--;
@@ -686,7 +726,8 @@ bool define_func(int end_condition, int declare, int equating, bool func){
                 get_and_set_token();
                 define_accept = true;
             }
-            GEN_CALL(saved_func_name);
+            if(strcmp(saved_func_name->data, "print"))
+                GEN_CALL(saved_func_name);
         } else
             define_accept = false;
     }
@@ -788,7 +829,6 @@ bool expression(int end_condition){
     static int was_it_string = 0;
 
 
-    printf("token = %s\n", token->data);
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         
@@ -796,6 +836,7 @@ bool expression(int end_condition){
         bracket++;
         can_be_function = 0;
         get_and_set_token();
+        allowed_eol();
         expression_accept = expression(end_condition);
 
     } else if(token->type == TOKEN_TYPE_LITERAL_FLOAT || token->type == TOKEN_TYPE_LITERAL_INT 
@@ -853,7 +894,7 @@ bool expression(int end_condition){
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR || token->type == TOKEN_TYPE_LOGICAL_OPERATOR){
             // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
             // ЗАКИНУТЬ В СТЕК 3 (token)
-
+            
             if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
                if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
                     delete_expr_stack = false;
@@ -894,9 +935,11 @@ bool expression(int end_condition){
             get_and_set_token();
 
             allowed_eol(); // func_name( \n args situation
-            GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
+            if(strcmp(saved_func_name->data, "print"))
+                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
             expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
-            GEN_CALL(saved_func_name);
+            if(strcmp(saved_func_name->data, "print"))
+                GEN_CALL(saved_func_name);
             if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
                 get_and_set_token();
 
@@ -1014,11 +1057,13 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
             
             if(args_check->type == 99){ // PRINT INPUT PARAMETERS TYPE
+                // t u t   p r i n t
+                GEN_PRINT_WRITE(token, deep);
                 args_check->next = args_check; // print cloning output argument
                 if(token->type == TOKEN_TYPE_IDENTIFIER){
                     if(!findVariableWithType(token, deep, SymTable->var)){
                         args_check->next = NULL;
-                        changeErrorCode(3); // not defined variable int printf
+                        changeErrorCode(3); // not defined variable int //in
                         return false;
                     }
                 }
@@ -1121,15 +1166,18 @@ bool start_block_new_line(){
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
 int main(){
-   // program_code = fopen ("file.ifj20", "r");
     SymTable = declaration(SymTable);
+    Container = declareContainer(Container);
     
     symTab_for_inbuilt_func(SymTable); // adding inbulid functions to symtable
     saved_func_name = saved_arg_name = saved_arg_type = NULL;
     GEN_START_MAIN();
+    GEN_CALL_INBUILDS();
+
     token = malloc (sizeof(Token));
     token->next = NULL;
     Token *second_run = token;
+
     if(get_token(token) == 1)
         changeErrorCode(1);
     
@@ -1151,12 +1199,25 @@ int main(){
         } 
     }
 
-    while(forStack != NULL)
-        delete_from_for_stack();
+    while(Container->forStack != NULL)
+        delete_from_for_if_stack(&(Container->forStack));
     
-    while(elseStack != NULL)
-        delete_from_else_stack();
+    while(Container->elseStack != NULL)
+        delete_from_for_if_stack(&(Container->elseStack));
     
+    while(Container->endElseStack != NULL)
+        delete_from_for_if_stack(&(Container->endElseStack));
+
+    while(Container->jumpIfStack != NULL)
+        delete_from_for_if_stack(&(Container->jumpIfStack));
+    
+    while(Container->jumpForStack != NULL)
+        delete_from_for_if_stack(&(Container->jumpForStack));
+    
+    while(Container->jumpElseStack != NULL)
+        delete_from_for_if_stack(&(Container->jumpElseStack));    
+
+    printf("LABEL $END_OF_PROGRAM\n");
     if(delete_expr_stack == true)
         deleteStack(&expr);
     
@@ -1165,10 +1226,11 @@ int main(){
     GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
     freeFunctions(&(SymTable->func));
     dtor(startCommandFuncList);
+    free(Container);
     free(SymTable);
     dtor(second_run);
-    printf("---------------------------------------------------------------------------------------------------------\n");
-    printf("                  [PROGRAMM RUN:%d] [ERROR CODE %d]\n", PROGRAMM_RUN, error_flag);
-    printf("---------------------------------------------------------------------------------------------------------\n");
+    ////printf("---------------------------------------------------------------------------------------------------------\n");
+    ////printf("                  [PROGRAMM RUN:%d] [ERROR CODE %d]\n", PROGRAMM_RUN, error_flag);
+    ////printf("---------------------------------------------------------------------------------------------------------\n");
     return error_flag;
 }

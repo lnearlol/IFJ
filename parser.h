@@ -37,13 +37,21 @@ void allowed_eol();
 typedef struct elseStack {
     int deep;
     struct elseStack *next;
-} else_stack;
+} *else_stack;
 
-void add_to_else_stack();
-void delete_from_else_stack();
+typedef struct stackContainer{
+    else_stack elseStack;
+    else_stack forStack;
+    else_stack endElseStack;
+    else_stack jumpForStack;
+    else_stack jumpIfStack;
+    else_stack jumpElseStack;
+} stackContainer;
 
-else_stack *elseStack;
-else_stack *forStack;
+stackContainer *declareContainer(stackContainer *myContainer);
+stackContainer *Container;
+void add_to_for_if_stack(else_stack *changeStack, int deep);
+void delete_from_for_if_stack(else_stack *changeStack);
 
 #define FIRST_RUN 1
 #define SECOND_RUN 0
@@ -119,3 +127,27 @@ void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
 void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
 void GEN_CREATE_LEFT_SIDE(int deep);
 void GEN_EQ_LEFT_SIDE(int deep);
+char* ASM_DATA_APPEND(char* ASM_string, char state, int length);
+char *GEN_ASM_STRING(Token *token, char* ASM_string);
+
+void GEN_PRINT_WRITE(Token *token, int deep);
+
+// ---------------- I F
+
+void GEN_JUMP(Token *token, int count, bool condition);
+void GEN_SCOPE(Token *token, int count, bool condition);
+
+
+// ----------------   I N B U I L D   F U N C T I O N S
+
+void GEN_CALL_INBUILDS();
+
+void GENERATION_INPUTS();
+void GENERATION_INPUTI();
+void GENERATION_INPUTF();
+void GENERATION_LEN();
+void GENERATION_FLOAT2INT();
+void GENERATION_INT2FLOAT();
+void GENERATION_SUBSTR();
+void GENERATION_ORD();
+void GENERATION_CHR();

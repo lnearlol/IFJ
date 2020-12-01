@@ -163,9 +163,11 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     if (var1 == NULL)
         return 0;
 
+    // printf("---------------------------- var1 = %d, var2 = %d\n", var1->type, var2);
+
     if(var1->type == TOKEN_TYPE_IDENTIFIER){      
         variable tmp = findVariableWithType(var1, deep, Var);
-
+        
         if(!tmp){
             changeErrorCode(3);
             return 0;
