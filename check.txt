@@ -217,50 +217,73 @@ LABEL $CHR_RET
 POPFRAME
 RETURN
 
-LABEL $add
-PUSHFRAME 
-
-PUSHS LF@i$0
-PUSHS LF@j$0
-ADDS
-
-POPFRAME 
-RETURN 
-
 LABEL $$main
 CREATEFRAME
 PUSHFRAME
 
+DEFVAR LF@o$2  #defines
+DEFVAR LF@i$1  #defines
+DEFVAR LF@a$0  #defines
+DEFVAR LF@a$2  #defines
+PUSHS int@1
+
+POPS LF@a$0
 PUSHS int@0
 
-DEFVAR LF@i$0
-POPS LF@i$0
-CREATEFRAME
-DEFVAR TF@i$0
-DEFVAR TF@j$0
-MOVE TF@i$0 int@1
-MOVE TF@j$0 int@1
-CALL $add
-POPS LF@i$0
-WRITE LF@i$0
-WRITE string@\010
+POPS LF@i$1
+LABEL $main$for$7
+PUSHS LF@i$1
+PUSHS int@10000
+LTS
+
+PUSHS bool@true
+JUMPIFEQS $main$for$5
+JUMP $main$for$4
+LABEL $main$for$6
+PUSHS LF@i$1
 PUSHS int@1
+ADDS
+
+POPS LF@i$1
+JUMP $main$for$7
+LABEL $main$for$5
+PUSHS LF@a$0
 PUSHS int@1
-PUSHS int@20
+PUSHS LF@i$1
+PUSHS LF@a$0
+POPS GF@tmpDividingByZero
+JUMPIFEQ error9 GF@tmpDividingByZero int@0
+PUSHS GF@tmpDividingByZero
+IDIVS
 MULS
 ADDS
 
-POPS LF@i$0
-PUSHS LF@i$0
-PUSHS int@0
-GTS
+POPS LF@a$2
+PUSHS LF@a$2
+PUSHS int@3
+POPS GF@tmpDividingByZero
+JUMPIFEQ error9 GF@tmpDividingByZero int@0
+PUSHS GF@tmpDividingByZero
+IDIVS
+
+POPS LF@o$2
+PUSHS LF@o$2
+PUSHS LF@a$2
+PUSHS int@1
+ADDS
+LTS
 
 PUSHS bool@true
-JUMPIFNEQS $main$if$0$else
-WRITE LF@i$0
-JUMP $main$if$0$end
-LABEL $main$if$0$else
-LABEL $main$if$0$end
+JUMPIFNEQS $main$if$1$else
+WRITE string@i\032=\032
+WRITE LF@i$1
+WRITE string@\010
+WRITE string@o\032=\032
+WRITE LF@o$2
+WRITE string@\010
+LABEL $main$if$1$else
+JUMP $main$for$6
+LABEL $main$for$4
 POPFRAME
 
 JUMP $END_OF_PROGRAM

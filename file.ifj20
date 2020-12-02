@@ -1,24 +1,14 @@
-// IFJ20: Ilustrace, kde se mohou, kde musi a kde se nesmi vyskytovat odradkovani
+// Program 3: Prace s retezci a vestavenymi funkcemi
 package main
 
-func add(i /*zde se nesmi odradkovat*/ int,
-j int /*zde se nesmi odradkovat*/) (int) /*zde se nesmi odradkovat*/ {
-	return i + j
-}
-
-func main() /*zde se nesmi odradkovat*/ {
-	i := 0
-	i = add( /* zde muzeme odradkovavat*/
-		1, /*pred carkou se nesmi, za carkou muze odradkovat*/
-		1 /*zde se nesmi odradkovat*/)
-	print(i, "\n")
-	i = /* zde muzeme odradkovavat*/
-		1 /*zde se nesmi odradkovat*/ + ( /* zde muzeme odradkovavat*/
-		1) /*zde se nesmi odradkovat*/ *  /* zde muzeme odradkovavat*/
-			(20)
-	if i > /* zde muzeme odradkovavat*/
-		0 /*zde se nesmi odradkovat*/ {
-		print(i)
-	} else /*zde se nesmi odradkovat*/ /*zde se nesmi odradkovat*/ {
-	} 
+func main() {
+	a:=1
+	for i := 0; i < 10000; i=i+1{
+		a := a+1*(i/a)
+		o := a/3
+		if o < a+1{
+			print("i = ", i, "\n")
+			print("o = ", o, "\n")
+		}
+	}
 }

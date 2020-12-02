@@ -9,8 +9,10 @@ int error_flag = 0;
 int return_in_function = true;
 bool wasMainInProgram = false;
 bool WAS_CONDITION = false;
+bool repeatFunctionRun = false;
 
 int if_else_counter = -1;
+int for_counter = -1;
 
 genFrameType GEN_FRAME = LOCAL;
 
@@ -20,6 +22,10 @@ int GET_GEN_FRAME(){
 
 void CHANGE_GEN_FRAME(int Frame){
     GEN_FRAME = Frame;
+}
+
+bool GET_REPEAT_FUNC_RUN(){
+    return repeatFunctionRun;
 }
 
 
@@ -146,6 +152,7 @@ void delete_type_from_compare_list(){
 bool checkCompareLists(){
     if (typeCompareList != NULL  || varCompareList != NULL){
         changeErrorCode(3);
+        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
         return false;
     } else 
         return true;
@@ -224,6 +231,16 @@ bool function_check(){
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
                 get_and_set_token();
                 allowed_eol();
+
+
+                Token *repeat_function_run = NULL;
+                    Token *saved_func_name_new = saved_func_name;
+                    Token *saved_arg_name_new = saved_arg_name;
+                    Token *saved_arg_type_new = saved_arg_type;
+                    repeat_function_run = token;
+                    fprintf(stderr, "token1 = %s\n", token->data);
+                
+
                 func = input_parameters();
                 if(func){
                     get_and_set_token();
@@ -238,16 +255,35 @@ bool function_check(){
                             if(token->type == TOKEN_TYPE_EOL){
                                 get_and_set_token();
                                 deep++;    // when first { is opened in function
+                                
                                 if(PROGRAMM_RUN == FIRST_RUN)
                                     func = first_run_body();
-                                else
+                                else {
                                     func = function_body(); // собираем инфу в дерево о инициализации всех возможных переменных всех глубин
                                     // assembler function  выписать все DEFVAR'ы
                                     // third run without defvars
                                     // JUST DEREVO (NOT SEZNAM DEREV'VEV)
                                     // save token linc on previous token and run body() again
 
+                                    repeatFunctionRun = true;
                                     // W E    N E E D    T H I R D    R U N !!!!!!!!!!!!!!!!!!!!!!
+                                    if(func){
+                                        saved_func_name = saved_func_name_new;
+                                        saved_arg_name = saved_arg_name_new;
+                                        saved_arg_type = saved_arg_type_new;
+                                        token = repeat_function_run;
+                                        fprintf(stderr, "token2 = %s\n", token->data);
+                                        input_parameters();
+                                        get_and_set_token();
+                                        output_parameters();
+                                        get_and_set_token();
+                                        get_and_set_token();
+                                        freeGenVariables(&(SymTable->genVar), true);
+                                        deep++;
+                                        func = function_body();
+                                        repeatFunctionRun = false;
+                                    }
+                                }
                                 if(func && token->type == TOKEN_TYPE_END_BLOCK){
                                     get_and_set_token();
                                     if(token->type == TOKEN_TYPE_EOL)
@@ -418,9 +454,9 @@ bool function_body(){
         add_to_for_if_stack(&(Container->jumpElseStack), Container->jumpIfStack->deep);
         ////printf("-------------- else +, if - %d\n", Container->jumpIfStack->deep);
         // jump2
-        GEN_JUMP(current_function_name, Container->jumpElseStack->deep, false);
+        GEN_JUMP(current_function_name, Container->jumpElseStack->deep, false, NO_FOR);
         // navěšti 1
-        GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+        GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
         delete_from_for_if_stack(&(Container->jumpIfStack));
 
             delete_from_for_if_stack(&(Container->elseStack));
@@ -429,14 +465,14 @@ bool function_body(){
             delete_from_for_if_stack(&(Container->elseStack));
             ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
             // navěšti 1
-            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
             delete_from_for_if_stack(&(Container->jumpIfStack));
             
         } else if (Container->elseStack->deep > deep){
             delete_from_for_if_stack(&(Container->elseStack));
             ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
             // navěšti 1
-            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true);
+            GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
             delete_from_for_if_stack(&(Container->jumpIfStack));
         }
     }
@@ -445,6 +481,16 @@ bool function_body(){
     if(token->type == TOKEN_TYPE_END_BLOCK && Container->forStack != NULL){
         if(Container->forStack->deep == deep){
             delete_from_for_if_stack(&(Container->forStack));
+            
+            ////printf("------------------%d\n", if_else_counter);
+            // jumpFor2
+            GEN_JUMP(current_function_name, Container->jumpForStack->next->deep, false, FOR_JUMP);
+            // scopeFor4
+            GEN_SCOPE(current_function_name, Container->jumpForStack->next->next->next->deep, false, true);
+            for(int i = 0; i < 4; i++)
+                delete_from_for_if_stack(&(Container->jumpForStack));
+            
+
             if(SymTable->var != NULL && deep == SymTable->var->deep)
                 freeVariablesLastLabel(&(SymTable->var));
             deep--;
@@ -457,7 +503,7 @@ bool function_body(){
             delete_from_for_if_stack(&(Container->endElseStack));
             ////printf("-------------- else - %d\n", Container->jumpElseStack->deep);
             // navěšti 2
-            GEN_SCOPE(current_function_name, Container->jumpElseStack->deep, false);
+            GEN_SCOPE(current_function_name, Container->jumpElseStack->deep, false, false);
             delete_from_for_if_stack(&(Container->jumpElseStack));
         }
     } 
@@ -564,6 +610,11 @@ bool for_construction(){
 
     if(token->type != TOKEN_TYPE_SEMICOLON){
 
+        // A S S E M B L Y
+        for(int i = 0; i < 4; i++)    
+            add_to_for_if_stack(&(Container->jumpForStack), ++for_counter);
+        // scopeFor1
+        GEN_SCOPE(current_function_name, Container->jumpForStack->deep, false, true);
 
         delete_expr_stack = true;
         expr = createStack();
@@ -586,14 +637,26 @@ bool for_construction(){
     for_accept = false;
     WAS_CONDITION = false;
     freeBothCompareLists();
+    
+    // jumpFor3
+    GEN_JUMP(current_function_name, Container->jumpForStack->next->next->deep, false, FOR_JUMP_EQ);
+    // jumpFor4
+    GEN_JUMP(current_function_name, Container->jumpForStack->next->next->next->deep, false, FOR_JUMP);
+
+    // scopeFor2
+    GEN_SCOPE(current_function_name, Container->jumpForStack->next->deep, false, true);
 
     if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
         return false;
     }
+    // jumpFor1
+    GEN_JUMP(current_function_name, Container->jumpForStack->deep, false, FOR_JUMP);
     if(token->type == TOKEN_TYPE_START_BLOCK){
         get_and_set_token();
         add_to_for_if_stack(&(Container->forStack), deep);
-        deep++;                                 
+        deep++;
+    // scopeFor3
+    GEN_SCOPE(current_function_name, Container->jumpForStack->next->next->deep, false, true);                                 
         if(token->type == TOKEN_TYPE_EOL){
             get_and_set_token();
             for_accept = function_body();
@@ -618,7 +681,7 @@ bool if_construction()
         add_to_for_if_stack(&(Container->jumpIfStack), ++if_else_counter);
         ////printf("------------------%d\n", if_else_counter);
         // jump1
-        GEN_JUMP(current_function_name, Container->jumpIfStack->deep, true);
+        GEN_JUMP(current_function_name, Container->jumpIfStack->deep, true, NO_FOR);
 
         deep++;
     }
@@ -691,6 +754,10 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             define_accept = count_operands(end_condition);
             // ЗАПИСЬ
             if(define_accept && !check_declare_logic(deep)){
+                
+                // if(GET_REPEAT_FUNC_RUN())
+                //     printf("beh dva deep - %d\n", deep);
+                // printf("heeeeeeeeeeeeeeeeeeeeeere\n");
                 changeErrorCode(7);
                 return false;
             } else if(define_accept){
@@ -741,6 +808,7 @@ bool define_operands(int func){
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_UNDERSCORE || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
         number_of_operands++;
+                    fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
 
         add_var_to_compare_list(token);
         GEN_ADD_VAR_TO_ASSEMBLY_STACK(token); // A S S E M B L Y
@@ -754,6 +822,7 @@ bool define_operands(int func){
         || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION)){
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
                 changeErrorCode(3);   //  ERROR 3, not found function_name
+                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                 return false;
             }
             // S Y M T A B L E    L O G I C
@@ -828,6 +897,7 @@ bool expression(int end_condition){
     static int closed_bracket_counter = 0;
     static int was_it_string = 0;
 
+            // fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
 
     
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
@@ -846,6 +916,7 @@ bool expression(int end_condition){
        && !findFunction(token, SymTable->func) && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
             sort_to_postfix(expr, deep, SymTable->var);
             changeErrorCode(3);
+            fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
             delete_expr_stack = false;
             return false;
        }
@@ -872,6 +943,7 @@ bool expression(int end_condition){
                 delete_expr_stack = false;
                 sort_to_postfix(expr, deep, SymTable->var);
                 changeErrorCode(3); // variable not defined 
+                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                 return false;
             }
 
@@ -900,6 +972,7 @@ bool expression(int end_condition){
                     delete_expr_stack = false;
                     sort_to_postfix(expr, deep, SymTable->var);
                     changeErrorCode(3); // variable not defined
+                    fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                     return false;
                 } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
                     was_it_string = 1;
@@ -926,6 +999,7 @@ bool expression(int end_condition){
             // S Y M T A B L E    L O G I C
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
                 changeErrorCode(3);   //  ERROR 3, not found function_name
+                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                 return false;
             }
             if(!findFunction(saved_func_name, SymTable->func)){
@@ -1018,6 +1092,7 @@ bool expression_func_arguments(){
     function arg_find = findFunction(saved_func_name, SymTable->func);
     if(!arg_find) {
         changeErrorCode(3);  // not found function
+        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
         return false;
     }
     inputParams args_check = arg_find->input_params;
@@ -1058,12 +1133,15 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             
             if(args_check->type == 99){ // PRINT INPUT PARAMETERS TYPE
                 // t u t   p r i n t
+                                    fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
+
                 GEN_PRINT_WRITE(token, deep);
                 args_check->next = args_check; // print cloning output argument
                 if(token->type == TOKEN_TYPE_IDENTIFIER){
                     if(!findVariableWithType(token, deep, SymTable->var)){
                         args_check->next = NULL;
                         changeErrorCode(3); // not defined variable int //in
+                        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                         return false;
                     }
                 }
@@ -1222,6 +1300,7 @@ int main(){
         deleteStack(&expr);
     
     freeAllVariables(&(SymTable->var));
+    freeGenVariables(&(SymTable)->genVar, false);
     freeBothCompareLists();
     GEN_DELETE_FULL_VAR_ASSEMBLY_STACK();
     freeFunctions(&(SymTable->func));
@@ -1229,8 +1308,8 @@ int main(){
     free(Container);
     free(SymTable);
     dtor(second_run);
-    ////printf("---------------------------------------------------------------------------------------------------------\n");
-    ////printf("                  [PROGRAMM RUN:%d] [ERROR CODE %d]\n", PROGRAMM_RUN, error_flag);
-    ////printf("---------------------------------------------------------------------------------------------------------\n");
+    // printf("---------------------------------------------------------------------------------------------------------\n");
+    // printf("                  [PROGRAMM RUN:%d] [ERROR CODE %d]\n", PROGRAMM_RUN, error_flag);
+    // printf("---------------------------------------------------------------------------------------------------------\n");
     return error_flag;
 }

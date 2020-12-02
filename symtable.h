@@ -29,12 +29,32 @@ typedef struct Function{
     outputParams output_params;
 } *function;
 
+
+typedef struct DeepInside{
+  int depthValue;
+  struct DeepInside *next;
+} *deepInside;
+
+
+typedef struct GenVariable{
+    char *name;
+    struct GenVariable *RPtr;
+    struct GenVariable *LPtr;
+    deepInside depth;
+} *genVariable;
+
+
+
 typedef struct sym_tab
 {
   variable var;//struct sym_tab* func;
   function func;//struct sym_tab* var;
+  genVariable genVar;
 }SymTab;
 
+void insertGenVariable(Token *token, int deep, genVariable *genVar);
+void freeGenVariables(genVariable *genVar, bool print);
+void insertDepth(int deep, deepInside *Depth);
 
 SymTab *declaration(SymTab *SymTable);
 void insertFunction(Token *token, function *Func);

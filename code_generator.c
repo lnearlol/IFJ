@@ -55,6 +55,8 @@ char framePrint[3];
  * @param token Pointer to the token that indicates the function name
  */
   void GEN_END_OF_FUNCTION(Token *token){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     if(!strcmp(token->data, "main")){
 	    printf("POPFRAME\n\n");
         printf("JUMP $END_OF_PROGRAM\n");
@@ -69,7 +71,8 @@ char framePrint[3];
  * @param InParams Signifies input parameters of function 
  */
 void GEN_CREATE_FRAME_AND_SET_PARAMS(inputParams InParams){
-    
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     printf("CREATEFRAME\n");
     while(InParams != NULL){
         printf("DEFVAR TF@%s$0\n", InParams->name);
@@ -83,6 +86,8 @@ void GEN_CREATE_FRAME_AND_SET_PARAMS(inputParams InParams){
  * @param deep Signifies the level of the variable
  */
 void MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     printf("MOVE TF@%s$0 ", InParam->name);
     GEN_WRITE_VAR_LITERAL(value, deep);
     printf("\n");
@@ -93,6 +98,8 @@ void MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep){
  * @param token Pointer to the token that indicates the function name
  */
 void GEN_CALL(Token *token){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
    printf("CALL $%s\n", token->data);
 }
 
@@ -205,13 +212,15 @@ char *GEN_ASM_STRING(Token *token, char* ASM_string){
  * @param deep Signifies the level of the variable
  */
 void GEN_CREATE_LEFT_SIDE(int deep){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     while(varStack != NULL){
         if(varStack->token_stack->type == TOKEN_TYPE_UNDERSCORE)
             changeErrorCode(3);
         else {
-            printf("DEFVAR ");
-            GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
-            printf("\n");
+            // printf("DEFVAR ");
+            // GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
+            // printf("\n");
             printf("POPS ");
             GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
             printf("\n");
@@ -221,6 +230,8 @@ void GEN_CREATE_LEFT_SIDE(int deep){
 }
 
 void GEN_EQ_LEFT_SIDE(int deep){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     while(varStack != NULL){
         printf("POPS ");
         GEN_WRITE_VAR_LITERAL(varStack->token_stack, deep);
@@ -234,6 +245,12 @@ void GEN_EQ_LEFT_SIDE(int deep){
  * @param stack Pointer signifies 
  */
 void GEN_ADD_VAR_TO_ASSEMBLY_STACK(Token *stack){
+    if(!GET_REPEAT_FUNC_RUN()){
+                // printf("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ended\n");
+
+        return;
+    }
+    // printf("--------------------------------------------------------------------\n");
     if(varStack == NULL){
         varStack = malloc(sizeof(var_assembly_stack));
         varStack->token_stack = stack;
@@ -256,6 +273,8 @@ void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK(){
 }
 
 void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK(){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     while(varStack != NULL)
         GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
 }
@@ -265,6 +284,8 @@ void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK(){
 * @param deep Signifies the level of the variable
 */
 void GEN_PRINT_WRITE(Token *token, int deep){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
     printf("WRITE ");
     GEN_WRITE_VAR_LITERAL(token, deep);
     printf("\n");
@@ -278,16 +299,28 @@ void GEN_PRINT_WRITE(Token *token, int deep){
  * @param count Number of condition
  * @param condition Signifies the current condition
  */
-void GEN_JUMP(Token *token, int count, bool condition){
-    if (condition){
+void GEN_JUMP(Token *token, int count, bool if_condition, int for_condition){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
+    
+    if(for_condition == FOR_JUMP_EQ){
+        printf("PUSHS bool@true\n");
+        printf("JUMPIFEQS $%s$for$%d\n", token->data, count);
+    } else if (for_condition == FOR_JUMP){
+        printf("JUMP $%s$for$%d\n", token->data, count);
+    } else if (if_condition){
         printf("PUSHS bool@true\n");
         printf("JUMPIFNEQS $%s$if$%d$else\n", token->data, count);
     } else 
         printf("JUMP $%s$if$%d$end\n", token->data, count);
 }
 
-void GEN_SCOPE(Token *token, int count, bool condition){
-    if (condition){
+void GEN_SCOPE(Token *token, int count, bool if_condition, bool for_condition){
+    if(!GET_REPEAT_FUNC_RUN())
+        return;
+    if(for_condition){
+        printf("LABEL $%s$for$%d\n", token->data, count);
+    } else if (if_condition){
         printf("LABEL $%s$if$%d$else\n", token->data, count);
     } else 
         printf("LABEL $%s$if$%d$end\n", token->data, count);

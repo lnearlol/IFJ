@@ -101,6 +101,7 @@ bool compare_return_and_output_params_logic();
 typedef enum {GLOBAL, LOCAL, TEMPORARY} genFrameType;
 int GET_GEN_FRAME();
 void CHANGE_GEN_FRAME(int Frame);
+bool GET_REPEAT_FUNC_RUN();
 
 
 void GEN_START_OF_FUNCTION(Token *token);
@@ -132,10 +133,14 @@ char *GEN_ASM_STRING(Token *token, char* ASM_string);
 
 void GEN_PRINT_WRITE(Token *token, int deep);
 
-// ---------------- I F
+// ---------------- I F  -  F O R
 
-void GEN_JUMP(Token *token, int count, bool condition);
-void GEN_SCOPE(Token *token, int count, bool condition);
+void GEN_JUMP(Token *token, int count, bool if_condition, int for_condition);
+void GEN_SCOPE(Token *token, int count, bool if_condition, bool for_condition);
+
+#define NO_FOR 0
+#define FOR_JUMP_EQ 1
+#define FOR_JUMP 2
 
 
 // ----------------   I N B U I L D   F U N C T I O N S
