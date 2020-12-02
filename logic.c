@@ -4,13 +4,21 @@
 // Write from typeCompareList to varCompareList and free that lists.
 bool check_declare_logic(int deep){
     while(varCompareList != NULL && typeCompareList != NULL){
+        // printf("varCompareList - %s, typeCompareList - %d\n", varCompareList->var->data, typeCompareList->type);
         if(!insertVariable(varCompareList->var, deep, &(SymTable->var)))
             changeErrorCode(3);
+        else {
+            if(!GET_REPEAT_FUNC_RUN()){
+                insertGenVariable(varCompareList->var, deep, &(SymTable->genVar));
+            }
+        }
         if(putTypeVariable(varCompareList->var, deep, typeCompareList->type, SymTable->var)){
             delete_var_from_compare_list();
             delete_type_from_compare_list(typeCompareList);
         } else 
             break;
+
+
     }
     if(varCompareList != NULL || typeCompareList != NULL){
         freeBothCompareLists();

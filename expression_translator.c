@@ -1,4 +1,4 @@
-#include "expression-translator.h"
+#include "expression_translator.h"
 
 Stack_t* createStack() {
     Stack_t *out = NULL;
@@ -207,67 +207,88 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                     token.type == TOKEN_TYPE_LITERAL_INT ||
                     token.type == TOKEN_TYPE_IDENTIFIER ||
                     token.type == TOKEN_TYPE_LITERAL_STRING) {
+                        if(GET_REPEAT_FUNC_RUN()){
                             printf("PUSHS ");
                             GEN_WRITE_VAR_LITERAL(&token, deepVar);
                             printf("\n");
+                        }
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
                     if (type != 3) {
                         if (strcmp(token.data, "/") == 0) {
                             if(incomingType == 1) {
-                                printf("POPS GF@tmpDividingByZero\n");
-                                printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
-                                printf("PUSHS GF@tmpDividingByZero\n");
-                                printf("IDIVS\n");
+                                if(GET_REPEAT_FUNC_RUN()){
+                                    printf("POPS GF@tmpDividingByZero\n");
+                                    printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
+                                    printf("PUSHS GF@tmpDividingByZero\n");
+                                    printf("IDIVS\n");
+                                }
                             }
                             else if (incomingType == 2) {
-                                printf("POPS GF@tmpDividingByZero\n");
-                                printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
-                                printf("PUSHS GF@tmpDividingByZero\n");
-                                printf("DIVS\n");
+                                if(GET_REPEAT_FUNC_RUN()){
+                                    printf("POPS GF@tmpDividingByZero\n");
+                                    printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
+                                    printf("PUSHS GF@tmpDividingByZero\n");
+                                    printf("DIVS\n");
+                                }
                             }
                         }
                         else if (strcmp(token.data, "*") == 0) {
-                            printf("MULS\n");
+                            if(GET_REPEAT_FUNC_RUN())
+                                printf("MULS\n");
                         }
                         else if (strcmp(token.data, "+") == 0) {
-                            printf("ADDS\n");
+                            if(GET_REPEAT_FUNC_RUN())
+                                printf("ADDS\n");
                         }
                         else if (strcmp(token.data, "-") == 0) {
-                            printf("SUBS\n");
+                            if(GET_REPEAT_FUNC_RUN())
+                                printf("SUBS\n");
                         }
 
                     }
                     else {
                         if (strcmp(token.data, "+") == 0) {
-                            printf("POPS GF@str2\n");
-                            printf("POPS GF@str1\n");
-                            printf("CONCAT GF@strRes GF@str1 GF@str2\n");
-                            printf("PUSHS GF@strRes\n");
+                            if(GET_REPEAT_FUNC_RUN()){
+                                printf("POPS GF@str2\n");
+                                printf("POPS GF@str1\n");
+                                printf("CONCAT GF@strRes GF@str1 GF@str2\n");
+                                printf("PUSHS GF@strRes\n");
+                            }
                         } else
                             break;
                     }
                 }
                 else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
                     if (strcmp(token.data, "<") == 0) {
-                        printf("LTS\n");
+                        if(GET_REPEAT_FUNC_RUN()){
+                            printf("LTS\n");
+                        }
                     }
                     else if (strcmp(token.data, "<=") == 0) {
-                        printf("GTS\n");
-                        printf("NOTS\n");
+                        if(GET_REPEAT_FUNC_RUN()){
+                            printf("GTS\n");
+                            printf("NOTS\n");
+                        }
                     }
                     else if (strcmp(token.data, ">") == 0) {
-                        printf("GTS\n");
+                        if(GET_REPEAT_FUNC_RUN())
+                            printf("GTS\n");
                     }
                     else if (strcmp(token.data, ">=") == 0) {
-                        printf("LTS\n");
-                        printf("NOTS\n");
+                        if(GET_REPEAT_FUNC_RUN()){
+                            printf("LTS\n");
+                            printf("NOTS\n");
+                        }
                     }
                     else if (strcmp(token.data, "==") == 0) {
-                        printf("EQS\n");
+                        if(GET_REPEAT_FUNC_RUN())
+                            printf("EQS\n");
                     }
                     else if (strcmp(token.data, "!=") == 0) {
-                        printf("EQS\n");
-                        printf("NOTS\n");
+                        if(GET_REPEAT_FUNC_RUN()){
+                            printf("EQS\n");
+                            printf("NOTS\n");
+                        }
                     }
 
                 }
@@ -275,5 +296,7 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                         break;
                 }
                 else break;
-        } printf("\n");
+        } 
+        if(GET_REPEAT_FUNC_RUN())
+            printf("\n");
 }

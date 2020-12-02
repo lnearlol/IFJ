@@ -9,6 +9,7 @@ SymTab *declaration(SymTab *SymTable){
     }
     SymTable->func = NULL;
     SymTable->var = NULL;
+    SymTable->genVar = NULL;
 
     return SymTable;
 }
@@ -163,9 +164,11 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     if (var1 == NULL)
         return 0;
 
+    // printf("---------------------------- var1 = %d, var2 = %d\n", var1->type, var2);
+
     if(var1->type == TOKEN_TYPE_IDENTIFIER){      
         variable tmp = findVariableWithType(var1, deep, Var);
-
+        
         if(!tmp){
             changeErrorCode(3);
             return 0;
@@ -176,7 +179,7 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     } else {
         type1 = returnLiteralType(var1);
     }
-
+    // printf("type1 = %d, type2 = %d", type1, type2);
     
     if(type1 == type2){
         return type1;
@@ -197,6 +200,64 @@ int returnLiteralType(Token *token){
     }
 }
 
+// --------------------------------------------------  G E N    V A R I A B L E S  ----------------------------------------------------
+
+
+void insertGenVariable(Token *token, int deep, genVariable *genVar){
+    if(*genVar == NULL){
+                
+		*genVar = malloc(sizeof(struct GenVariable));
+		(*genVar)->name = token->data;
+		(*genVar)->LPtr = NULL;
+		(*genVar)->RPtr = NULL;
+        (*genVar)->depth = NULL;
+        insertDepth(deep, &(*genVar)->depth);
+		return;
+
+	} else if(strcmp((*genVar)->name, token->data) > 0) {
+		insertGenVariable(token, deep, &((*genVar)->LPtr));
+
+	} else if(strcmp((*genVar)->name, token->data) < 0) {
+		insertGenVariable(token, deep, &((*genVar)->RPtr));
+
+	} else if(strcmp((*genVar)->name, token->data) == 0) {
+        insertDepth(deep, &(*genVar)->depth);
+	}
+}
+
+void insertDepth(int deep, deepInside *Depth){
+    if(*Depth == NULL){
+        *Depth = malloc(sizeof(struct DeepInside));
+        (*Depth)->next = NULL;
+        (*Depth)->depthValue = deep;
+        return; 
+    } else if ((*Depth)->depthValue == deep) {
+        return;
+    } else {
+        insertDepth(deep, &(*Depth)->next);
+    }
+}
+
+void freeGenVariables(genVariable *genVar, bool print){
+    
+    if(*genVar == NULL){
+        return;
+    }
+    
+    freeGenVariables(&(*genVar)->LPtr, print);
+    freeGenVariables(&(*genVar)->RPtr, print);
+    deepInside tmp_depth;
+    while((*genVar)->depth != NULL){
+        if(print)
+            printf("DEFVAR LF@%s$%d  #defines\n", (*genVar)->name, (*genVar)->depth->depthValue);
+        tmp_depth = (*genVar)->depth->next;
+        free((*genVar)->depth);
+        (*genVar)->depth = tmp_depth;
+    }
+    free(*genVar);
+    *genVar = NULL;
+    return;
+}
 
 
 // --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
