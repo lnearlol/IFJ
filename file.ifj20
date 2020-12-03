@@ -1,14 +1,6 @@
-// Program 3: Prace s retezci a vestavenymi funkcemi
 package main
-
-func main() {
-	a:=1
-	for i := 0; i < 10000; i=i+1{
-		a := a+1*(i/a)
-		o := a/3
-		if o < a+1{
-			print("i = ", i, "\n")
-			print("o = ", o, "\n")
-		}
-	}
+func main (){
+    s1 := 2
+    s1len := int2float(s1)
+    print(s1len, "\n")
 }
