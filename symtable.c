@@ -1,5 +1,23 @@
+/**
+ * @file symtable.c
+ * 
+ * @brief Symbol table implementation
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xstepa64> Stepaniuk Roman, Bc.
+ * @author <xpastu04> Pastushenko Vladislav
+ * @author <xbahda01> Bahdanovich Viktoryia 
+ * @author <xtomas34> Tomason Viktoryia 
+ */
+
 #include "symtable.h"
 
+/**
+ * Function allocates a new symbol table
+ * @param SymTable Symbol table to be initialized
+ * @return Function returns pointer to the new symbol table
+ */
 SymTab *declaration(SymTab *SymTable){
 
     SymTable = malloc(sizeof(struct sym_tab));
@@ -15,7 +33,13 @@ SymTab *declaration(SymTab *SymTable){
 }
 
 // --------------------------------------   V A R I A B L E S   --------------------------------------
-
+/**
+ * Function inserts new variable in the symbol table.
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the deep of the variable
+ * @param Var Pointer to the symbol table for variables
+ * @return Function true in a successful insertion
+ */
  bool insertVariable(Token *token, int deepVar, variable *Var){
     
     if(*Var == NULL){
@@ -53,7 +77,12 @@ SymTab *declaration(SymTab *SymTable){
 	}
 }
 
-// FIND VARIABLE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
+/**
+ * Function find variable with the same name on maximum possible level
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the deep of the variable
+ * @param Var Signifies variable
+ */
 variable findVariable(Token *token, int deepVar, variable Var){
     variable tmp = Var;
     if(Var == NULL){
@@ -70,7 +99,7 @@ variable findVariable(Token *token, int deepVar, variable Var){
     }
 }
 
-
+// Helper function for "findVariable"
 variable findVariableHelper(Token *token, int deepVar, variable Var){
     if (Var == NULL) {
         return NULL;
@@ -85,8 +114,12 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 }
 
 //------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
-
-// FIND VARIABLE WITH NON-EMPTY TYPE WITH THE SAME NAME ON MAXIMUM POSSIBLE LABEL
+/**
+ * Function find variable with the type on maximum possible level
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the deep of the variable
+ * @param Var Signifies variable
+ */
 variable findVariableWithType(Token *token, int deepVar, variable Var){
     variable tmp = Var;
 
@@ -112,6 +145,7 @@ variable findVariableWithType(Token *token, int deepVar, variable Var){
     }
 }
 
+// Helper function for "findVariableWithType" with the same parametеrs
 variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
 
     if (Var == NULL) {
@@ -128,6 +162,13 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
 
 //--------------------------------------
 
+/**
+ * Function put the type of a variable according to its name and deep
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the deep of the variable
+ * @param varType Signifies the type of the variable
+ * @param Var Signifies variable
+ */
 bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
     variable PutTypeVar = findVariable(token, deepVar, Var);
     if(PutTypeVar == NULL || PutTypeVar->type != VAR_TYPE_UNDEFINED){
@@ -138,7 +179,11 @@ bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
     }
 }
 
-// DELETE ONLY LAST LABEL   (2->1->0  =>  1->0)
+
+/**
+ * Function deletes the last appereance of the variable in the symbol table
+ * @param Var Signifies variable
+ */
 void freeVariablesLastLabel(variable *Var){
     if(*Var == NULL)
 		return;
@@ -152,13 +197,21 @@ void freeVariablesLastLabel(variable *Var){
     }
 }
 
-// DELETE WHOLE SYMTABLE->VAR
+// Function deletes all variables into symbol table 
 void freeAllVariables(variable *Var){
 
     while(*Var != NULL)
         freeVariablesLastLabel(Var);
 }
 
+/**
+ * Function compare two variables. Searching for a variable by name and deер
+ * @param var1 Token that contains information about a variable
+ * @param var2 Type of the second variable
+ * @param deepVar Signifies the deep of the variable
+ * @param Var Signifies variable
+ * @return Сorrect type
+ */
 int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     int type1 = 0, type2 = var2;
     if (var1 == NULL)
@@ -187,7 +240,7 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
         return 0;
 }
 
-// HELPS compareTwoString
+// Helper function for "compareTwoVariables"
 int returnLiteralType(Token *token){
     if(token->type == TOKEN_TYPE_LITERAL_INT){
         return 1;
@@ -202,7 +255,13 @@ int returnLiteralType(Token *token){
 
 // --------------------------------------------------  G E N    V A R I A B L E S  ----------------------------------------------------
 
-
+/**
+ * Function inserts new variable
+ * @param token Token that contains information about a variable
+ * @param deep Signifies the deep of the variable
+ * @param genVar Pointer to the symbol table for genvariables
+ * @return Function true in a successful insertion
+ */
 void insertGenVariable(Token *token, int deep, genVariable *genVar){
     if(*genVar == NULL){
                 
@@ -225,6 +284,7 @@ void insertGenVariable(Token *token, int deep, genVariable *genVar){
 	}
 }
 
+// Helper function for "insertGenVariable"
 void insertDepth(int deep, deepInside *Depth){
     if(*Depth == NULL){
         *Depth = malloc(sizeof(struct DeepInside));
@@ -262,7 +322,12 @@ void freeGenVariables(genVariable *genVar, bool print){
 
 // --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
 
-
+/**
+ * Function inserts new function in the symbol table
+ * @param token Token that contains information about a function
+ * @param Var Pointer to the symbol table for functions
+ * @return Function true in a successful insertion
+ */
 void insertFunction(Token *token, function *Func){
 
 	if(*Func == NULL){
@@ -285,7 +350,7 @@ void insertFunction(Token *token, function *Func){
         changeErrorCode(3);
 	}
 }
-
+// Function deletes all functions into symbol table 
 void freeFunctions(function *Func){
     if(*Func == NULL){
 		return;

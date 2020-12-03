@@ -207,8 +207,8 @@ char *GEN_ASM_STRING(Token *token, char* ASM_string){
 //     }
 // }
 
-/**
- * Functions doing something
+ /**
+ * Function takes the variable by its level, then removes it from the stack
  * @param deep Signifies the level of the variable
  */
 void GEN_CREATE_LEFT_SIDE(int deep){
@@ -228,7 +228,10 @@ void GEN_CREATE_LEFT_SIDE(int deep){
         GEN_DELETE_VAR_FROM_ASSEMBLY_STACK();
     }
 }
-
+ /**
+ * Function takes the variable by its level, then removes it from the stack
+ * @param deep Signifies the level of the variable
+ */
 void GEN_EQ_LEFT_SIDE(int deep){
     if(!GET_REPEAT_FUNC_RUN())
         return;
@@ -241,8 +244,8 @@ void GEN_EQ_LEFT_SIDE(int deep){
 }
 
 /**
- * Functions doing something
- * @param stack Pointer signifies 
+ * Functions add variables to the stack
+ * @param stack Pointer signifies the current stack
  */
 void GEN_ADD_VAR_TO_ASSEMBLY_STACK(Token *stack){
     if(!GET_REPEAT_FUNC_RUN()){
@@ -263,7 +266,7 @@ void GEN_ADD_VAR_TO_ASSEMBLY_STACK(Token *stack){
     }
 }
 
-
+// Function completely deletes stack
 void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK(){
     if(varStack != NULL){
         var_assembly_stack *tmpStack = varStack->next;
@@ -271,7 +274,7 @@ void GEN_DELETE_VAR_FROM_ASSEMBLY_STACK(){
         varStack = tmpStack;
     }
 }
-
+// Function deletes all variables in stack by the level
 void GEN_DELETE_FULL_VAR_ASSEMBLY_STACK(){
     if(!GET_REPEAT_FUNC_RUN())
         return;
@@ -294,10 +297,12 @@ void GEN_PRINT_WRITE(Token *token, int deep){
 // ---------------------------------   I F   C O N S T R U C T I O N   ---------------------------------
 
 /**
- * Functions generates if operation in code
- * @param token Pointer to the token that indicates the name of functions
+ * Functions generates "if" and "for" operation in code.
+ * Check on what label should jump
+ * @param token Pointer to the token that indicates the name of function
  * @param count Number of condition
- * @param condition Signifies the current condition
+ * @param if_condition Signifies if condition "if "is the current condition
+ * @param for_condition Signifies if condition "for "is the current condition
  */
 void GEN_JUMP(Token *token, int count, bool if_condition, int for_condition){
     if(!GET_REPEAT_FUNC_RUN())
@@ -314,7 +319,13 @@ void GEN_JUMP(Token *token, int count, bool if_condition, int for_condition){
     } else 
         printf("JUMP $%s$if$%d$end\n", token->data, count);
 }
-
+/**
+ * Functions creates label to jump on
+ * @param token Pointer to the token that indicates the name of functions
+ * @param count Number of condition
+ * @param if_condition Signifies if condition "if "is the current condition
+ * @param for_condition Signifies if condition "for "is the current condition
+ */
 void GEN_SCOPE(Token *token, int count, bool if_condition, bool for_condition){
     if(!GET_REPEAT_FUNC_RUN())
         return;
@@ -552,7 +563,7 @@ void GENERATION_SUBSTR(){
 	printf("RETURN\n\n");
 
     printf("LABEL $SUBSTR_EMPTY\n");
-    printf("MOVE LF@retval string@\\000\n");
+    printf("MOVE LF@retval string@\n");
     printf("PUSHS LF@retval\n");
     printf("MOVE LF@retval$1 int@0\n");
     printf("PUSHS LF@retval$1\n");
