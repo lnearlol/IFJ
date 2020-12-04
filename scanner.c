@@ -79,10 +79,24 @@ void dtor(Token *first){
 int get_token(Token *token){
     static char state;
     static int state_flag = 0;
+    static int EOL_flag = 0;
     token->size = 1;
     token->type = WRONG_DATA_TOKEN_TYPE;
     token->data = malloc(token->size);
+    
+    if(token->data == NULL){
+        changeErrorCode(99);
+        return 1;
+    }
+
     token->data[0] = '\0';
+
+    if(EOL_flag != 0){
+        state = first_non_EOL(state);
+        state_flag++;
+        if(state != '/')
+            EOL_flag = 0;
+    }
 
     if(state_flag == 0 || state == ' ')
         state = first_non_space(state);
@@ -103,8 +117,10 @@ int get_token(Token *token){
 
         if(state == '/'){
             state = fgetc(stdin);
-            if(state != '/' && state != '*')
+            if(state != '/' && state != '*'){
                 state_flag++;
+                EOL_flag = 0;
+            }
             else{
                 int comment_ending_flag = 0;
                 free(token->data);
@@ -112,6 +128,7 @@ int get_token(Token *token){
                     while(state != '\n' && !feof( stdin ))
                         state = fgetc(stdin);
                     comment_ending_flag = 1;
+                    state_flag++;
                 }
                 else if(state == '*'){
                     while(!feof( stdin )){
@@ -126,10 +143,6 @@ int get_token(Token *token){
                     }
                 }
 
-                state = first_non_EOL(state);
-                if (state == '%')
-                    return 1;
-                state_flag++;
                 if(get_token(token) || !comment_ending_flag)
                     return 1;
 
@@ -146,12 +159,7 @@ int get_token(Token *token){
         token->type = TOKEN_TYPE_EOL;
         state = '$';
         data_append(token, state);
-        state = first_non_EOL(state);
-
-        if (state == '%')
-            return 1;
-
-        state_flag++;
+        EOL_flag++;
         return 0;
     }
     else if(state == '=')
