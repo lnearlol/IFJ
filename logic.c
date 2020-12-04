@@ -3,17 +3,22 @@
 
 // Write from typeCompareList to varCompareList and free that lists.
 bool check_declare_logic(int deep){
-    printf("CHECK DECLARED LOGIC \n");
     while(varCompareList != NULL && typeCompareList != NULL){
-        printf("CHECK DECLARED LOGIC 1\n");
+        // printf("varCompareList - %s, typeCompareList - %d\n", varCompareList->var->data, typeCompareList->type);
         if(!insertVariable(varCompareList->var, deep, &(SymTable->var)))
             changeErrorCode(3);
+        else {
+            if(!GET_REPEAT_FUNC_RUN()){
+                insertGenVariable(varCompareList->var, deep, &(SymTable->genVar));
+            }
+        }
         if(putTypeVariable(varCompareList->var, deep, typeCompareList->type, SymTable->var)){
-            printf("CHECK DECLARED LOGIC 1\n");
             delete_var_from_compare_list();
             delete_type_from_compare_list(typeCompareList);
         } else 
             break;
+
+
     }
     if(varCompareList != NULL || typeCompareList != NULL){
         freeBothCompareLists();
@@ -25,24 +30,18 @@ bool check_declare_logic(int deep){
 
 // Compare top of varCompareList and typeCompareList and free that lists. 
 bool check_define_logic(int deep){
-    printf("CHECK EQUATING LOGIC \n");
     while(varCompareList != NULL && typeCompareList != NULL){
-        printf("EQUATING LOGIC 1 %s - %d, [%d]\n", varCompareList->var->data, varCompareList->var->type, typeCompareList->type);
         if(compareTwoVariables(varCompareList->var, typeCompareList->type, deep, SymTable->var)){
             // assembly
-            printf("EQUATING LOGIC 2 [%d]\n", typeCompareList->type);
             delete_var_from_compare_list();
             delete_type_from_compare_list();
         } else 
             break;
     } 
-    printf("EQUATING LOGIC 3\n");
     if(varCompareList != NULL || typeCompareList != NULL){
         freeBothCompareLists();
-        printf("EQUATING LOGIC FALSE\n");
         return false;
     } else {
-        printf("EQUATING LOGIC TRUE\n");
         return true;
     }
 }
