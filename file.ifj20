@@ -1,5 +1,11 @@
-// Program 1: Vypocet faktorialu (iterativne)
+//compiler 7
+//
 package main
-func main() {
-	print()
+
+func alpha (a int) (int) {
+	return 6
+}
+
+func main () {
+	alpha(_)
 }

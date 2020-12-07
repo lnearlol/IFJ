@@ -217,19 +217,60 @@ LABEL $CHR_RET
 POPFRAME
 RETURN
 
-LABEL $alpha
-PUSHFRAME 
-
-PUSHS int@6
-
-POPFRAME 
-RETURN 
-
-POPFRAME 
-RETURN 
-
 LABEL $$main
 CREATEFRAME
 PUSHFRAME
 
+DEFVAR LF@vysl$1  #defines
+DEFVAR LF@a$0  #defines
+WRITE string@Zadejte\032cislo\032pro\032vypocet\032faktorialu:\032
+PUSHS int@0
+
+POPS LF@a$0
+CREATEFRAME
+CALL $inputi
+POPS GF@_
+POPS LF@a$0
+PUSHS LF@a$0
+PUSHS int@0
+LTS
+
+PUSHS bool@true
+JUMPIFNEQS $main$if$1$else
+WRITE string@Faktorial\032nejde\032spocitat!\010
+JUMP $main$if$1$end
+LABEL $main$if$1$else
+PUSHS int@1
+
+POPS LF@vysl$1
+LABEL $main$for$7
+PUSHS LF@a$0
+PUSHS int@0
+GTS
+
+PUSHS bool@true
+JUMPIFEQS $main$for$5
+JUMP $main$for$4
+LABEL $main$for$6
+PUSHS LF@a$0
+PUSHS int@1
+SUBS
+
+POPS LF@a$0
+JUMP $main$for$7
+LABEL $main$for$5
+PUSHS LF@vysl$1
+PUSHS LF@a$0
+MULS
+
+POPS LF@vysl$1
+JUMP $main$for$6
+LABEL $main$for$4
+WRITE string@Vysledek\032je\032
+WRITE LF@vysl$1
+WRITE string@\010
+LABEL $main$if$1$end
+POPFRAME
+
+JUMP $END_OF_PROGRAM
 LABEL $END_OF_PROGRAM

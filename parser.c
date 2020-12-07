@@ -1,34 +1,63 @@
+/**
+ * @file parser.c
+ * 
+ * @brief Parser and function main implementation
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xstepa64> Stepaniuk Roman, Bc.
+*/
+
 #include "parser.h"
 
+// control if expression stack will be free in the end of program
 bool delete_expr_stack = false;
+// depth of label
 int deep = -1;
+// count of variables on the left part of expression, to compare the right side
 int number_of_operands = 0;
+// number of run of program
 int PROGRAMM_RUN = FIRST_RUN;
+// error detection. Program will return the error_flag.
 int error_flag = 0;
+// check if each function has own return in case of need
 int return_in_function = true;
+// check if main function was in program
 bool wasMainInProgram = false;
+// separation of mathematical expression and logic expression to compare expressions return types
 bool WAS_CONDITION = false;
+// run of function_body() in each function
 bool repeatFunctionRun = false;
-
+// number of depth where was 'if' to possible edition 'else' in each function
 int if_else_counter = -1;
+// number of depth where for to adding new depth label
 int for_counter = -1;
 
-genFrameType GEN_FRAME = LOCAL;
+// change
+// genFrameType GEN_FRAME = LOCAL;
 
-int GET_GEN_FRAME(){
-    return GEN_FRAME;
-}
+// int GET_GEN_FRAME(){
+//     return GEN_FRAME;
+// }
 
-void CHANGE_GEN_FRAME(int Frame){
-    GEN_FRAME = Frame;
-}
+// void CHANGE_GEN_FRAME(int Frame){
+//     GEN_FRAME = Frame;
+// }
 
+/**
+ * Function ckecks run of statement
+ * If function returns true, IFJcode20 will generate
+ * @return Function returns true if it's second run of statement, and false if it's first run of statement
+ */
 bool GET_REPEAT_FUNC_RUN(){
     return repeatFunctionRun;
 }
 
 
-
+/**
+ * Function allocates new token, moves pointer from current token to new token and calls get_token()
+ * Function calls changeErrorCode() if something goes wrong
+ */
 void get_and_set_token(){
         if(PROGRAMM_RUN == FIRST_RUN){
         token->next = malloc (sizeof(Token));
@@ -46,14 +75,23 @@ void get_and_set_token(){
 
 //  ------------------------------------ E R R O R    C O D E ------------------------------------
 
+/**
+ * @param code number of error
+ * Function change error_flag if some kind of error was found.
+ */
 void changeErrorCode(int code){
     if(error_flag == 0)
         error_flag = code;
 }
 
 
-//  ------------------------------------ F O R   S T A C K ------------------------------------
+//  ------------------------------------  S T A C K   C O N T A I N E R  ------------------------------------
 
+/**
+ * Function allocates container of stacks
+ * @param myContainer pointer on container which contains pointers on all stacks
+ * @return Function returns pointer on stackContainer
+ */
 stackContainer *declareContainer(stackContainer *myContainer){
     myContainer = malloc(sizeof(struct stackContainer));
     if(myContainer == NULL){
@@ -69,6 +107,14 @@ stackContainer *declareContainer(stackContainer *myContainer){
     return myContainer;
 }
 
+
+//  ------------------------------------  F O R  /  I F   S T A C K  ------------------------------------
+
+/**
+ * Function adds one instanse of some stack and allocates memory for it
+ * @param changeStack pointer on some kind of stack
+ * @param deep depth of label
+ */
 void add_to_for_if_stack(else_stack *changeStack, int deep){
     
     if (*changeStack == NULL){
@@ -91,6 +137,10 @@ void add_to_for_if_stack(else_stack *changeStack, int deep){
     }
 }
 
+/**
+ * Function frees one instanse of some stack
+ * @param changeStack pointer on some kind of stack
+ */
 void delete_from_for_if_stack(else_stack *changeStack){
     if(*changeStack != NULL){
         else_stack tmpforStack = (*changeStack)->next;
@@ -101,6 +151,10 @@ void delete_from_for_if_stack(else_stack *changeStack){
 
 //  ------------------------------------ C O M P A R E    L I S T ------------------------------------
 
+/**
+ * Function adds variable to compare list and allocates memory for it
+ * @param var Token contains name of variable
+ */
 void add_var_to_compare_list(Token *var){
     if(varCompareList == NULL){
         varCompareList = malloc(sizeof(variables_compare_list));
@@ -130,6 +184,9 @@ void add_var_to_compare_list(Token *var){
     }
 }
 
+/**
+ * Function frees last variable from compare list
+ */
 void delete_var_from_compare_list(){
     if(varCompareList != NULL){
         variables_compare_list *tmpList = varCompareList->next;
@@ -138,6 +195,10 @@ void delete_var_from_compare_list(){
     }
 }
 
+/**
+ * Function adds type to compare list and allocates memory for it
+ * @param type Token contains name of variable
+ */
 void add_type_to_compare_list(int type){
     if(typeCompareList == NULL){
         typeCompareList = malloc(sizeof(type_compare_list));
@@ -167,6 +228,9 @@ void add_type_to_compare_list(int type){
     }
 }
 
+/**
+ * Function frees last type from compare list
+ */
 void delete_type_from_compare_list(){
 
     if(typeCompareList != NULL){
@@ -176,15 +240,22 @@ void delete_type_from_compare_list(){
     }
 }
 
-bool checkCompareLists(){
-    if (typeCompareList != NULL  || varCompareList != NULL){
-        changeErrorCode(3);
-        //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
-        return false;
-    } else 
-        return true;
-}
+/**
+ * Function checks if typeCompareList or varCompareList are empty
+ * @return Function returns true if both lists are empty and returns false if some list isn't empty
+ */
+// bool checkCompareLists(){
+//     if (typeCompareList != NULL  || varCompareList != NULL){
+//         changeErrorCode(3);
+//         return false;
+//     } else 
+//         return true;
+// }
 
+/**
+ * Function compares types of typeCompareList and varCompareList
+ * @return Function returns 0 if both stacks are empty, 1 if varCompareList isn't empty, -1 if typeCompareList isn't empty
+ */
 int compareCompareLists(){
     variables_compare_list *tmpVar = varCompareList;
     type_compare_list *tmpType = typeCompareList;
@@ -201,7 +272,9 @@ int compareCompareLists(){
     }
 }
 
-
+/**
+ * Function frees typeCompareList and varCompareList
+ */
 void freeBothCompareLists(){
     while(varCompareList != NULL || typeCompareList != NULL){
         if(typeCompareList != NULL)
@@ -211,7 +284,10 @@ void freeBothCompareLists(){
 }
 
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
-// package main \n func() EOF
+
+/**
+ * PROGRAM_SRART -> package main eol FUNCTION_CHECK eol eof
+ */
 bool program_start(){
     bool program_start = false;
     allowed_eol();
@@ -240,6 +316,9 @@ bool program_start(){
 
 //  ------------------------------------ F U N C T I O N ------------------------------------
 
+/**
+ * FUNCTION_CHECK -> func identifier ( ALLOWED_EOL  INPUT_PARAMETERS  OUTPUT_PARAMETERS { eol FUNCTION_BODY } eol
+ */
 bool function_check(){
     bool func = false;
     if(token->type == TOKEN_TYPE_FUNC){
@@ -328,6 +407,10 @@ bool function_check(){
 
 //  ------------------------------------ I N P U T    P A R A M E T E R S ------------------------------------
 
+/**
+ * INPUT_PARAMETERS -> )
+ * INPUT_PARAMETERS -> INPUT_SINGLE_PARAMETERS
+ */
 bool input_parameters(){
     bool input_parameters = false;
     
@@ -338,13 +421,17 @@ bool input_parameters(){
     return input_parameters;
 }
 
+/**
+ * INPUT_SINGLE_PARAMETERS -> identifier int/float/string , INPUT_SINGLE_PARAMETERS
+ * INPUT_SINGLE_PARAMETERS -> identifier int/float/string )
+ */
 bool input_single_parameters(){
     bool input_single_parameter = false;
     if(token->type == TOKEN_TYPE_IDENTIFIER){
         if(PROGRAMM_RUN){
-            if(strcmp(saved_func_name->data, "main") == 0){      // I F    M A I N   H A S   I N P U T   P A R A M S
+            if(strcmp(saved_func_name->data, "main") == 0){      // if function main has input parameters
                 changeErrorCode(6);
-                return false;  // error_flag = 4to-to
+                return false; 
             }   
         }
         saved_arg_name = token; // foo(a int) -> saved_arg_name = a
@@ -378,6 +465,11 @@ bool input_single_parameters(){
 
 //  ------------------------------------ O U T P U T    P A R A M E T E R S ------------------------------------
 
+/**
+ * OUTPUT_PARAMETERS -> {
+ * OUTPUT_PARAMETERS -> ( )
+ * OUTPUT_PARAMETERS -> ( OUTPUT_SINGLE_PARAMETERS
+ */
 bool output_parameters(){
     bool output_parameters = false;
     if(token->type == TOKEN_TYPE_START_BLOCK)
@@ -397,6 +489,11 @@ bool output_parameters(){
     }
     return output_parameters;
 }
+
+/**
+ * OUTPUT_SINGLE_PARAMETERS -> int/float/string , OUTPUT_SINGLE_PARAMETERS
+ * OUTPUT_SINGLE_PARAMETERS -> int/float/string ) {
+ */
 
 bool output_single_parameters(){
     bool output_single_parameter = false;
@@ -428,9 +525,12 @@ bool output_single_parameters(){
 
 //  ------------------------------------  B O D Y    1    R U N  ------------------------------------
 
+/**
+ * Function works only on first run of program. Ignore all types of tokens except '}'
+ * Function gets next tokens until finds } which will be last in this function (depth will be the same as it was on start)
+ */
 bool first_run_body(){
     bool first_run_accept = true;
-
 
     while(1){
         if(token->type == TOKEN_TYPE_END_BLOCK)
@@ -451,6 +551,19 @@ bool first_run_body(){
 
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
+/**
+ * FUNCTION_BODY -> } eol  FUNCTION_BODY
+ * FUNCTION_BODY -> { eol  FUNCTION_BODY
+ * FUNCTION_BODY -> eol  FUNCTION_BODY
+ * FUNCTION_BODY -> if IF_CONSTRUCTION  FUNCTION_BODY
+ * FUNCTION_BODY -> else  {  eol  FUNCTION_BODY
+ * FUNCTION_BODY -> for FOR_CONSTRUCTION  FUNCTION_BODY
+ * FUNCTION_BODY -> IDENTIFIER  DEFINE_FUNC  FUNCTION_BODY
+ * FUNCTION_BODY -> COMMAND_FUNCTION  DEFINE_FUNC  FUNCTION_BODY
+ * FUNCTION_BODY -> _  DEFINE_FUNC  FUNCTION_BODY
+ * FUNCTION_BODY -> return eol  FUNCTION_BODY
+ * FUNCTION_BODY -> return  RETURN_CONSTRUCTION FUNCTION_BODY
+ */
 bool function_body(){
     bool else_condition_flag = false;
     bool for_condition_flag = false;
@@ -509,7 +622,6 @@ bool function_body(){
         if(Container->forStack->deep == deep){
             delete_from_for_if_stack(&(Container->forStack));
             
-            ////printf("------------------%d\n", if_else_counter);
             // jumpFor2
             GEN_JUMP(current_function_name, Container->jumpForStack->next->deep, false, FOR_JUMP);
             // scopeFor4
@@ -528,19 +640,15 @@ bool function_body(){
     if(token->type == TOKEN_TYPE_END_BLOCK && Container->endElseStack != NULL){
         if(Container->endElseStack->deep == deep){
             delete_from_for_if_stack(&(Container->endElseStack));
-            ////printf("-------------- else - %d\n", Container->jumpElseStack->deep);
             // navěšti 2
             GEN_SCOPE(current_function_name, Container->jumpElseStack->deep, false, false);
             delete_from_for_if_stack(&(Container->jumpElseStack));
         }
     } 
-            //printf("------------------------------ deep = %d\n", deep);
-
 
     // E N D    B L O C K   ( L A S T )
     if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1){
         function_accept = true;
-        //printf("------------------------------ IMMMMMMMMMMM HEEERE\n");
         if(findFunction(current_function_name, SymTable->func)->output_params != NULL && return_in_function == true){ // was not return command
                 changeErrorCode(6); // number of return args and function output args not the same
                 return false;
@@ -620,18 +728,22 @@ bool function_body(){
         }
         
     }
-    
-
     return function_accept;
 }
 
 //  ------------------------------------ F O R    C O N S T R U C T I O N ------------------------------------
 
+/**
+ * FOR_CONSTRUCTION ->  DEFINE_FUNC ; EXPRESSION ; DEFINE_FUNC { eol FUNCTION_BODY
+ */
 bool for_construction(){
     bool for_accept = false;
     deep++;
-    if(!define_func(TOKEN_TYPE_SEMICOLON, 1, 1, false)){
-        return false;
+
+    if(token->type != TOKEN_TYPE_SEMICOLON){
+        if(!define_func(TOKEN_TYPE_SEMICOLON, 1, 1, false)){
+            return false;
+        }
     }
     get_and_set_token();
 
@@ -690,13 +802,14 @@ bool for_construction(){
             for_accept = function_body();
         }
     }
-
-
     return for_accept;
 }
 
 //  ------------------------------------ I F    C O N S T R U C T I O N ------------------------------------
 
+/**
+ * IF_CONSTRUCTION -> EXPRESSION { eol FUNCTION_BODY
+ */
 bool if_construction()
 {
     delete_expr_stack = true;
@@ -704,6 +817,10 @@ bool if_construction()
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
     if(if_accept){
+        if(!WAS_CONDITION ){
+            changeErrorCode(5);
+            return false;
+        }
         add_to_for_if_stack(&(Container->elseStack), deep);
         // A S S E M B L Y
         add_to_for_if_stack(&(Container->jumpIfStack), ++if_else_counter);
@@ -763,6 +880,9 @@ bool if_construction()
 //  ------------------------------------ D E C L A R E   &   E Q U A T I N G    E X P R E S S I O N ------------------------------------
 //  ------------------------------------ O R    F U N C T I O N ()    F R O M    B O D Y 
 
+/**
+ * DEFINE_FUNC -> 
+ */
 bool define_func(int end_condition, int declare, int equating, bool func){
     bool define_accept = false;
     number_of_operands = 0;
@@ -782,10 +902,6 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             define_accept = count_operands(end_condition);
             // ЗАПИСЬ
             if(define_accept && !check_declare_logic(deep)){
-                
-                // if(GET_REPEAT_FUNC_RUN())
-                //     printf("beh dva deep - %d\n", deep);
-                // printf("heeeeeeeeeeeeeeeeeeeeeere\n");
                 changeErrorCode(7);
                 return false;
             } else if(define_accept){
@@ -800,7 +916,7 @@ bool define_func(int end_condition, int declare, int equating, bool func){
 
             // C O M P A R E   T W O   L I S T S
             if(!check_define_logic(deep)){
-                changeErrorCode(7);
+                changeErrorCode(5);
                 return false;
             }
 
@@ -924,10 +1040,11 @@ bool expression(int end_condition){
     static int bracket = 0;
     static int closed_bracket_counter = 0;
     static int was_it_string = 0;
+    static bool normal_quantity_of_expressions = true;
 
-            // //fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
 
-    
+         fprintf(stderr, "[data - %s, type - %d] %s %d\n", token->data, token->type, __FILE__, __LINE__);
+
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         
         push(expr, *token);
@@ -966,6 +1083,12 @@ bool expression(int end_condition){
 
 
         if(token->type == end_condition){
+            if (!normal_quantity_of_expressions){
+                delete_expr_stack = false;
+                sort_to_postfix(expr, deep, SymTable->var);
+                changeErrorCode(7);
+                return false;
+            }
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 delete_expr_stack = false;
@@ -1075,7 +1198,15 @@ bool expression(int end_condition){
                     can_be_function = 1;
                 }
             }
+        } else if(token->type == TOKEN_TYPE_COMMA){
+            normal_quantity_of_expressions = false;
+            get_and_set_token();
+            fprintf(stderr, "[data - %s, type - %d] %s %d\n", token->data, token->type, __FILE__, __LINE__);
+            expression_accept = expression(TOKEN_TYPE_EOL);
         }
+    } else if (token->type == TOKEN_TYPE_UNDERSCORE){
+        changeErrorCode(3);
+        return false;
     }
 
     if(bracket != 0){
@@ -1123,19 +1254,21 @@ bool expression_func_arguments(){
         //fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
         return false;
     }
+        fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
+
     inputParams args_check = arg_find->input_params;
     outputParams args_output = arg_find->output_params;
 
     // ADDING OUTPUT ARGS TO TYPE LIST
-            while(args_output != NULL){
-                    add_type_to_compare_list(args_output->type);
-                    args_output = args_output->next;
-                }
+    while(args_output != NULL){
+        add_type_to_compare_list(args_output->type);
+        args_output = args_output->next;
+    }
 
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
         // LOGIC
         
-        if(args_check == NULL){ // if after all arguments next argument in sym_table will be null  (except print)
+        if(args_check == NULL || !strcmp(arg_find->name, "print")){ // if after all arguments next argument in sym_table will be null  (except print)
             func_arguments_accept = true;
             // записать аутпуты в лист 
 
@@ -1151,7 +1284,7 @@ bool expression_func_arguments(){
 
 bool expression_func_single_argument(inputParams args_check, outputParams args_output){
     bool func_single_argument = false;
-    
+    fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
     || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
 
@@ -1203,6 +1336,9 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             allowed_eol(); //[ a (c, \n b)] situation
             func_single_argument = expression_func_single_argument(args_check->next, args_output);
         }
+    } else if (token->type == TOKEN_TYPE_UNDERSCORE){
+        changeErrorCode(3);
+        return false;
     }
         // args_check->next = NULL;
     return func_single_argument;
