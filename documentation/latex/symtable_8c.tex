@@ -1,0 +1,331 @@
+\hypertarget{symtable_8c}{}\doxysection{symtable.\+c File Reference}
+\label{symtable_8c}\index{symtable.c@{symtable.c}}
+
+
+Symbol table implementation.  
+
+
+{\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structsym__tab}{Sym\+Tab}} $\ast$ \mbox{\hyperlink{symtable_8c_a283ba98bd3a858439f39c20c9a991a4d}{declaration}} (\mbox{\hyperlink{structsym__tab}{Sym\+Tab}} $\ast$Sym\+Table)
+\item 
+bool \mbox{\hyperlink{symtable_8c_a55aa60ceaf74ec1afb004b9c28fd8459}{insert\+Variable}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} $\ast$Var)
+\item 
+\mbox{\hyperlink{structVariable}{variable}} \mbox{\hyperlink{symtable_8c_a94f504e6590cb1a6b158ec72b9ca2ce9}{find\+Variable}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+\mbox{\Hypertarget{symtable_8c_a6b157c67e396d1d3b9aa479331391c8c}\label{symtable_8c_a6b157c67e396d1d3b9aa479331391c8c}} 
+\mbox{\hyperlink{structVariable}{variable}} {\bfseries find\+Variable\+Helper} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+\mbox{\hyperlink{structVariable}{variable}} \mbox{\hyperlink{symtable_8c_a795bf80eca064085be1899437675bfbb}{find\+Variable\+With\+Type}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+\mbox{\Hypertarget{symtable_8c_ab51a1173c1cefb7983c05ea5f17aff40}\label{symtable_8c_ab51a1173c1cefb7983c05ea5f17aff40}} 
+\mbox{\hyperlink{structVariable}{variable}} {\bfseries find\+\_\+var\+\_\+with\+\_\+type\+\_\+helper} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+bool \mbox{\hyperlink{symtable_8c_a61c7f0d9fcf9e522c536756614582f3a}{put\+Type\+Variable}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep\+Var, int var\+Type, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+void \mbox{\hyperlink{symtable_8c_a6f389e8328466183f1ab4d8689455716}{free\+Variables\+Last\+Label}} (\mbox{\hyperlink{structVariable}{variable}} $\ast$Var)
+\item 
+\mbox{\Hypertarget{symtable_8c_a286647630e89edf3398d3aba497c3596}\label{symtable_8c_a286647630e89edf3398d3aba497c3596}} 
+void {\bfseries free\+All\+Variables} (\mbox{\hyperlink{structVariable}{variable}} $\ast$Var)
+\item 
+int \mbox{\hyperlink{symtable_8c_ae0c72812cdc0108d01dbc0f68a456f17}{compare\+Two\+Variables}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$var1, int var2, int deep, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+\mbox{\Hypertarget{symtable_8c_a1ce10180c08a7d3d6f0712389557337c}\label{symtable_8c_a1ce10180c08a7d3d6f0712389557337c}} 
+int {\bfseries return\+Literal\+Type} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}})
+\item 
+void \mbox{\hyperlink{symtable_8c_a22cd90b66f443528d1b007dc4239dc23}{insert\+Gen\+Variable}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep, \mbox{\hyperlink{structGenVariable}{gen\+Variable}} $\ast$gen\+Var)
+\item 
+\mbox{\Hypertarget{symtable_8c_a2234fb57691b23cb183456e2e01c8700}\label{symtable_8c_a2234fb57691b23cb183456e2e01c8700}} 
+void {\bfseries insert\+Depth} (int deep, \mbox{\hyperlink{structDeepInside}{deep\+Inside}} $\ast$Depth)
+\item 
+\mbox{\Hypertarget{symtable_8c_a149b89d8f7551b6bbdcb8d2ecf703e23}\label{symtable_8c_a149b89d8f7551b6bbdcb8d2ecf703e23}} 
+void {\bfseries free\+Gen\+Variables} (\mbox{\hyperlink{structGenVariable}{gen\+Variable}} $\ast$gen\+Var, bool print)
+\item 
+void \mbox{\hyperlink{symtable_8c_a604d7560bf16cc887cb504a8427877cd}{insert\+Function}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, \mbox{\hyperlink{structFunction}{function}} $\ast$Func)
+\item 
+\mbox{\Hypertarget{symtable_8c_a4240ecaa648d8724c3c489f292abaa18}\label{symtable_8c_a4240ecaa648d8724c3c489f292abaa18}} 
+void {\bfseries free\+Functions} (\mbox{\hyperlink{structFunction}{function}} $\ast$Func)
+\item 
+\mbox{\hyperlink{structFunction}{function}} \mbox{\hyperlink{symtable_8c_a670dad90096a5582d4582fd673e3598b}{find\+Function}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, \mbox{\hyperlink{structFunction}{function}} Func)
+\item 
+void \mbox{\hyperlink{symtable_8c_a311d1750009d51d9f57215a2e8af808b}{add\+Input\+Arguments}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$func\+\_\+name, \mbox{\hyperlink{structtoken}{Token}} $\ast$arg\+\_\+name, \mbox{\hyperlink{structtoken}{Token}} $\ast$arg\+\_\+type, \mbox{\hyperlink{structFunction}{function}} Func)
+\item 
+void \mbox{\hyperlink{symtable_8c_ab5713335e9ea215159e525f47f70f551}{add\+Output\+Arguments}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$func\+\_\+name, \mbox{\hyperlink{structtoken}{Token}} $\ast$arg\+\_\+type, \mbox{\hyperlink{structFunction}{function}} Func)
+\item 
+\mbox{\Hypertarget{symtable_8c_a8fa871f2cac15a6d46d4bcb2cf4a5e82}\label{symtable_8c_a8fa871f2cac15a6d46d4bcb2cf4a5e82}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries create\+\_\+and\+\_\+set\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$helper)
+\item 
+\mbox{\Hypertarget{symtable_8c_a6d8f86026bc8ddd659189c1a68dd3b7e}\label{symtable_8c_a6d8f86026bc8ddd659189c1a68dd3b7e}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+print\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$prints)
+\item 
+\mbox{\Hypertarget{symtable_8c_a93ded104d576ab6ef65154bb1b7f71bd}\label{symtable_8c_a93ded104d576ab6ef65154bb1b7f71bd}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+inputs\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$inputs)
+\item 
+\mbox{\Hypertarget{symtable_8c_a4dbe45476d0a3a0749599b7a45434595}\label{symtable_8c_a4dbe45476d0a3a0749599b7a45434595}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+inputi\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$inputi)
+\item 
+\mbox{\Hypertarget{symtable_8c_accfcbc70b1f6d4d37924b8ff0f558473}\label{symtable_8c_accfcbc70b1f6d4d37924b8ff0f558473}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+inputf\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$inputf)
+\item 
+\mbox{\Hypertarget{symtable_8c_ad631b9c5955c8716a5076cc21377f9eb}\label{symtable_8c_ad631b9c5955c8716a5076cc21377f9eb}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+int2float\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$int2float)
+\item 
+\mbox{\Hypertarget{symtable_8c_a93927d69c363679ca68c7547229d2c64}\label{symtable_8c_a93927d69c363679ca68c7547229d2c64}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+float2int\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$float2int)
+\item 
+\mbox{\Hypertarget{symtable_8c_aed2d5c5f5f01a6e9740c98dcd7a60654}\label{symtable_8c_aed2d5c5f5f01a6e9740c98dcd7a60654}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+len\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$len)
+\item 
+\mbox{\Hypertarget{symtable_8c_a1427bb8da66f1f26117f4cfbef63900f}\label{symtable_8c_a1427bb8da66f1f26117f4cfbef63900f}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+substr\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$substr)
+\item 
+\mbox{\Hypertarget{symtable_8c_ad95933c309fd7936af5e3cede0373dbe}\label{symtable_8c_ad95933c309fd7936af5e3cede0373dbe}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+ord\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$ord)
+\item 
+\mbox{\Hypertarget{symtable_8c_a073e2f5bf2c8ae248a1cfd9dff74b420}\label{symtable_8c_a073e2f5bf2c8ae248a1cfd9dff74b420}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+chr\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$chr)
+\item 
+\mbox{\Hypertarget{symtable_8c_a98d4a46b9d6673089a127d0c626f709f}\label{symtable_8c_a98d4a46b9d6673089a127d0c626f709f}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+int\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$integer)
+\item 
+\mbox{\Hypertarget{symtable_8c_aa88ebfc300ba083e2e3f314b4b4a5ac4}\label{symtable_8c_aa88ebfc300ba083e2e3f314b4b4a5ac4}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+float\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$floating)
+\item 
+\mbox{\Hypertarget{symtable_8c_a070ccf1064fd30e208169572a5ec1709}\label{symtable_8c_a070ccf1064fd30e208169572a5ec1709}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+string\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$string)
+\item 
+\mbox{\Hypertarget{symtable_8c_aaa70afefe87d241e94cf70b9677b0925}\label{symtable_8c_aaa70afefe87d241e94cf70b9677b0925}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+i\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$i)
+\item 
+\mbox{\Hypertarget{symtable_8c_a0c4fb35269de8b3694e6d6793ba4e57f}\label{symtable_8c_a0c4fb35269de8b3694e6d6793ba4e57f}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+f\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$f)
+\item 
+\mbox{\Hypertarget{symtable_8c_a0e5cbfd83a98555667e670c7f97a3167}\label{symtable_8c_a0e5cbfd83a98555667e670c7f97a3167}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+s\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$s)
+\item 
+\mbox{\Hypertarget{symtable_8c_ac47e048363f8aa96f34c61eddd7e4bcb}\label{symtable_8c_ac47e048363f8aa96f34c61eddd7e4bcb}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+n\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$n)
+\item 
+\mbox{\Hypertarget{symtable_8c_a1278997394b91d84ab7a16d146608037}\label{symtable_8c_a1278997394b91d84ab7a16d146608037}} 
+\mbox{\hyperlink{structtoken}{Token}} $\ast$ {\bfseries get\+\_\+print\+\_\+type\+\_\+token} (\mbox{\hyperlink{structtoken}{Token}} $\ast$print\+\_\+type)
+\item 
+void \mbox{\hyperlink{symtable_8c_a2c38a559943af3e7d68cae7f823e8996}{sym\+Tab\+\_\+for\+\_\+inbuilt\+\_\+func}} (\mbox{\hyperlink{structsym__tab}{Sym\+Tab}} $\ast$Sym\+Table)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Symbol table implementation. 
+
+I\+FJ Projekt 2020, Tým 55
+
+\begin{DoxyAuthor}{Author}
+$<$xstepa64$>$ Stepaniuk Roman, Bc. 
+
+$<$xpastu04$>$ Pastushenko Vladislav 
+
+$<$xbahda01$>$ Bahdanovich Viktoryia 
+
+$<$xtomas34$>$ Tomason Viktoryia 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{symtable_8c_a311d1750009d51d9f57215a2e8af808b}\label{symtable_8c_a311d1750009d51d9f57215a2e8af808b}} 
+\index{symtable.c@{symtable.c}!addInputArguments@{addInputArguments}}
+\index{addInputArguments@{addInputArguments}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{addInputArguments()}{addInputArguments()}}
+{\footnotesize\ttfamily void add\+Input\+Arguments (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{func\+\_\+name,  }\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{arg\+\_\+name,  }\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{arg\+\_\+type,  }\item[{\mbox{\hyperlink{structFunction}{function}}}]{Func }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds input arguments for a function according to its name in the symbol table 
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & Token that contains information about a function \\
+\hline
+{\em arg\+\_\+name} & Signifies the name of argument \\
+\hline
+{\em arg\+\_\+type} & Signifies the type of argument \\
+\hline
+{\em Func} & Signifies function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_ab5713335e9ea215159e525f47f70f551}\label{symtable_8c_ab5713335e9ea215159e525f47f70f551}} 
+\index{symtable.c@{symtable.c}!addOutputArguments@{addOutputArguments}}
+\index{addOutputArguments@{addOutputArguments}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{addOutputArguments()}{addOutputArguments()}}
+{\footnotesize\ttfamily void add\+Output\+Arguments (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{func\+\_\+name,  }\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{arg\+\_\+type,  }\item[{\mbox{\hyperlink{structFunction}{function}}}]{Func }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds output arguments for a function according to its name in the symbol table 
+\begin{DoxyParams}{Parameters}
+{\em func\+\_\+name} & Token that contains information about a function \\
+\hline
+{\em arg\+\_\+type} & Signifies the type of argument \\
+\hline
+{\em Func} & Signifies function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_ae0c72812cdc0108d01dbc0f68a456f17}\label{symtable_8c_ae0c72812cdc0108d01dbc0f68a456f17}} 
+\index{symtable.c@{symtable.c}!compareTwoVariables@{compareTwoVariables}}
+\index{compareTwoVariables@{compareTwoVariables}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{compareTwoVariables()}{compareTwoVariables()}}
+{\footnotesize\ttfamily int compare\+Two\+Variables (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{var1,  }\item[{int}]{var2,  }\item[{int}]{deep,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} compare two variables. Searching for a variable by name and deер 
+\begin{DoxyParams}{Parameters}
+{\em var1} & Token that contains information about a variable \\
+\hline
+{\em var2} & Type of the second variable \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Signifies variable \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Сorrect type 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a283ba98bd3a858439f39c20c9a991a4d}\label{symtable_8c_a283ba98bd3a858439f39c20c9a991a4d}} 
+\index{symtable.c@{symtable.c}!declaration@{declaration}}
+\index{declaration@{declaration}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{declaration()}{declaration()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structsym__tab}{Sym\+Tab}}$\ast$ declaration (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsym__tab}{Sym\+Tab}} $\ast$}]{Sym\+Table }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} allocates a new symbol table 
+\begin{DoxyParams}{Parameters}
+{\em Sym\+Table} & Symbol table to be initialized \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns pointer to the new symbol table 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a670dad90096a5582d4582fd673e3598b}\label{symtable_8c_a670dad90096a5582d4582fd673e3598b}} 
+\index{symtable.c@{symtable.c}!findFunction@{findFunction}}
+\index{findFunction@{findFunction}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{findFunction()}{findFunction()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structFunction}{function}} find\+Function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{\mbox{\hyperlink{structFunction}{function}}}]{Func }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} finds for a function according to its name in the symbol table 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a function \\
+\hline
+{\em Func} & Signifies the name of function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a94f504e6590cb1a6b158ec72b9ca2ce9}\label{symtable_8c_a94f504e6590cb1a6b158ec72b9ca2ce9}} 
+\index{symtable.c@{symtable.c}!findVariable@{findVariable}}
+\index{findVariable@{findVariable}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{findVariable()}{findVariable()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structVariable}{variable}} find\+Variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep\+Var,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} find variable with the same name on maximum possible level 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a variable \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Signifies variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a795bf80eca064085be1899437675bfbb}\label{symtable_8c_a795bf80eca064085be1899437675bfbb}} 
+\index{symtable.c@{symtable.c}!findVariableWithType@{findVariableWithType}}
+\index{findVariableWithType@{findVariableWithType}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{findVariableWithType()}{findVariableWithType()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structVariable}{variable}} find\+Variable\+With\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep\+Var,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} find variable with the type on maximum possible level 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a variable \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Signifies variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a6f389e8328466183f1ab4d8689455716}\label{symtable_8c_a6f389e8328466183f1ab4d8689455716}} 
+\index{symtable.c@{symtable.c}!freeVariablesLastLabel@{freeVariablesLastLabel}}
+\index{freeVariablesLastLabel@{freeVariablesLastLabel}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{freeVariablesLastLabel()}{freeVariablesLastLabel()}}
+{\footnotesize\ttfamily void free\+Variables\+Last\+Label (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structVariable}{variable}} $\ast$}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} deletes the last appereance of the variable in the symbol table 
+\begin{DoxyParams}{Parameters}
+{\em Var} & Signifies variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a604d7560bf16cc887cb504a8427877cd}\label{symtable_8c_a604d7560bf16cc887cb504a8427877cd}} 
+\index{symtable.c@{symtable.c}!insertFunction@{insertFunction}}
+\index{insertFunction@{insertFunction}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{insertFunction()}{insertFunction()}}
+{\footnotesize\ttfamily void insert\+Function (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{\mbox{\hyperlink{structFunction}{function}} $\ast$}]{Func }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} inserts new function in the symbol table 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a function \\
+\hline
+{\em Func} & Pointer to the symbol table for functions \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a22cd90b66f443528d1b007dc4239dc23}\label{symtable_8c_a22cd90b66f443528d1b007dc4239dc23}} 
+\index{symtable.c@{symtable.c}!insertGenVariable@{insertGenVariable}}
+\index{insertGenVariable@{insertGenVariable}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{insertGenVariable()}{insertGenVariable()}}
+{\footnotesize\ttfamily void insert\+Gen\+Variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep,  }\item[{\mbox{\hyperlink{structGenVariable}{gen\+Variable}} $\ast$}]{gen\+Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} inserts new variable from function into symbol table for generation 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a variable \\
+\hline
+{\em deep} & Signifies the deep of the variable \\
+\hline
+{\em gen\+Var} & Pointer to the symbol table for variables \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} true in a successful insertion 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a55aa60ceaf74ec1afb004b9c28fd8459}\label{symtable_8c_a55aa60ceaf74ec1afb004b9c28fd8459}} 
+\index{symtable.c@{symtable.c}!insertVariable@{insertVariable}}
+\index{insertVariable@{insertVariable}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{insertVariable()}{insertVariable()}}
+{\footnotesize\ttfamily bool insert\+Variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep\+Var,  }\item[{\mbox{\hyperlink{structVariable}{variable}} $\ast$}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} inserts new variable in the symbol table. 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a variable \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Pointer to the symbol table for variables \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} true in a successful insertion 
+\end{DoxyReturn}
+\mbox{\Hypertarget{symtable_8c_a61c7f0d9fcf9e522c536756614582f3a}\label{symtable_8c_a61c7f0d9fcf9e522c536756614582f3a}} 
+\index{symtable.c@{symtable.c}!putTypeVariable@{putTypeVariable}}
+\index{putTypeVariable@{putTypeVariable}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{putTypeVariable()}{putTypeVariable()}}
+{\footnotesize\ttfamily bool put\+Type\+Variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep\+Var,  }\item[{int}]{var\+Type,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} put the type of a variable according to its name and deep 
+\begin{DoxyParams}{Parameters}
+{\em token} & Token that contains information about a variable \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em var\+Type} & Signifies the type of the variable \\
+\hline
+{\em Var} & Signifies variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{symtable_8c_a2c38a559943af3e7d68cae7f823e8996}\label{symtable_8c_a2c38a559943af3e7d68cae7f823e8996}} 
+\index{symtable.c@{symtable.c}!symTab\_for\_inbuilt\_func@{symTab\_for\_inbuilt\_func}}
+\index{symTab\_for\_inbuilt\_func@{symTab\_for\_inbuilt\_func}!symtable.c@{symtable.c}}
+\doxysubsubsection{\texorpdfstring{symTab\_for\_inbuilt\_func()}{symTab\_for\_inbuilt\_func()}}
+{\footnotesize\ttfamily void sym\+Tab\+\_\+for\+\_\+inbuilt\+\_\+func (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structsym__tab}{Sym\+Tab}} $\ast$}]{Sym\+Table }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds inbuilt functions to the symbol table when it is called 
+\begin{DoxyParams}{Parameters}
+{\em Sym\+Table} & Token that contains information about a function \\
+\hline
+\end{DoxyParams}

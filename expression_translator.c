@@ -5,10 +5,7 @@
  *
  * IFJ Projekt 2020, Tým 55
  *
- * @author <xstepa64> Stepaniuk Roman, Bc.
  * @author <xpastu04> Pastushenko Vladislav
- * @author <xbahda01> Bahdanovich Viktoryia
- * @author <xtomas34> Tomason Viktoryia
  */
 
 #include "expression_translator.h"
@@ -16,7 +13,7 @@
 
 /**
  * Function for creating stack of tokens.
- * @return New empty stack
+ * @return New empty stack of tokens
  */
 Stack_t* createStack() {
     Stack_t *out = NULL;
@@ -107,7 +104,7 @@ void implode(Stack_t *stack) {
 
 /**
  * Check token and return its priority
- * @param Token Verifiable token
+ * @param token Verifiable token
  * @return An integer representing the priority number
  */
 int prec(Token token) {
