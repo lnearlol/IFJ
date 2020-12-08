@@ -155,7 +155,7 @@ POPFRAME
 RETURN
 
 LABEL $SUBSTR_EMPTY
-MOVE LF@retval string@\000
+MOVE LF@retval string@
 PUSHS LF@retval
 MOVE LF@retval$1 int@0
 PUSHS LF@retval$1
@@ -217,73 +217,1170 @@ LABEL $CHR_RET
 POPFRAME
 RETURN
 
+LABEL $Instruction
+PUSHFRAME 
+
+DEFVAR LF@err$0  #defines
+PUSHS int@0
+
+POPS LF@err$0
+PUSHS LF@instr$0
+PUSHS string@+
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$8$else
+CREATEFRAME
+DEFVAR TF@increment$0
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+MOVE TF@increment$0 int@1
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Change
+POPS LF@err$0
+POPS LF@memory$0
+PUSHS LF@err$0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$8$end
+LABEL $Instruction$if$8$else
+LABEL $Instruction$if$8$end
+PUSHS LF@instr$0
+PUSHS string@-
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$9$else
+CREATEFRAME
+DEFVAR TF@increment$0
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+MOVE TF@increment$0 int@0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Change
+POPS LF@err$0
+POPS LF@memory$0
+PUSHS LF@err$0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$9$end
+LABEL $Instruction$if$9$else
+LABEL $Instruction$if$9$end
+PUSHS LF@instr$0
+PUSHS string@>
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$10$else
+CREATEFRAME
+DEFVAR TF@right$0
+DEFVAR TF@ptr$0
+MOVE TF@right$0 int@1
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Move
+POPS LF@ptr$0
+PUSHS int@0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$10$end
+LABEL $Instruction$if$10$else
+LABEL $Instruction$if$10$end
+PUSHS LF@instr$0
+PUSHS string@<
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$11$else
+CREATEFRAME
+DEFVAR TF@right$0
+DEFVAR TF@ptr$0
+MOVE TF@right$0 int@0
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Move
+POPS LF@ptr$0
+PUSHS int@0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$11$end
+LABEL $Instruction$if$11$else
+LABEL $Instruction$if$11$end
+PUSHS LF@instr$0
+PUSHS string@.
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$12$else
+CREATEFRAME
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Output
+PUSHS int@0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$12$end
+LABEL $Instruction$if$12$else
+LABEL $Instruction$if$12$end
+PUSHS LF@instr$0
+PUSHS string@,
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$13$else
+CREATEFRAME
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+CALL $Input
+POPS LF@err$0
+POPS LF@memory$0
+PUSHS LF@err$0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$13$end
+LABEL $Instruction$if$13$else
+LABEL $Instruction$if$13$end
+PUSHS LF@instr$0
+PUSHS string@[
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$14$else
+CREATEFRAME
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+DEFVAR TF@program$0
+DEFVAR TF@pc$0
+DEFVAR TF@progLen$0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+MOVE TF@program$0 LF@program$0
+MOVE TF@pc$0 LF@pc$0
+MOVE TF@progLen$0 LF@progLen$0
+CALL $CycleBegin
+POPS LF@err$0
+POPS LF@pc$0
+PUSHS LF@err$0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$14$end
+LABEL $Instruction$if$14$else
+LABEL $Instruction$if$14$end
+PUSHS LF@instr$0
+PUSHS string@]
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Instruction$if$15$else
+CREATEFRAME
+DEFVAR TF@memory$0
+DEFVAR TF@ptr$0
+DEFVAR TF@program$0
+DEFVAR TF@pc$0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@ptr$0 LF@ptr$0
+MOVE TF@program$0 LF@program$0
+MOVE TF@pc$0 LF@pc$0
+CALL $CycleEnd
+POPS LF@err$0
+POPS LF@pc$0
+PUSHS LF@err$0
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+JUMP $Instruction$if$15$end
+LABEL $Instruction$if$15$else
+LABEL $Instruction$if$15$end
+WRITE string@Unsupported\032instruction
+PUSHS int@1
+
+PUSHS LF@pc$0
+
+PUSHS LF@ptr$0
+
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
+LABEL $Move
+PUSHFRAME 
+
+PUSHS LF@right$0
+PUSHS int@1
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Move$if$17$else
+PUSHS LF@ptr$0
+PUSHS int@1
+ADDS
+
+POPS LF@ptr$0
+JUMP $Move$if$17$end
+LABEL $Move$if$17$else
+PUSHS LF@ptr$0
+PUSHS int@1
+SUBS
+
+POPS LF@ptr$0
+LABEL $Move$if$17$end
+PUSHS LF@ptr$0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
+LABEL $Change
+PUSHFRAME 
+
+DEFVAR LF@err$0  #defines
+DEFVAR LF@char$0  #defines
+DEFVAR LF@last$0  #defines
+DEFVAR LF@result$0  #defines
+DEFVAR LF@lastLen$0  #defines
+DEFVAR LF@lastBegin$0  #defines
+DEFVAR LF@first$0  #defines
+PUSHS string@
+
+POPS LF@first$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 int@0
+MOVE TF@n$0 LF@ptr$0
+CALL $substr
+POPS GF@_
+POPS LF@first$0
+PUSHS LF@ptr$0
+PUSHS int@1
+ADDS
+
+POPS LF@lastBegin$0
+PUSHS int@0
+
+POPS LF@lastLen$0
+CREATEFRAME
+DEFVAR TF@s$0
+MOVE TF@s$0 LF@memory$0
+CALL $len
+POPS LF@lastLen$0
+PUSHS LF@lastLen$0
+PUSHS LF@ptr$0
+SUBS
+PUSHS int@1
+ADDS
+
+POPS LF@lastLen$0
+PUSHS string@
+
+POPS LF@last$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@lastBegin$0
+MOVE TF@n$0 LF@lastLen$0
+CALL $substr
+POPS GF@_
+POPS LF@last$0
+PUSHS int@0
+
+POPS LF@char$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@ptr$0
+CALL $ord
+POPS GF@_
+POPS LF@char$0
+PUSHS LF@increment$0
+PUSHS int@1
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Change$if$20$else
+PUSHS LF@char$0
+PUSHS int@1
+ADDS
+
+POPS LF@char$0
+JUMP $Change$if$20$end
+LABEL $Change$if$20$else
+PUSHS LF@char$0
+PUSHS int@1
+SUBS
+
+POPS LF@char$0
+LABEL $Change$if$20$end
+PUSHS int@0
+
+POPS LF@err$0
+PUSHS string@
+
+POPS LF@result$0
+CREATEFRAME
+DEFVAR TF@i$0
+MOVE TF@i$0 LF@char$0
+CALL $chr
+POPS LF@err$0
+POPS LF@result$0
+PUSHS LF@err$0
+PUSHS int@1
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $Change$if$21$else
+WRITE string@Memory\032value\032out\032of\032range\010
+PUSHS LF@memory$0
+
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $Change$if$21$end
+LABEL $Change$if$21$else
+PUSHS LF@first$0
+PUSHS LF@result$0
+POPS GF@str2
+POPS GF@str1
+CONCAT GF@strRes GF@str1 GF@str2
+PUSHS GF@strRes
+PUSHS LF@last$0
+POPS GF@str2
+POPS GF@str1
+CONCAT GF@strRes GF@str1 GF@str2
+PUSHS GF@strRes
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+LABEL $Change$if$21$end
+POPFRAME 
+RETURN 
+
+LABEL $Input
+PUSHFRAME 
+
+DEFVAR LF@err$0  #defines
+DEFVAR LF@char$0  #defines
+DEFVAR LF@last$0  #defines
+DEFVAR LF@result$1  #defines
+DEFVAR LF@lastLen$0  #defines
+DEFVAR LF@lastBegin$0  #defines
+DEFVAR LF@first$0  #defines
+PUSHS string@
+
+POPS LF@first$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 int@0
+MOVE TF@n$0 LF@ptr$0
+CALL $substr
+POPS GF@_
+POPS LF@first$0
+PUSHS LF@ptr$0
+PUSHS int@1
+ADDS
+
+POPS LF@lastBegin$0
+PUSHS int@0
+
+POPS LF@lastLen$0
+CREATEFRAME
+DEFVAR TF@s$0
+MOVE TF@s$0 LF@memory$0
+CALL $len
+POPS LF@lastLen$0
+PUSHS LF@lastLen$0
+PUSHS LF@ptr$0
+SUBS
+PUSHS int@1
+ADDS
+
+POPS LF@lastLen$0
+PUSHS string@
+
+POPS LF@last$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@lastBegin$0
+MOVE TF@n$0 LF@lastLen$0
+CALL $substr
+POPS GF@_
+POPS LF@last$0
+PUSHS int@0
+
+POPS LF@char$0
+PUSHS int@0
+
+POPS LF@err$0
+CREATEFRAME
+CALL $inputi
+POPS LF@err$0
+POPS LF@char$0
+PUSHS LF@err$0
+PUSHS int@0
+EQS
+NOTS
+
+PUSHS bool@true
+JUMPIFNEQS $Input$if$24$else
+WRITE string@Input\032error\010
+PUSHS LF@memory$0
+
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $Input$if$24$end
+LABEL $Input$if$24$else
+PUSHS string@
+
+POPS LF@result$1
+CREATEFRAME
+DEFVAR TF@i$0
+MOVE TF@i$0 LF@char$0
+CALL $chr
+POPS LF@err$0
+POPS LF@result$1
+PUSHS LF@err$0
+PUSHS int@0
+EQS
+NOTS
+
+PUSHS bool@true
+JUMPIFNEQS $Input$if$25$else
+WRITE string@Input\032value\032is\032too\032large\010
+PUSHS LF@memory$0
+
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $Input$if$25$end
+LABEL $Input$if$25$else
+PUSHS LF@first$0
+PUSHS LF@result$1
+POPS GF@str2
+POPS GF@str1
+CONCAT GF@strRes GF@str1 GF@str2
+PUSHS GF@strRes
+PUSHS LF@last$0
+POPS GF@str2
+POPS GF@str1
+CONCAT GF@strRes GF@str1 GF@str2
+PUSHS GF@strRes
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+LABEL $Input$if$25$end
+LABEL $Input$if$24$end
+POPFRAME 
+RETURN 
+
+LABEL $Output
+PUSHFRAME 
+
+DEFVAR LF@char$0  #defines
+PUSHS string@
+
+POPS LF@char$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@ptr$0
+MOVE TF@n$0 int@1
+CALL $substr
+POPS GF@_
+POPS LF@char$0
+WRITE LF@char$0
+POPFRAME 
+RETURN 
+
+LABEL $CycleBegin
+PUSHFRAME 
+
+DEFVAR LF@counter$1  #defines
+DEFVAR LF@instr$3  #defines
+DEFVAR LF@deep$1  #defines
+DEFVAR LF@current$0  #defines
+PUSHS int@0
+
+POPS LF@current$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@ptr$0
+CALL $ord
+POPS GF@_
+POPS LF@current$0
+PUSHS LF@current$0
+PUSHS int@0
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleBegin$if$31$else
+PUSHS LF@pc$0
+
+POPS LF@counter$1
+PUSHS int@0
+
+POPS LF@deep$1
+LABEL $CycleBegin$for$7
+PUSHS int@0
+PUSHS int@0
+EQS
+
+PUSHS bool@true
+JUMPIFEQS $CycleBegin$for$5
+JUMP $CycleBegin$for$4
+LABEL $CycleBegin$for$6
+JUMP $CycleBegin$for$7
+LABEL $CycleBegin$for$5
+PUSHS LF@counter$1
+PUSHS int@1
+ADDS
+
+POPS LF@counter$1
+PUSHS LF@counter$1
+PUSHS LF@progLen$0
+LTS
+NOTS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleBegin$if$32$else
+WRITE string@Incomplete\032cycle\032(begin)\010
+PUSHS LF@pc$0
+
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $CycleBegin$if$32$end
+LABEL $CycleBegin$if$32$else
+LABEL $CycleBegin$if$32$end
+PUSHS string@
+
+POPS LF@instr$3
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@program$0
+MOVE TF@i$0 LF@counter$1
+MOVE TF@n$0 int@1
+CALL $substr
+POPS GF@_
+POPS LF@instr$3
+PUSHS LF@instr$3
+PUSHS string@]
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleBegin$if$33$else
+PUSHS LF@deep$1
+PUSHS int@0
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleBegin$if$34$else
+PUSHS LF@counter$1
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+JUMP $CycleBegin$if$34$end
+LABEL $CycleBegin$if$34$else
+PUSHS LF@deep$1
+PUSHS int@1
+SUBS
+
+POPS LF@deep$1
+LABEL $CycleBegin$if$34$end
+JUMP $CycleBegin$if$33$end
+LABEL $CycleBegin$if$33$else
+LABEL $CycleBegin$if$33$end
+PUSHS LF@instr$3
+PUSHS string@[
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleBegin$if$35$else
+PUSHS LF@deep$1
+PUSHS int@1
+ADDS
+
+POPS LF@deep$1
+JUMP $CycleBegin$if$35$end
+LABEL $CycleBegin$if$35$else
+LABEL $CycleBegin$if$35$end
+JUMP $CycleBegin$for$6
+LABEL $CycleBegin$for$4
+JUMP $CycleBegin$if$31$end
+LABEL $CycleBegin$if$31$else
+LABEL $CycleBegin$if$31$end
+PUSHS LF@pc$0
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
+LABEL $CycleEnd
+PUSHFRAME 
+
+DEFVAR LF@counter$1  #defines
+DEFVAR LF@instr$3  #defines
+DEFVAR LF@deep$1  #defines
+DEFVAR LF@current$0  #defines
+PUSHS int@0
+
+POPS LF@current$0
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+MOVE TF@s$0 LF@memory$0
+MOVE TF@i$0 LF@ptr$0
+CALL $ord
+POPS GF@_
+POPS LF@current$0
+PUSHS LF@current$0
+PUSHS int@0
+EQS
+NOTS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleEnd$if$41$else
+PUSHS LF@pc$0
+
+POPS LF@counter$1
+PUSHS int@0
+
+POPS LF@deep$1
+LABEL $CycleEnd$for$15
+PUSHS int@1
+PUSHS int@0
+EQS
+NOTS
+
+PUSHS bool@true
+JUMPIFEQS $CycleEnd$for$13
+JUMP $CycleEnd$for$12
+LABEL $CycleEnd$for$14
+JUMP $CycleEnd$for$15
+LABEL $CycleEnd$for$13
+PUSHS LF@counter$1
+PUSHS int@1
+SUBS
+
+POPS LF@counter$1
+PUSHS LF@counter$1
+PUSHS int@0
+LTS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleEnd$if$42$else
+WRITE string@Incomplete\032cycle\032(end)\010
+PUSHS LF@pc$0
+
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $CycleEnd$if$42$end
+LABEL $CycleEnd$if$42$else
+LABEL $CycleEnd$if$42$end
+PUSHS string@
+
+POPS LF@instr$3
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@program$0
+MOVE TF@i$0 LF@counter$1
+MOVE TF@n$0 int@1
+CALL $substr
+POPS GF@_
+POPS LF@instr$3
+PUSHS LF@instr$3
+PUSHS string@]
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleEnd$if$43$else
+PUSHS LF@deep$1
+PUSHS int@1
+SUBS
+
+POPS LF@deep$1
+JUMP $CycleEnd$if$43$end
+LABEL $CycleEnd$if$43$else
+LABEL $CycleEnd$if$43$end
+PUSHS LF@instr$3
+PUSHS string@[
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleEnd$if$44$else
+PUSHS LF@deep$1
+PUSHS int@0
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $CycleEnd$if$45$else
+PUSHS LF@counter$1
+PUSHS int@1
+SUBS
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+JUMP $CycleEnd$if$45$end
+LABEL $CycleEnd$if$45$else
+LABEL $CycleEnd$if$45$end
+PUSHS LF@deep$1
+PUSHS int@1
+ADDS
+
+POPS LF@deep$1
+JUMP $CycleEnd$if$44$end
+LABEL $CycleEnd$if$44$else
+LABEL $CycleEnd$if$44$end
+JUMP $CycleEnd$for$14
+LABEL $CycleEnd$for$12
+JUMP $CycleEnd$if$41$end
+LABEL $CycleEnd$if$41$else
+LABEL $CycleEnd$if$41$end
+PUSHS LF@pc$0
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
+LABEL $LoadProgram
+PUSHFRAME 
+
+DEFVAR LF@progLen$0  #defines
+DEFVAR LF@program$0  #defines
+DEFVAR LF@err$0  #defines
+PUSHS int@0
+
+POPS LF@err$0
+PUSHS string@
+
+POPS LF@program$0
+PUSHS int@0
+
+POPS LF@progLen$0
+CREATEFRAME
+CALL $inputs
+POPS LF@err$0
+POPS LF@program$0
+PUSHS LF@err$0
+PUSHS int@1
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $LoadProgram$if$47$else
+WRITE string@Error\032loading\032program\010
+PUSHS string@
+
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+JUMP $LoadProgram$if$47$end
+LABEL $LoadProgram$if$47$else
+CREATEFRAME
+DEFVAR TF@s$0
+MOVE TF@s$0 LF@program$0
+CALL $len
+POPS LF@progLen$0
+PUSHS LF@program$0
+
+PUSHS LF@progLen$0
+
+POPFRAME 
+RETURN 
+
+LABEL $LoadProgram$if$47$end
+POPFRAME 
+RETURN 
+
+LABEL $InitMemory
+PUSHFRAME 
+
+DEFVAR LF@counter$1  #defines
+DEFVAR LF@memory$0  #defines
+DEFVAR LF@char$0  #defines
+PUSHS string@
+
+POPS LF@char$0
+CREATEFRAME
+DEFVAR TF@i$0
+MOVE TF@i$0 int@0
+CALL $chr
+POPS GF@_
+POPS LF@char$0
+PUSHS string@
+
+POPS LF@memory$0
+PUSHS int@0
+
+POPS LF@counter$1
+LABEL $InitMemory$for$23
+PUSHS LF@counter$1
+PUSHS int@256
+LTS
+
+PUSHS bool@true
+JUMPIFEQS $InitMemory$for$21
+JUMP $InitMemory$for$20
+LABEL $InitMemory$for$22
+PUSHS LF@counter$1
+PUSHS int@1
+ADDS
+
+POPS LF@counter$1
+JUMP $InitMemory$for$23
+LABEL $InitMemory$for$21
+PUSHS LF@memory$0
+PUSHS LF@char$0
+POPS GF@str2
+POPS GF@str1
+CONCAT GF@strRes GF@str1 GF@str2
+PUSHS GF@strRes
+
+POPS LF@memory$0
+JUMP $InitMemory$for$22
+LABEL $InitMemory$for$20
+PUSHS LF@memory$0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
+LABEL $SanityCheck
+PUSHFRAME 
+
+DEFVAR LF@pcErrorMsg$0  #defines
+DEFVAR LF@ptrErrorMsg$0  #defines
+PUSHS string@Value\032of\032'ptr'\032is\032out\032of\032range\010
+
+POPS LF@ptrErrorMsg$0
+PUSHS string@Value\032of\032'pc'\032is\032out\032of\032range\010
+
+POPS LF@pcErrorMsg$0
+PUSHS LF@ptr$0
+PUSHS int@0
+LTS
+
+PUSHS bool@true
+JUMPIFNEQS $SanityCheck$if$52$else
+WRITE LF@ptrErrorMsg$0
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $SanityCheck$if$52$end
+LABEL $SanityCheck$if$52$else
+LABEL $SanityCheck$if$52$end
+PUSHS LF@pc$0
+PUSHS int@0
+LTS
+
+PUSHS bool@true
+JUMPIFNEQS $SanityCheck$if$53$else
+WRITE LF@pcErrorMsg$0
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $SanityCheck$if$53$end
+LABEL $SanityCheck$if$53$else
+LABEL $SanityCheck$if$53$end
+PUSHS LF@ptr$0
+PUSHS int@256
+GTS
+
+PUSHS bool@true
+JUMPIFNEQS $SanityCheck$if$54$else
+WRITE LF@ptrErrorMsg$0
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $SanityCheck$if$54$end
+LABEL $SanityCheck$if$54$else
+LABEL $SanityCheck$if$54$end
+PUSHS LF@pc$0
+PUSHS LF@progLen$0
+LTS
+NOTS
+
+PUSHS bool@true
+JUMPIFNEQS $SanityCheck$if$55$else
+WRITE string@Program\032completed\010
+PUSHS int@1
+
+POPFRAME 
+RETURN 
+
+JUMP $SanityCheck$if$55$end
+LABEL $SanityCheck$if$55$else
+LABEL $SanityCheck$if$55$end
+PUSHS int@0
+
+POPFRAME 
+RETURN 
+
+POPFRAME 
+RETURN 
+
 LABEL $$main
 CREATEFRAME
 PUSHFRAME
 
-DEFVAR LF@o$2  #defines
-DEFVAR LF@i$1  #defines
-DEFVAR LF@a$0  #defines
-DEFVAR LF@a$2  #defines
-PUSHS int@1
-
-POPS LF@a$0
+DEFVAR LF@instr$3  #defines
+DEFVAR LF@memory$0  #defines
+DEFVAR LF@progLen$0  #defines
+DEFVAR LF@program$0  #defines
+DEFVAR LF@result$3  #defines
+DEFVAR LF@ptr$0  #defines
+DEFVAR LF@pc$0  #defines
 PUSHS int@0
 
-POPS LF@i$1
-LABEL $main$for$7
-PUSHS LF@i$1
-PUSHS int@10000
+POPS LF@pc$0
+PUSHS int@0
+
+POPS LF@ptr$0
+PUSHS string@
+
+POPS LF@memory$0
+PUSHS string@
+
+POPS LF@program$0
+PUSHS int@0
+
+POPS LF@progLen$0
+CREATEFRAME
+CALL $InitMemory
+POPS LF@memory$0
+CREATEFRAME
+CALL $LoadProgram
+POPS LF@progLen$0
+POPS LF@program$0
+PUSHS LF@progLen$0
+PUSHS int@0
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $main$if$59$else
+POPFRAME
+
+JUMP $END_OF_PROGRAM
+JUMP $main$if$59$end
+LABEL $main$if$59$else
+LABEL $main$for$31
+PUSHS LF@pc$0
+PUSHS LF@progLen$0
 LTS
 
 PUSHS bool@true
-JUMPIFEQS $main$for$5
-JUMP $main$for$4
-LABEL $main$for$6
-PUSHS LF@i$1
-PUSHS int@1
-ADDS
+JUMPIFEQS $main$for$29
+JUMP $main$for$28
+LABEL $main$for$30
+JUMP $main$for$31
+LABEL $main$for$29
+PUSHS string@
 
-POPS LF@i$1
-JUMP $main$for$7
-LABEL $main$for$5
-PUSHS LF@a$0
-PUSHS int@1
-PUSHS LF@i$1
-PUSHS LF@a$0
-POPS GF@tmpDividingByZero
-JUMPIFEQ error9 GF@tmpDividingByZero int@0
-PUSHS GF@tmpDividingByZero
-IDIVS
-MULS
-ADDS
+POPS LF@instr$3
+PUSHS int@0
 
-POPS LF@a$2
-PUSHS LF@a$2
-PUSHS int@3
-POPS GF@tmpDividingByZero
-JUMPIFEQ error9 GF@tmpDividingByZero int@0
-PUSHS GF@tmpDividingByZero
-IDIVS
-
-POPS LF@o$2
-PUSHS LF@o$2
-PUSHS LF@a$2
+POPS LF@result$3
+CREATEFRAME
+DEFVAR TF@s$0
+DEFVAR TF@i$0
+DEFVAR TF@n$0
+MOVE TF@s$0 LF@program$0
+MOVE TF@i$0 LF@pc$0
+MOVE TF@n$0 int@1
+CALL $substr
+POPS GF@_
+POPS LF@instr$3
+CREATEFRAME
+DEFVAR TF@instr$0
+DEFVAR TF@pc$0
+DEFVAR TF@ptr$0
+DEFVAR TF@memory$0
+DEFVAR TF@program$0
+DEFVAR TF@progLen$0
+MOVE TF@instr$0 LF@instr$3
+MOVE TF@pc$0 LF@pc$0
+MOVE TF@ptr$0 LF@ptr$0
+MOVE TF@memory$0 LF@memory$0
+MOVE TF@program$0 LF@program$0
+MOVE TF@progLen$0 LF@progLen$0
+CALL $Instruction
+POPS LF@memory$0
+POPS LF@ptr$0
+POPS LF@pc$0
+POPS LF@result$3
+PUSHS LF@result$3
 PUSHS int@1
-ADDS
-LTS
+EQS
 
 PUSHS bool@true
-JUMPIFNEQS $main$if$1$else
-WRITE string@i\032=\032
-WRITE LF@i$1
-WRITE string@\010
-WRITE string@o\032=\032
-WRITE LF@o$2
-WRITE string@\010
-LABEL $main$if$1$else
-JUMP $main$for$6
-LABEL $main$for$4
+JUMPIFNEQS $main$if$60$else
+POPFRAME
+
+JUMP $END_OF_PROGRAM
+JUMP $main$if$60$end
+LABEL $main$if$60$else
+LABEL $main$if$60$end
+PUSHS LF@pc$0
+PUSHS int@1
+ADDS
+
+POPS LF@pc$0
+CREATEFRAME
+DEFVAR TF@ptr$0
+DEFVAR TF@pc$0
+DEFVAR TF@progLen$0
+MOVE TF@ptr$0 LF@ptr$0
+MOVE TF@pc$0 LF@pc$0
+MOVE TF@progLen$0 LF@progLen$0
+CALL $SanityCheck
+POPS LF@result$3
+PUSHS LF@result$3
+PUSHS int@1
+EQS
+
+PUSHS bool@true
+JUMPIFNEQS $main$if$61$else
+POPFRAME
+
+JUMP $END_OF_PROGRAM
+JUMP $main$if$61$end
+LABEL $main$if$61$else
+LABEL $main$if$61$end
+JUMP $main$for$30
+LABEL $main$for$28
+LABEL $main$if$59$end
 POPFRAME
 
 JUMP $END_OF_PROGRAM

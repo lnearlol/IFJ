@@ -1,10 +1,26 @@
+/**
+ * @file logic.c
+ * 
+ * @brief Logic functions working with SymTable implementation
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xstepa64> Stepaniuk Roman, Bc.
+*/
+
 
 #include "parser.h"
 
-// Write from typeCompareList to varCompareList and free that lists.
+/**
+ * Function creats variables in SymTable with names which are written to varCompareList and give them types from typeCompareList 
+ * and frees that lists
+ * 
+ * @param deep depth of label
+ * @return Function returns true if all expression types are successfully written to variable->type in symtable. And
+ * returns false if there was any syntax or semantic error
+ */
 bool check_declare_logic(int deep){
     while(varCompareList != NULL && typeCompareList != NULL){
-        // printf("varCompareList - %s, typeCompareList - %d\n", varCompareList->var->data, typeCompareList->type);
         if(!insertVariable(varCompareList->var, deep, &(SymTable->var)))
             changeErrorCode(3);
         else {
@@ -28,7 +44,13 @@ bool check_declare_logic(int deep){
 }
 
 
-// Compare top of varCompareList and typeCompareList and free that lists. 
+/**
+ * Function compares types of variables with names which are written to varCompareList and types from typeCompareList 
+ * and frees that lists
+ * 
+ * @param deep depth of label
+ * @return Function returns true if all types are the same, and returns false if at least only one type will be different
+ */
 bool check_define_logic(int deep){
     while(varCompareList != NULL && typeCompareList != NULL){
         if(compareTwoVariables(varCompareList->var, typeCompareList->type, deep, SymTable->var)){
@@ -44,24 +66,6 @@ bool check_define_logic(int deep){
     } else {
         return true;
     }
-}
-
-
-bool compare_return_and_output_params_logic(){
-    
-    function F = findFunction(current_function_name, SymTable->func);
-    outputParams out_params = F->output_params;
-    while(out_params != NULL && typeCompareList != NULL){
-        delete_type_from_compare_list(typeCompareList);
-        if(out_params->type != typeCompareList->type)
-            return false;
-        out_params = out_params->next;
-    }
-    if(out_params != NULL || typeCompareList != NULL){
-        freeBothCompareLists();
-        return false;
-    } else
-        return true;
 }
 
 
