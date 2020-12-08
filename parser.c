@@ -18,7 +18,7 @@ int deep = -1;
 int number_of_operands = 0;
 // number of run of program
 int PROGRAMM_RUN = FIRST_RUN;
-// error detection. Program will return the error_flag.
+// error detection. Program will return the error_flag
 int error_flag = 0;
 // check if each function has own return in case of need
 int return_in_function = true;
@@ -263,7 +263,8 @@ void freeBothCompareLists(){
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
 
 /**
- * PROGRAM_SRART -> package main eol FUNCTION_CHECK eol eof
+ * <PROGRAM_SRART> -> package main eol <FUNCTION_CHECK> eol eof
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool program_start(){
     bool program_start = false;
@@ -294,7 +295,8 @@ bool program_start(){
 //  ------------------------------------ F U N C T I O N ------------------------------------
 
 /**
- * FUNCTION_CHECK -> func IDENTIFIER ( ALLOWED_EOL  INPUT_PARAMETERS  OUTPUT_PARAMETERS { eol FUNCTION_BODY } eol
+ * <FUNCTION_CHECK> -> func IDENTIFIER ( <ALLOWED_EOL>  <INPUT_PARAMETERS>  <OUTPUT_PARAMETERS> { eol <FUNCTION_BODY> } eol
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool function_check(){
     bool func = false;
@@ -375,8 +377,9 @@ bool function_check(){
 //  ------------------------------------ I N P U T    P A R A M E T E R S ------------------------------------
 
 /**
- * INPUT_PARAMETERS -> )
- * INPUT_PARAMETERS -> INPUT_SINGLE_PARAMETERS
+ * <INPUT_PARAMETERS> -> )
+ * <INPUT_PARAMETERS> -> <INPUT_SINGLE_PARAMETERS>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool input_parameters(){
     bool input_parameters = false;
@@ -389,8 +392,9 @@ bool input_parameters(){
 }
 
 /**
- * INPUT_SINGLE_PARAMETERS -> IDENTIFIER int/float/string , INPUT_SINGLE_PARAMETERS
- * INPUT_SINGLE_PARAMETERS -> IDENTIFIER int/float/string )
+ * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string , <INPUT_SINGLE_PARAMETERS>
+ * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string )
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool input_single_parameters(){
     bool input_single_parameter = false;
@@ -432,9 +436,10 @@ bool input_single_parameters(){
 //  ------------------------------------ O U T P U T    P A R A M E T E R S ------------------------------------
 
 /**
- * OUTPUT_PARAMETERS -> {
- * OUTPUT_PARAMETERS -> ( )
- * OUTPUT_PARAMETERS -> ( OUTPUT_SINGLE_PARAMETERS
+ * <OUTPUT_PARAMETERS> -> {
+ * <OUTPUT_PARAMETERS> -> ( )
+ * <OUTPUT_PARAMETERS> -> ( <OUTPUT_SINGLE_PARAMETERS>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool output_parameters(){
     bool output_parameters = false;
@@ -457,8 +462,9 @@ bool output_parameters(){
 }
 
 /**
- * OUTPUT_SINGLE_PARAMETERS -> int/float/string , OUTPUT_SINGLE_PARAMETERS
- * OUTPUT_SINGLE_PARAMETERS -> int/float/string ) {
+ * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string , <OUTPUT_SINGLE_PARAMETERS>
+ * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string ) {
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 
 bool output_single_parameters(){
@@ -494,6 +500,7 @@ bool output_single_parameters(){
 /**
  * Function works only on first run of program. Ignore all types of tokens except '}'
  * Function gets next tokens until finds } which will be last in this function (depth will be the same as it was on start)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool first_run_body(){
     bool first_run_accept = true;
@@ -518,17 +525,18 @@ bool first_run_body(){
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
 /**
- * FUNCTION_BODY -> } eol  FUNCTION_BODY
- * FUNCTION_BODY -> { eol  FUNCTION_BODY
- * FUNCTION_BODY -> eol  FUNCTION_BODY
- * FUNCTION_BODY -> if IF_CONSTRUCTION  FUNCTION_BODY
- * FUNCTION_BODY -> else  {  eol  FUNCTION_BODY
- * FUNCTION_BODY -> for FOR_CONSTRUCTION  FUNCTION_BODY
- * FUNCTION_BODY -> IDENTIFIER  DEFINE_FUNC  FUNCTION_BODY
- * FUNCTION_BODY -> COMMAND_FUNCTION  DEFINE_FUNC  FUNCTION_BODY
- * FUNCTION_BODY -> _  DEFINE_FUNC  FUNCTION_BODY
- * FUNCTION_BODY -> return eol  FUNCTION_BODY
- * FUNCTION_BODY -> return  RETURN_CONSTRUCTION FUNCTION_BODY
+ * <FUNCTION_BODY> -> } eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> { eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> if <IF_CONSTRUCTION>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> else  {  eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> for <FOR_CONSTRUCTION>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> IDENTIFIER  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> COMMAND_FUNCTION  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> _  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> return eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> return  <RETURN_CONSTRUCTION> <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool function_body(){
     bool else_condition_flag = false;
@@ -697,7 +705,8 @@ bool function_body(){
 //  ------------------------------------ F O R    C O N S T R U C T I O N ------------------------------------
 
 /**
- * FOR_CONSTRUCTION ->  DEFINE_FUNC ; EXPRESSION ; DEFINE_FUNC { eol FUNCTION_BODY
+ * <FOR_CONSTRUCTION> ->  <DEFINE_FUNC> ; <IF_CONSTRUCTION> ; <DEFINE_FUNC> { eol <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool for_construction(){
     bool for_accept = false;
@@ -771,7 +780,8 @@ bool for_construction(){
 //  ------------------------------------ I F    C O N S T R U C T I O N ------------------------------------
 
 /**
- * IF_CONSTRUCTION -> EXPRESSION { eol FUNCTION_BODY
+ * <IF_CONSTRUCTION> -> <IF_CONSTRUCTION> { eol <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool if_construction()
 {
@@ -812,15 +822,16 @@ bool if_construction()
 //  ------------------------------------ O R    F U N C T I O N ()    F R O M    B O D Y 
 
 /**
- * DEFINE_FUNC -> DEFINE_OPERANDS := COUNT_OPERANDS
- * DEFINE_FUNC -> DEFINE_OPERANDS = COUNT_OPERANDS
- * DEFINCE_FUNC -> DEFINE_OPERANDS ( EXPRESSION_FUNC_ARGUMENTS
+ * <DEFINE_FUNC> -> <DEFINE_OPERANDS> := <COUNT_OPERANDS>
+ * <DEFINE_FUNC> -> <DEFINE_OPERANDS> = <COUNT_OPERANDS>
+ * DEFINCE_FUNC -> <DEFINE_OPERANDS> ( <EXPRESSION_FUNC_ARGUMENTS>
  * 
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
  * @param declare is true when declaration is allowed :=
  * @param equating is true when define is allowed =
  * @param func is true when function is allowed
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool define_func(int end_condition, bool declare, bool equating, bool func){
     bool define_accept = false;
@@ -882,14 +893,15 @@ bool define_func(int end_condition, bool declare, bool equating, bool func){
 }
 
 /**
- * DEFINE_OPERANDS -> IDENTIFIER
- * DEFINE_OPERANDS -> IDENTIFIER , DEFINDE_OPERANDS
- * DEFINE_OPERANDS -> COMMAND_FUNCTION
- * DEFINE_OPERANDS -> COMMAND_FUNCTION , DEFINE_OPERANDS
- * DEFINE_OPERANDS -> _
- * DEFINE_OPERANDS -> _ , DEFINE_OPERANDS
+ * <DEFINE_OPERANDS> -> IDENTIFIER
+ * <DEFINE_OPERANDS> -> IDENTIFIER , <DEFINE_OPERANDS>
+ * <DEFINE_OPERANDS> -> COMMAND_FUNCTION
+ * <DEFINE_OPERANDS> -> COMMAND_FUNCTION , <DEFINE_OPERANDS>
+ * <DEFINE_OPERANDS> -> _
+ * <DEFINE_OPERANDS> -> _ , <DEFINE_OPERANDS>
  * 
  * @param func is true when function is allowed
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool define_operands(int func){
    
@@ -931,12 +943,13 @@ bool define_operands(int func){
 
 
 /**
- * COUNT_OPERANDS -> EXPRESSION
- * COUNT_OPERANDS -> EXPRESSION , COUNT_OPERANDS
+ * <COUNT_OPERANDS> -> <IF_CONSTRUCTION>
+ * <COUNT_OPERANDS> -> <IF_CONSTRUCTION> , <COUNT_OPERANDS>
  * 
  * function for recursive calling expressions + count of operands
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool count_operands(int end_condition){
     int current_end_condition = 0;   // for a, b = 2+1, 3+1   ',' -> end_condition
@@ -984,27 +997,28 @@ bool count_operands(int end_condition){
 //  ------------------------------------ E X P R E S S I O N ------------------------------------
 
 /**
- * EXPRESSION -> (  ALLOWED_EOL  EXPRESSION
- * EXPRESSION -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  IS_CLOSED_BRACKET
- * EXPRESSION -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  IS_CLOSED_BRACKET  OPERATOR  ALLOWED_EOL  EXPRESSION
- * EXPRESSION -> IDENTIFIER/COMMAND_FUNCTION  IS_CLOSED_BRACKET  (  ALLOWED_EOL  EXPRESSION_FUNC_ARGUMENTS
+ * <IF_CONSTRUCTION> -> (  <ALLOWED_EOL>  <IF_CONSTRUCTION>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  OPERATOR  <ALLOWED_EOL>  <IF_CONSTRUCTION>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  (  <ALLOWED_EOL>  <EXPRESSION_FUNC_ARGUMENTS>
  * 
  * Function parses syntax of expressions
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool expression(int end_condition){
     bool expression_accept = false;
-    static int can_be_function = 1;
+    static bool can_be_function = true;
     static int bracket = 0;
     static int closed_bracket_counter = 0;
-    static int was_it_string = 0;
+    static bool was_it_string = false;
     static bool normal_quantity_of_expressions = true;
 
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
         push(expr, *token);
         bracket++;
-        can_be_function = 0;
+        can_be_function = false;
         get_and_set_token();
         allowed_eol();
         expression_accept = expression(end_condition);
@@ -1021,7 +1035,7 @@ bool expression(int end_condition){
        }
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
-            was_it_string = 1; 
+            was_it_string = true; 
 
         // check existing function logic
         saved_func_name = token;
@@ -1052,8 +1066,8 @@ bool expression(int end_condition){
             }
 
             expression_accept = true;
-            was_it_string = 0;
-            can_be_function = 1;
+            was_it_string = false;
+            can_be_function = true;
 
            
             delete_expr_stack = false;
@@ -1076,12 +1090,12 @@ bool expression(int end_condition){
                     changeErrorCode(3); // variable not defined
                     return false;
                 } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
-                    was_it_string = 1;
+                    was_it_string = true;
                 }
 
             }
 
-            if(was_it_string == 1){  // if used not '+' for string
+            if(was_it_string == true){  // if used not '+' for string
                 if(strcmp(token->data, "+") && token->type != TOKEN_TYPE_LOGICAL_OPERATOR){
 
                     changeErrorCode(5);
@@ -1092,7 +1106,7 @@ bool expression(int end_condition){
             }
             push(expr, *token);
             get_and_set_token();
-            can_be_function = 0;
+            can_be_function = false;
             allowed_eol(); //[ a + \n b] situation
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
@@ -1127,7 +1141,7 @@ bool expression(int end_condition){
 
                 if(token->type == end_condition){
                     expression_accept = true;
-                    can_be_function = 1;
+                    can_be_function = true;
                 }
             }
         } else if(token->type == TOKEN_TYPE_COMMA){
@@ -1156,8 +1170,8 @@ bool expression(int end_condition){
 }
 
 /**
- * IS_CLOSED_BRACKET -> )  IS_CLOSED_BRACKET
- * IS_CLOSED_BRACKET -> eps
+ * <IS_CLOSED_BRACKET> -> )  <IS_CLOSED_BRACKET>
+ * <IS_CLOSED_BRACKET> -> eps
  * 
  * Function counts closed brackets
  * @return counter of closed brackets
@@ -1173,8 +1187,8 @@ int is_closed_bracket(){
 }
 
 /**
- * ALLOWED_EOL -> eol  ALLOWED_EOL
- * ALLOWED_EOL -> eps
+ * <ALLOWED_EOL> -> eol  <ALLOWED_EOL>
+ * <ALLOWED_EOL> -> eps
  */
 void allowed_eol(){
     while(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
@@ -1183,8 +1197,8 @@ void allowed_eol(){
 
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
 /**
- * EXPRESSION_FUNC_ARGUMENTS -> )
- * EXPRESSION_FUNC_ARGUMENTS -> EXPRESSION_FUNC_SINGLE_ARGUMENT
+ * <EXPRESSION_FUNC_ARGUMENTS> -> )
+ * <EXPRESSION_FUNC_ARGUMENTS> -> <EXPRESSION_FUNC_SINGLE_ARGUMENT>
  */
 bool expression_func_arguments(){
 
@@ -1221,11 +1235,12 @@ bool expression_func_arguments(){
 
 
 /**
- * EXPRESSION_FUNC_SINGLE_ARGUMENT -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  )
- * EXPRESSION_FUNC_SINGLE_ARGUMENT -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  ,  EXPRESSION_FUNC_SINGLE_ARGUMENT
+ * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  )
+ * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  ,  <EXPRESSION_FUNC_SINGLE_ARGUMENT>
  * 
  * @param arg_check pointer on list of input function arguments (SymTable)
  * @param args_output pointer on list of output function arguments (SymTable)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool expression_func_single_argument(inputParams args_check, outputParams args_output){
     bool func_single_argument = false;
@@ -1285,11 +1300,12 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
 //  ------------------------------------ R E T U R N    C O N S T R U C T I O N ------------------------------------
 
 /**
- * RETURN_CONSTRUCTION -> eol
- * RETURN_CONSTRUCTION -> EXPRESSION  eol
- * RETURN_CONSTRUCTION -> EXPRESSION  ,  RETURN_CONSTRUCTION
+ * <RETURN_CONSTRUCTION> -> eol
+ * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  eol
+ * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  ,  <RETURN_CONSTRUCTION>
  * 
  * @param out_params pointer on list of output function arguments (SymTable)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool return_construction(outputParams out_params){
     bool return_construction_accept = false;
@@ -1337,7 +1353,8 @@ bool return_construction(outputParams out_params){
 //  ------------------------------------ S T A R T    B L O C K    &    N E W    L I N E ------------------------------------
 
 /**
- * START_BLOCK_NEW_LINE -> { eol
+ * <START_BLOCK_NEW_LINE> -> { eol
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool start_block_new_line(){
     bool start_block_accept = false;
@@ -1354,6 +1371,9 @@ bool start_block_new_line(){
 
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
+/**
+ * @return function main returns error_flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code
+ */
 int main(){
     SymTable = declaration(SymTable);
     Container = declareContainer(Container);

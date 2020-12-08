@@ -13,6 +13,11 @@
 
 #include "symtable.h"
 
+/**
+ * Function allocates a new symbol table
+ * @param SymTable Symbol table to be initialized
+ * @return Function returns pointer to the new symbol table
+ */
 SymTab *declaration(SymTab *SymTable){
 
     SymTable = malloc(sizeof(struct sym_tab));
@@ -29,6 +34,13 @@ SymTab *declaration(SymTab *SymTable){
 
 // --------------------------------------   V A R I A B L E S   --------------------------------------
 
+/**
+ * Function inserts new variable in the symbol table.
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the depth of the variable
+ * @param Var Pointer to the symbol table for variables
+ * @return Function true in a successful insertion
+ */
  bool insertVariable(Token *token, int deepVar, variable *Var){
     
     if(*Var == NULL){
@@ -66,6 +78,12 @@ SymTab *declaration(SymTab *SymTable){
 	}
 }
 
+/**
+ * Function find variable with the same name on maximum possible level
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the depth of the variable
+ * @param Var Signifies variable
+ */
 variable findVariable(Token *token, int deepVar, variable Var){
     variable tmp = Var;
     if(Var == NULL){
@@ -82,6 +100,7 @@ variable findVariable(Token *token, int deepVar, variable Var){
     }
 }
 
+// Helper function for "findVariable"
 variable findVariableHelper(Token *token, int deepVar, variable Var){
     if (Var == NULL) {
         return NULL;
@@ -97,6 +116,12 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 
 //------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
 
+/**
+ * Function find variable with the type on maximum possible level
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the depth of the variable
+ * @param Var Signifies variable
+ */
 variable findVariableWithType(Token *token, int deepVar, variable Var){
     variable tmp = Var;
 
@@ -122,6 +147,7 @@ variable findVariableWithType(Token *token, int deepVar, variable Var){
     }
 }
 
+// Helper function for "findVariableWithType" with the same parametеrs
 variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
 
     if (Var == NULL) {
@@ -138,6 +164,13 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
 
 //--------------------------------------
 
+/**
+ * Function put the type of a variable according to its name and depth
+ * @param token Token that contains information about a variable
+ * @param deepVar Signifies the depth of the variable
+ * @param varType Signifies the type of the variable
+ * @param Var Signifies variable
+ */
 bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
     variable PutTypeVar = findVariable(token, deepVar, Var);
     if(PutTypeVar == NULL || PutTypeVar->type != VAR_TYPE_UNDEFINED){
@@ -148,7 +181,10 @@ bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
     }
 }
 
-
+/**
+ * Function deletes the last appereance of the variable in the symbol table
+ * @param Var Signifies variable
+ */
 void freeVariablesLastLabel(variable *Var){
     if(*Var == NULL)
 		return;
@@ -162,12 +198,21 @@ void freeVariablesLastLabel(variable *Var){
     }
 }
 
+// Function deletes all variables into symbol table 
 void freeAllVariables(variable *Var){
 
     while(*Var != NULL)
         freeVariablesLastLabel(Var);
 }
 
+/**
+ * Function compare two variables. Searching for a variable by name and deер
+ * @param var1 Token that contains information about a variable
+ * @param var2 Type of the second variable
+ * @param deepVar Signifies the depth of the variable
+ * @param Var Signifies variable
+ * @return Сorrect type
+ */
 int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     int type1 = 0, type2 = var2;
     if (var1 == NULL)
@@ -196,6 +241,7 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
         return 0;
 }
 
+// Helper function for "compareTwoVariables"
 int returnLiteralType(Token *token){
     if(token->type == TOKEN_TYPE_LITERAL_INT){
         return 1;
@@ -209,7 +255,13 @@ int returnLiteralType(Token *token){
 }
 
 // --------------------------------------------------  G E N    V A R I A B L E S  ----------------------------------------------------
-
+/**
+ * Function inserts new variable from function into symbol table for generation
+ * @param token Token that contains information about a variable
+ * @param deep Signifies the depth of the variable
+ * @param genVar Pointer to the symbol table for variables
+ * @return Function true in a successful insertion
+ */
 void insertGenVariable(Token *token, int deep, genVariable *genVar){
     if(*genVar == NULL){
                 
@@ -232,6 +284,7 @@ void insertGenVariable(Token *token, int deep, genVariable *genVar){
 	}
 }
 
+// Helper function for "insertGenVariable"
 void insertDepth(int deep, deepInside *Depth){
     if(*Depth == NULL){
         *Depth = malloc(sizeof(struct DeepInside));
@@ -244,6 +297,8 @@ void insertDepth(int deep, deepInside *Depth){
         insertDepth(deep, &(*Depth)->next);
     }
 }
+
+// Function deletes all variables into symbol table for generation
 void freeGenVariables(genVariable *genVar, bool print){
     
     if(*genVar == NULL){
@@ -268,6 +323,11 @@ void freeGenVariables(genVariable *genVar, bool print){
 
 // --------------------------------------------------  F  U  N  C  T  I  O  N  S  ----------------------------------------------------
 
+/**
+ * Function inserts new function in the symbol table
+ * @param token Token that contains information about a function
+ * @param Func Pointer to the symbol table for functions
+ */
 void insertFunction(Token *token, function *Func){
 
 	if(*Func == NULL){
@@ -291,6 +351,7 @@ void insertFunction(Token *token, function *Func){
 	}
 }
 
+// Function deletes all functions with all parameters into symbol table 
 void freeFunctions(function *Func){
     if(*Func == NULL){
 		return;
@@ -314,6 +375,11 @@ void freeFunctions(function *Func){
 	return;
 }
 
+/**
+ * Function finds for a function according to its name in the symbol table  
+ * @param token Token that contains information about a function
+ * @param Func Signifies the name of function 
+ */
 function findFunction(Token *token, function Func){
 
     if(Func == NULL){
@@ -329,6 +395,13 @@ function findFunction(Token *token, function Func){
 	}
 }
 
+/**
+ * Function adds input arguments for a function according to its name in the symbol table  
+ * @param func_name Token that contains information about a function
+ * @param arg_name Signifies the name of argument 
+ * @param arg_type Signifies the type of argument 
+ * @param Func Signifies function 
+ */
 void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
 
@@ -349,6 +422,12 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
     argument->next->type = arg_type->type;
 }
 
+/**
+ * Function adds output arguments for a function according to its name in the symbol table  
+ * @param func_name Token that contains information about a function
+ * @param arg_type Signifies the type of argument 
+ * @param Func Signifies function 
+ */
 void addOutputArguments(Token *func_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
     if(Found->output_params == NULL){
@@ -380,6 +459,7 @@ Token *create_and_set_token(Token *helper){
     return helper;
 }
 
+// Create token for function prints
 Token *get_print_token(Token *prints){
     prints->size = 6;
     prints->data = malloc(prints->size);
@@ -388,7 +468,7 @@ Token *get_print_token(Token *prints){
     prints->next = NULL;
     return prints;
 }
-
+// Create token for function inputs
 Token *get_inputs_token(Token *inputs){
     inputs->size = 7;
     inputs->data = malloc(inputs->size);
@@ -397,7 +477,7 @@ Token *get_inputs_token(Token *inputs){
     inputs->next = NULL;
     return inputs;
 }
-
+// Create token for function inputi
 Token *get_inputi_token(Token *inputi){
     inputi->size = 7;
     inputi->data = malloc(inputi->size);
@@ -406,7 +486,7 @@ Token *get_inputi_token(Token *inputi){
     inputi->next = NULL;
     return inputi;
 }
-
+// Create token for function inputf
 Token *get_inputf_token(Token *inputf){
     inputf->size = 7;
     inputf->data = malloc(inputf->size);
@@ -415,7 +495,7 @@ Token *get_inputf_token(Token *inputf){
     inputf->next = NULL;
     return inputf;
 }
-
+// Create token for function int2float
 Token *get_int2float_token(Token *int2float){
     int2float->size = 10;
     int2float->data = malloc(int2float->size);
@@ -424,7 +504,7 @@ Token *get_int2float_token(Token *int2float){
     int2float->next = NULL;
     return int2float;
 }
-
+// Create token for function float2int
 Token *get_float2int_token(Token *float2int){
     float2int->size = 10;
     float2int->data = malloc(float2int->size);
@@ -433,7 +513,7 @@ Token *get_float2int_token(Token *float2int){
     float2int->next = NULL;
     return float2int;
 }
-
+// Create token for function len
 Token *get_len_token(Token *len){  
     len->size = 4;
     len->data = malloc(len->size);
@@ -442,7 +522,7 @@ Token *get_len_token(Token *len){
     len->next = NULL;
     return len;
 }
-
+// Create token for function substr
 Token *get_substr_token(Token *substr){
     substr->size = 10;
     substr->data = malloc(substr->size);
@@ -451,7 +531,7 @@ Token *get_substr_token(Token *substr){
     substr->next = NULL;
     return substr;
 }
-
+// Create token for function ord
 Token *get_ord_token(Token *ord){
     ord->size = 4;
     ord->data = malloc(ord->size);
@@ -460,7 +540,7 @@ Token *get_ord_token(Token *ord){
     ord->next = NULL;
     return ord;
 }
-
+// Create token for function chr
 Token *get_chr_token(Token *chr){
     chr->size = 4;
     chr->data = malloc(chr->size);
@@ -469,7 +549,7 @@ Token *get_chr_token(Token *chr){
     chr->next = NULL;
     return chr;
 }
-
+// Create a token for the "int" type
 Token *get_int_token(Token *integer){
     integer->size = 4;
     integer->data = malloc(integer->size);
@@ -478,7 +558,7 @@ Token *get_int_token(Token *integer){
     integer->next = NULL;
     return integer;
 }
-
+// Create a token for the "float" type
 Token *get_float_token(Token *floating){
     floating->size = 8;
     floating->data = malloc(floating->size);
@@ -487,7 +567,7 @@ Token *get_float_token(Token *floating){
     floating->next = NULL;
     return floating;
 }
-
+// Create a token for the "string" type
 Token *get_string_token(Token *string){
     string->size = 7;
     string->data = malloc(string->size);
@@ -496,7 +576,7 @@ Token *get_string_token(Token *string){
     string->next = NULL;
     return string;
 }
-
+// Create a token for the "i" name
 Token *get_i_token(Token *i){
     i->size = 2;
     i->data = malloc(i->size);
@@ -505,7 +585,7 @@ Token *get_i_token(Token *i){
     i->next = NULL;
 return i;
 }
-
+// Create a token for the "f" name
 Token *get_f_token(Token *f){
     f->size = 2;
     f->data = malloc(f->size);
@@ -514,7 +594,7 @@ Token *get_f_token(Token *f){
     f->next = NULL;
 return f;
 }
-
+// Create a token for the "s" name
 Token *get_s_token(Token *s){
     s->size = 2;
     s->data = malloc(s->size);
@@ -523,7 +603,7 @@ Token *get_s_token(Token *s){
     s->next = NULL;
 return s;
 }
-
+// Create a token for the "n" name
 Token *get_n_token(Token *n){
     n->size = 2;
     n->data = malloc(n->size);
@@ -532,7 +612,7 @@ Token *get_n_token(Token *n){
     n->next = NULL;
 return n;
 }
-
+// Create a type token for the "print" function
 Token *get_print_type_token(Token *print_type)
 {
     print_type->size = 11;
@@ -543,6 +623,10 @@ Token *get_print_type_token(Token *print_type)
 return print_type;
 }
 
+/**
+ * Function adds inbuilt functions to the  symbol table when it is called
+ * @param SymTable Token that contains information about a function
+ */
 void symTab_for_inbuilt_func(SymTab *SymTable){
     Token *prints, *inputs, *inputi, *inputf, *int2float, *float2int, *len, *substr, 
     *ord, *chr, *integer, *floating, *string, *i, *f, *s, *n, *helper, *print_type;
