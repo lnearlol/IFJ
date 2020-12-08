@@ -25,7 +25,7 @@ typedef struct inParam{
 } *inputParams;
 
 /**
- * @struct Symbol table for functions representation.
+ * @struct Functions tree in the symbol table
  */
 typedef struct Function{
     char *name;
@@ -44,7 +44,7 @@ typedef struct DeepInside{
 } *deepInside;
 
 /**
- * @struct Symbol table for variables representation in the code generator
+ * @struct Variables tree in the symbol table for code generator
  */
 typedef struct GenVariable{
     char *name;
@@ -67,7 +67,7 @@ typedef struct sym_tab
 /**
  * Function inserts new variable from function into symbol table for generation
  * @param token Token that contains information about a variable
- * @param deep Signifies the deep of the variable
+ * @param deep Signifies the depth of the variable
  * @param genVar Pointer to the symbol table for variables
  * @return Function true in a successful insertion
  */
@@ -123,7 +123,7 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func);
 /**
  * Function inserts new variable in the symbol table.
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Pointer to the symbol table for variables
  * @return Function true in a successful insertion
  */
@@ -141,7 +141,7 @@ void freeAllVariables(variable *Var);
 /**
  * Function find variable with the same name on maximum possible level
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  */
 variable findVariable(Token *token, int deepVar, variable Var);
@@ -150,9 +150,9 @@ variable findVariable(Token *token, int deepVar, variable Var);
 variable findVariableHelper(Token *token, int deepVar, variable Var);
 
 /**
- * Function put the type of a variable according to its name and deep
+ * Function put the type of a variable according to its name and depth
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param varType Signifies the type of the variable
  * @param Var Signifies variable
  */
@@ -162,7 +162,7 @@ bool putTypeVariable(Token *token, int deepVar, int varType, variable Var);
 /**
  * Function find variable with the type on maximum possible level
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  */
 //variable findVariableWithType(Token *token, int deepVar, variable Var);
@@ -179,7 +179,7 @@ int returnLiteralType(Token *token);
  * Function compare two variables. Searching for a variable by name and deер
  * @param var1 Token that contains information about a variable
  * @param var2 Type of the second variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  * @return Сorrect type
  */
