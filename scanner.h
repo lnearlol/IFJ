@@ -1,3 +1,13 @@
+/**
+ * @file scanner.h
+ * 
+ * @brief Scanner header file
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xbahda01> Bahdanovich Viktoryia
+*/
+
 #include "token.h"
 #define FUNCTIONS_ARRAY_SIZE 10         //length and quantity of strings in array of command functions
 #define TAB 9                           //horizontal tab ASCII code
@@ -17,6 +27,6 @@ char first_non_TAB(char state);
 //function for reading the first non-EOL, non-TAB and non-space char after the first detected EOL char
 char first_non_EOL(char state);
 //function of token data filling
-void data_append(Token *token, char state);
+int data_append(Token *token, char state);
 //searching of command functions tokens
 int check_command_functions(Token *token);

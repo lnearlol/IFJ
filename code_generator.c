@@ -135,13 +135,31 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
     free(ASM_string);
 }
 
-
+/**
+ * Helper function for `GEN_ASM_STRING`, filling data to string
+ * @param ASM_string is a string that we rewrite and return
+ * @param state is a character that we fill to string
+ * @param length is a length of string ASM_string
+ * @return Function returns ASM_string, in which we fill data
+ */
 char* ASM_DATA_APPEND(char* ASM_string, char state, int length){
     ASM_string = realloc(ASM_string, length);
+
+    if(ASM_string == NULL){
+		changeErrorCode(99);
+		return ASM_string;
+	}
+
     strncat(ASM_string, &state, 1);
     return ASM_string;
 }
 
+/**
+ * Function generates a string for IFJcode20
+ * @param token Structure instance that contains information about token
+ * @param ASM_string is a string that we rewrite and return
+ * @return Function returns ASM_string, which we generate
+ */
 char *GEN_ASM_STRING(Token *token, char* ASM_string){
     char state = token->data[0];
     int length = 1;
