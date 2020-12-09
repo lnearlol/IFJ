@@ -1,12 +1,14 @@
+/**
+ * @file symtable.h
+ *
+ * @brief Header file for symtable.c
+ *
+ * IFJ Projekt 2020, Tým 55
+ *
+ * @author <xtomas34> Tomason Viktoryia
+ */
 #include "token.h"
 
-Token *startCommandFuncList;//first
-union Types
-{
-  int value;
-  float float_value;
-  char *string;
-};
 /**
  * @struct Structure for output function parameters
  */
@@ -38,6 +40,9 @@ typedef struct Function{
 } *function;
 
 
+/**
+ * @struct List of depth
+ */
 typedef struct DeepInside{
   int depthValue;
   struct DeepInside *next;
@@ -64,7 +69,7 @@ typedef struct sym_tab
   genVariable genVar;
 }SymTab;
 
-
+Token *startCommandFuncList;//first
 void insertGenVariable(Token *token, int deep, genVariable *genVar);
 void freeGenVariables(genVariable *genVar, bool print);
 void insertDepth(int deep, deepInside *Depth);
@@ -82,8 +87,7 @@ void freeAllVariables(variable *Var);
 variable findVariable(Token *token, int deepVar, variable Var);
 variable findVariableHelper(Token *token, int deepVar, variable Var);
 bool putTypeVariable(Token *token, int deepVar, int varType, variable Var);
-//--
-//variable findVariableWithType(Token *token, int deepVar, variable Var);
+
 variable find_var_with_type_helper(Token *token, int deepVar, variable Var);
 int returnLiteralType(Token *token);
 int compareTwoVariables(Token *var1, int var2, int deep, variable Var);

@@ -51,11 +51,12 @@ void dtor(Token *first);
 void changeErrorCode(int code);
 
 
-
+/**
+ * @struct Variables list of binary trees in the symbol table
+ */
 typedef struct Variable{
     char *name;
     int type;
-    //union Types value;
     int length;
     int deep;
     struct Variable *RPtr;

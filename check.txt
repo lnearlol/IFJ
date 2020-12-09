@@ -225,9 +225,10 @@ PUSHS int@0
 
 POPS LF@err$0
 PUSHS LF@instr$0
-PUSHS string@+
-EQS
 
+PUSHS string@+
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$8$else
 CREATEFRAME
@@ -255,9 +256,10 @@ JUMP $Instruction$if$8$end
 LABEL $Instruction$if$8$else
 LABEL $Instruction$if$8$end
 PUSHS LF@instr$0
-PUSHS string@-
-EQS
 
+PUSHS string@-
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$9$else
 CREATEFRAME
@@ -285,9 +287,10 @@ JUMP $Instruction$if$9$end
 LABEL $Instruction$if$9$else
 LABEL $Instruction$if$9$end
 PUSHS LF@instr$0
-PUSHS string@>
-EQS
 
+PUSHS string@>
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$10$else
 CREATEFRAME
@@ -312,9 +315,10 @@ JUMP $Instruction$if$10$end
 LABEL $Instruction$if$10$else
 LABEL $Instruction$if$10$end
 PUSHS LF@instr$0
-PUSHS string@<
-EQS
 
+PUSHS string@<
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$11$else
 CREATEFRAME
@@ -339,9 +343,10 @@ JUMP $Instruction$if$11$end
 LABEL $Instruction$if$11$else
 LABEL $Instruction$if$11$end
 PUSHS LF@instr$0
-PUSHS string@.
-EQS
 
+PUSHS string@.
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$12$else
 CREATEFRAME
@@ -365,9 +370,10 @@ JUMP $Instruction$if$12$end
 LABEL $Instruction$if$12$else
 LABEL $Instruction$if$12$end
 PUSHS LF@instr$0
-PUSHS string@,
-EQS
 
+PUSHS string@,
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$13$else
 CREATEFRAME
@@ -393,9 +399,10 @@ JUMP $Instruction$if$13$end
 LABEL $Instruction$if$13$else
 LABEL $Instruction$if$13$end
 PUSHS LF@instr$0
-PUSHS string@[
-EQS
 
+PUSHS string@[
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$14$else
 CREATEFRAME
@@ -427,9 +434,10 @@ JUMP $Instruction$if$14$end
 LABEL $Instruction$if$14$else
 LABEL $Instruction$if$14$end
 PUSHS LF@instr$0
-PUSHS string@]
-EQS
 
+PUSHS string@]
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Instruction$if$15$else
 CREATEFRAME
@@ -477,22 +485,25 @@ LABEL $Move
 PUSHFRAME 
 
 PUSHS LF@right$0
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Move$if$17$else
 PUSHS LF@ptr$0
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@ptr$0
 JUMP $Move$if$17$end
 LABEL $Move$if$17$else
 PUSHS LF@ptr$0
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 POPS LF@ptr$0
 LABEL $Move$if$17$end
 PUSHS LF@ptr$0
@@ -527,9 +538,10 @@ CALL $substr
 POPS GF@_
 POPS LF@first$0
 PUSHS LF@ptr$0
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@lastBegin$0
 PUSHS int@0
 
@@ -540,11 +552,13 @@ MOVE TF@s$0 LF@memory$0
 CALL $len
 POPS LF@lastLen$0
 PUSHS LF@lastLen$0
+
 PUSHS LF@ptr$0
+
 SUBS
 PUSHS int@1
-ADDS
 
+ADDS
 POPS LF@lastLen$0
 PUSHS string@
 
@@ -571,22 +585,25 @@ CALL $ord
 POPS GF@_
 POPS LF@char$0
 PUSHS LF@increment$0
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Change$if$20$else
 PUSHS LF@char$0
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@char$0
 JUMP $Change$if$20$end
 LABEL $Change$if$20$else
 PUSHS LF@char$0
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 POPS LF@char$0
 LABEL $Change$if$20$end
 PUSHS int@0
@@ -602,9 +619,10 @@ CALL $chr
 POPS LF@err$0
 POPS LF@result$0
 PUSHS LF@err$0
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $Change$if$21$else
 WRITE string@Memory\032value\032out\032of\032range\010
@@ -618,17 +636,19 @@ RETURN
 JUMP $Change$if$21$end
 LABEL $Change$if$21$else
 PUSHS LF@first$0
+
 PUSHS LF@result$0
+
 POPS GF@str2
 POPS GF@str1
 CONCAT GF@strRes GF@str1 GF@str2
 PUSHS GF@strRes
 PUSHS LF@last$0
+
 POPS GF@str2
 POPS GF@str1
 CONCAT GF@strRes GF@str1 GF@str2
 PUSHS GF@strRes
-
 PUSHS int@0
 
 POPFRAME 
@@ -662,9 +682,10 @@ CALL $substr
 POPS GF@_
 POPS LF@first$0
 PUSHS LF@ptr$0
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@lastBegin$0
 PUSHS int@0
 
@@ -675,11 +696,13 @@ MOVE TF@s$0 LF@memory$0
 CALL $len
 POPS LF@lastLen$0
 PUSHS LF@lastLen$0
+
 PUSHS LF@ptr$0
+
 SUBS
 PUSHS int@1
-ADDS
 
+ADDS
 POPS LF@lastLen$0
 PUSHS string@
 
@@ -705,10 +728,11 @@ CALL $inputi
 POPS LF@err$0
 POPS LF@char$0
 PUSHS LF@err$0
+
 PUSHS int@0
+
 EQS
 NOTS
-
 PUSHS bool@true
 JUMPIFNEQS $Input$if$24$else
 WRITE string@Input\032error\010
@@ -731,10 +755,11 @@ CALL $chr
 POPS LF@err$0
 POPS LF@result$1
 PUSHS LF@err$0
+
 PUSHS int@0
+
 EQS
 NOTS
-
 PUSHS bool@true
 JUMPIFNEQS $Input$if$25$else
 WRITE string@Input\032value\032is\032too\032large\010
@@ -748,17 +773,19 @@ RETURN
 JUMP $Input$if$25$end
 LABEL $Input$if$25$else
 PUSHS LF@first$0
+
 PUSHS LF@result$1
+
 POPS GF@str2
 POPS GF@str1
 CONCAT GF@strRes GF@str1 GF@str2
 PUSHS GF@strRes
 PUSHS LF@last$0
+
 POPS GF@str2
 POPS GF@str1
 CONCAT GF@strRes GF@str1 GF@str2
 PUSHS GF@strRes
-
 PUSHS int@0
 
 POPFRAME 
@@ -809,9 +836,10 @@ CALL $ord
 POPS GF@_
 POPS LF@current$0
 PUSHS LF@current$0
-PUSHS int@0
-EQS
 
+PUSHS int@0
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleBegin$if$31$else
 PUSHS LF@pc$0
@@ -822,9 +850,10 @@ PUSHS int@0
 POPS LF@deep$1
 LABEL $CycleBegin$for$7
 PUSHS int@0
-PUSHS int@0
-EQS
 
+PUSHS int@0
+
+EQS
 PUSHS bool@true
 JUMPIFEQS $CycleBegin$for$5
 JUMP $CycleBegin$for$4
@@ -832,15 +861,17 @@ LABEL $CycleBegin$for$6
 JUMP $CycleBegin$for$7
 LABEL $CycleBegin$for$5
 PUSHS LF@counter$1
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@counter$1
 PUSHS LF@counter$1
+
 PUSHS LF@progLen$0
+
 LTS
 NOTS
-
 PUSHS bool@true
 JUMPIFNEQS $CycleBegin$if$32$else
 WRITE string@Incomplete\032cycle\032(begin)\010
@@ -868,15 +899,17 @@ CALL $substr
 POPS GF@_
 POPS LF@instr$3
 PUSHS LF@instr$3
-PUSHS string@]
-EQS
 
+PUSHS string@]
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleBegin$if$33$else
 PUSHS LF@deep$1
-PUSHS int@0
-EQS
 
+PUSHS int@0
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleBegin$if$34$else
 PUSHS LF@counter$1
@@ -889,24 +922,27 @@ RETURN
 JUMP $CycleBegin$if$34$end
 LABEL $CycleBegin$if$34$else
 PUSHS LF@deep$1
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 POPS LF@deep$1
 LABEL $CycleBegin$if$34$end
 JUMP $CycleBegin$if$33$end
 LABEL $CycleBegin$if$33$else
 LABEL $CycleBegin$if$33$end
 PUSHS LF@instr$3
-PUSHS string@[
-EQS
 
+PUSHS string@[
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleBegin$if$35$else
 PUSHS LF@deep$1
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@deep$1
 JUMP $CycleBegin$if$35$end
 LABEL $CycleBegin$if$35$else
@@ -945,10 +981,11 @@ CALL $ord
 POPS GF@_
 POPS LF@current$0
 PUSHS LF@current$0
+
 PUSHS int@0
+
 EQS
 NOTS
-
 PUSHS bool@true
 JUMPIFNEQS $CycleEnd$if$41$else
 PUSHS LF@pc$0
@@ -959,10 +996,11 @@ PUSHS int@0
 POPS LF@deep$1
 LABEL $CycleEnd$for$15
 PUSHS int@1
+
 PUSHS int@0
+
 EQS
 NOTS
-
 PUSHS bool@true
 JUMPIFEQS $CycleEnd$for$13
 JUMP $CycleEnd$for$12
@@ -970,14 +1008,16 @@ LABEL $CycleEnd$for$14
 JUMP $CycleEnd$for$15
 LABEL $CycleEnd$for$13
 PUSHS LF@counter$1
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 POPS LF@counter$1
 PUSHS LF@counter$1
-PUSHS int@0
-LTS
 
+PUSHS int@0
+
+LTS
 PUSHS bool@true
 JUMPIFNEQS $CycleEnd$if$42$else
 WRITE string@Incomplete\032cycle\032(end)\010
@@ -1005,35 +1045,40 @@ CALL $substr
 POPS GF@_
 POPS LF@instr$3
 PUSHS LF@instr$3
-PUSHS string@]
-EQS
 
+PUSHS string@]
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleEnd$if$43$else
 PUSHS LF@deep$1
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 POPS LF@deep$1
 JUMP $CycleEnd$if$43$end
 LABEL $CycleEnd$if$43$else
 LABEL $CycleEnd$if$43$end
 PUSHS LF@instr$3
-PUSHS string@[
-EQS
 
+PUSHS string@[
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleEnd$if$44$else
 PUSHS LF@deep$1
-PUSHS int@0
-EQS
 
+PUSHS int@0
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $CycleEnd$if$45$else
 PUSHS LF@counter$1
-PUSHS int@1
-SUBS
 
+PUSHS int@1
+
+SUBS
 PUSHS int@0
 
 POPFRAME 
@@ -1043,9 +1088,10 @@ JUMP $CycleEnd$if$45$end
 LABEL $CycleEnd$if$45$else
 LABEL $CycleEnd$if$45$end
 PUSHS LF@deep$1
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@deep$1
 JUMP $CycleEnd$if$44$end
 LABEL $CycleEnd$if$44$else
@@ -1085,9 +1131,10 @@ CALL $inputs
 POPS LF@err$0
 POPS LF@program$0
 PUSHS LF@err$0
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $LoadProgram$if$47$else
 WRITE string@Error\032loading\032program\010
@@ -1139,27 +1186,30 @@ PUSHS int@0
 POPS LF@counter$1
 LABEL $InitMemory$for$23
 PUSHS LF@counter$1
-PUSHS int@256
-LTS
 
+PUSHS int@256
+
+LTS
 PUSHS bool@true
 JUMPIFEQS $InitMemory$for$21
 JUMP $InitMemory$for$20
 LABEL $InitMemory$for$22
 PUSHS LF@counter$1
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@counter$1
 JUMP $InitMemory$for$23
 LABEL $InitMemory$for$21
 PUSHS LF@memory$0
+
 PUSHS LF@char$0
+
 POPS GF@str2
 POPS GF@str1
 CONCAT GF@strRes GF@str1 GF@str2
 PUSHS GF@strRes
-
 POPS LF@memory$0
 JUMP $InitMemory$for$22
 LABEL $InitMemory$for$20
@@ -1183,9 +1233,10 @@ PUSHS string@Value\032of\032'pc'\032is\032out\032of\032range\010
 
 POPS LF@pcErrorMsg$0
 PUSHS LF@ptr$0
-PUSHS int@0
-LTS
 
+PUSHS int@0
+
+LTS
 PUSHS bool@true
 JUMPIFNEQS $SanityCheck$if$52$else
 WRITE LF@ptrErrorMsg$0
@@ -1198,9 +1249,10 @@ JUMP $SanityCheck$if$52$end
 LABEL $SanityCheck$if$52$else
 LABEL $SanityCheck$if$52$end
 PUSHS LF@pc$0
-PUSHS int@0
-LTS
 
+PUSHS int@0
+
+LTS
 PUSHS bool@true
 JUMPIFNEQS $SanityCheck$if$53$else
 WRITE LF@pcErrorMsg$0
@@ -1213,9 +1265,10 @@ JUMP $SanityCheck$if$53$end
 LABEL $SanityCheck$if$53$else
 LABEL $SanityCheck$if$53$end
 PUSHS LF@ptr$0
-PUSHS int@256
-GTS
 
+PUSHS int@256
+
+GTS
 PUSHS bool@true
 JUMPIFNEQS $SanityCheck$if$54$else
 WRITE LF@ptrErrorMsg$0
@@ -1228,10 +1281,11 @@ JUMP $SanityCheck$if$54$end
 LABEL $SanityCheck$if$54$else
 LABEL $SanityCheck$if$54$end
 PUSHS LF@pc$0
+
 PUSHS LF@progLen$0
+
 LTS
 NOTS
-
 PUSHS bool@true
 JUMPIFNEQS $SanityCheck$if$55$else
 WRITE string@Program\032completed\010
@@ -1285,9 +1339,10 @@ CALL $LoadProgram
 POPS LF@progLen$0
 POPS LF@program$0
 PUSHS LF@progLen$0
-PUSHS int@0
-EQS
 
+PUSHS int@0
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $main$if$59$else
 POPFRAME
@@ -1297,9 +1352,10 @@ JUMP $main$if$59$end
 LABEL $main$if$59$else
 LABEL $main$for$31
 PUSHS LF@pc$0
-PUSHS LF@progLen$0
-LTS
 
+PUSHS LF@progLen$0
+
+LTS
 PUSHS bool@true
 JUMPIFEQS $main$for$29
 JUMP $main$for$28
@@ -1341,9 +1397,10 @@ POPS LF@ptr$0
 POPS LF@pc$0
 POPS LF@result$3
 PUSHS LF@result$3
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $main$if$60$else
 POPFRAME
@@ -1353,9 +1410,10 @@ JUMP $main$if$60$end
 LABEL $main$if$60$else
 LABEL $main$if$60$end
 PUSHS LF@pc$0
-PUSHS int@1
-ADDS
 
+PUSHS int@1
+
+ADDS
 POPS LF@pc$0
 CREATEFRAME
 DEFVAR TF@ptr$0
@@ -1367,9 +1425,10 @@ MOVE TF@progLen$0 LF@progLen$0
 CALL $SanityCheck
 POPS LF@result$3
 PUSHS LF@result$3
-PUSHS int@1
-EQS
 
+PUSHS int@1
+
+EQS
 PUSHS bool@true
 JUMPIFNEQS $main$if$61$else
 POPFRAME

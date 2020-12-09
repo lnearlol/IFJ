@@ -242,7 +242,6 @@ int expression_processor(Stack_t *stack, int deepVar, variable Var) {
                 else break;
         }
 
-        //printf("result %d\n", result);
         if (result != -1) generateCode(stack, deepVar, Var, result);
         deleteStack(&stack);
         if (logical_type_flag) result = 4;
@@ -368,8 +367,6 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                         }
                     }
                     else if (tmpToken.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
-                        printf("SAASDSADADASD\n");
-                        printf("tmpToken.data %s \n", tmpToken.data);
                         if (strcmp(tmpToken.data, "<") == 0) {
                             if(GET_REPEAT_FUNC_RUN()){
                                 printf("LTS\n");

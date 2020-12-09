@@ -19,8 +19,8 @@ SymTab *declaration(SymTab *SymTable){
 
     SymTable = malloc(sizeof(struct sym_tab));
     if(SymTable == NULL){
-        fprintf(stderr,"SYMTABLE ALLOCATION ERROR!!!\n");
-        exit(1);
+        changeErrorCode(99);
+        return SymTable;
     }
     SymTable->func = NULL;
     SymTable->var = NULL;
@@ -42,6 +42,11 @@ SymTab *declaration(SymTab *SymTable){
 
     if(*Var == NULL){
 		*Var = malloc(sizeof(struct Variable));
+        if(*Var == NULL){
+            changeErrorCode(99);
+            return false;
+        }
+
 		(*Var)->name = token->data;
 		(*Var)->length = token->size;
 		(*Var)->LPtr = NULL;
@@ -53,6 +58,10 @@ SymTab *declaration(SymTab *SymTable){
 
 	} else if ((*Var != NULL) && ((*Var)->deep < deepVar)){
         variable tmp = malloc(sizeof(struct Variable));
+        if(tmp == NULL){
+            changeErrorCode(99);
+            return false;
+        }
         tmp->LPtr = NULL;
         tmp->RPtr = NULL;
         tmp->prevTree = (*Var);
@@ -215,8 +224,6 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     if (var1 == NULL)
         return 0;
 
-    // printf("---------------------------- var1 = %d, var2 = %d\n", var1->type, var2);
-
     if(var1->type == TOKEN_TYPE_IDENTIFIER){
         variable tmp = findVariableWithType(var1, deep, Var);
 
@@ -230,7 +237,6 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
     } else {
         type1 = returnLiteralType(var1);
     }
-    // printf("type1 = %d, type2 = %d", type1, type2);
 
     if(type1 == type2){
         return type1;
@@ -263,6 +269,10 @@ void insertGenVariable(Token *token, int deep, genVariable *genVar){
     if(*genVar == NULL){
 
 		*genVar = malloc(sizeof(struct GenVariable));
+        if(*genVar == NULL){
+            changeErrorCode(99);
+            return;
+        }
 		(*genVar)->name = token->data;
 		(*genVar)->LPtr = NULL;
 		(*genVar)->RPtr = NULL;
@@ -285,6 +295,10 @@ void insertGenVariable(Token *token, int deep, genVariable *genVar){
 void insertDepth(int deep, deepInside *Depth){
     if(*Depth == NULL){
         *Depth = malloc(sizeof(struct DeepInside));
+        if(*Depth == NULL){
+            changeErrorCode(99);
+            return;
+        }
         (*Depth)->next = NULL;
         (*Depth)->depthValue = deep;
         return;
@@ -329,6 +343,10 @@ void insertFunction(Token *token, function *Func){
 
 	if(*Func == NULL){
 		*Func = malloc(sizeof(struct Function));
+        if(*Func == NULL){
+            changeErrorCode(99);
+            return;
+        }
 		(*Func)->name = token->data;
 		(*Func)->length = token->size;
         (*Func)->input_params = NULL;
@@ -404,6 +422,10 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
 
     if(Found->input_params == NULL){
         Found->input_params = malloc(sizeof(struct inParam));
+        if(Found->input_params == NULL){
+            changeErrorCode(99);
+            return;
+        }
         Found->input_params->next = NULL;
         Found->input_params->name = arg_name->data;
         Found->input_params->type = arg_type->type;
@@ -414,6 +436,10 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
         argument = argument->next;
     }
     argument->next = malloc(sizeof(struct inParam));
+    if(argument->next == NULL){
+        changeErrorCode(99);
+        return;
+    }
     argument->next->next = NULL;
     argument->next->name = arg_name->data;
     argument->next->type = arg_type->type;
@@ -429,6 +455,10 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
     if(Found->output_params == NULL){
         Found->output_params = malloc(sizeof(struct outParam));
+        if(Found->output_params == NULL){
+            changeErrorCode(99);
+            return;
+        }
         Found->output_params->next = NULL;
         Found->output_params->type = arg_type->type;
         return;
@@ -438,6 +468,10 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func){
         argument = argument->next;
     }
     argument->next = malloc(sizeof(struct outParam));
+    if(argument->next == NULL){
+            changeErrorCode(99);
+            return;
+        }
     argument->next->next = NULL;
     argument->next->type = arg_type->type;
 }
@@ -451,6 +485,10 @@ void addOutputArguments(Token *func_name, Token *arg_type, function Func){
 // ---------------------------------------   I N B U I L D    F U N C T I O N S   ---------------------------------------
 Token *create_and_set_token(Token *helper){
     helper->next = malloc(sizeof(Token));
+    if(helper->next == NULL){
+        changeErrorCode(99);
+        return helper;
+    }
     helper = helper->next;
     helper->next = NULL;
     return helper;
@@ -460,6 +498,10 @@ Token *create_and_set_token(Token *helper){
 Token *get_print_token(Token *prints){
     prints->size = 6;
     prints->data = malloc(prints->size);
+    if(prints->data == NULL){
+        changeErrorCode(99);
+        return prints;
+    }
     strcpy(prints->data,"print\0");
     prints->type = 10 ;
     prints->next = NULL;
@@ -469,6 +511,10 @@ Token *get_print_token(Token *prints){
 Token *get_inputs_token(Token *inputs){
     inputs->size = 7;
     inputs->data = malloc(inputs->size);
+    if(inputs->data == NULL){
+        changeErrorCode(99);
+        return inputs;
+    }
     strcpy(inputs->data,"inputs\0");
     inputs->type = 10;
     inputs->next = NULL;
@@ -478,8 +524,12 @@ Token *get_inputs_token(Token *inputs){
 Token *get_inputi_token(Token *inputi){
     inputi->size = 7;
     inputi->data = malloc(inputi->size);
+    if(inputi->data == NULL){
+        changeErrorCode(99);
+        return inputi;
+    }
     strcpy(inputi->data,"inputi\0");
-    inputi->type =10;
+    inputi->type = 10;
     inputi->next = NULL;
     return inputi;
 }
@@ -487,6 +537,10 @@ Token *get_inputi_token(Token *inputi){
 Token *get_inputf_token(Token *inputf){
     inputf->size = 7;
     inputf->data = malloc(inputf->size);
+    if(inputf->data == NULL){
+        changeErrorCode(99);
+        return inputf;
+    }
     strcpy(inputf->data,"inputf\0");
     inputf->type = 10;
     inputf->next = NULL;
@@ -496,6 +550,10 @@ Token *get_inputf_token(Token *inputf){
 Token *get_int2float_token(Token *int2float){
     int2float->size = 10;
     int2float->data = malloc(int2float->size);
+    if(int2float->data == NULL){
+        changeErrorCode(99);
+        return int2float;
+    }
     strcpy(int2float->data,"int2float\0");
     int2float->type = 10;
     int2float->next = NULL;
@@ -505,6 +563,10 @@ Token *get_int2float_token(Token *int2float){
 Token *get_float2int_token(Token *float2int){
     float2int->size = 10;
     float2int->data = malloc(float2int->size);
+    if(float2int->data == NULL){
+        changeErrorCode(99);
+        return float2int;
+    }
     strcpy(float2int->data,"float2int\0");
     float2int->type = 10;
     float2int->next = NULL;
@@ -514,6 +576,10 @@ Token *get_float2int_token(Token *float2int){
 Token *get_len_token(Token *len){
     len->size = 4;
     len->data = malloc(len->size);
+    if(len->data == NULL){
+        changeErrorCode(99);
+        return len;
+    }
     strcpy(len->data,"len\0");
     len->type =10;
     len->next = NULL;
@@ -523,6 +589,10 @@ Token *get_len_token(Token *len){
 Token *get_substr_token(Token *substr){
     substr->size = 10;
     substr->data = malloc(substr->size);
+    if(substr->data == NULL){
+        changeErrorCode(99);
+        return substr;
+    }
     strcpy(substr->data,"substr\0");
     substr->type = 10;
     substr->next = NULL;
@@ -532,6 +602,10 @@ Token *get_substr_token(Token *substr){
 Token *get_ord_token(Token *ord){
     ord->size = 4;
     ord->data = malloc(ord->size);
+    if(ord->data == NULL){
+        changeErrorCode(99);
+        return ord;
+    }
     strcpy(ord->data,"ord\0");
     ord->type = 10;
     ord->next = NULL;
@@ -541,6 +615,10 @@ Token *get_ord_token(Token *ord){
 Token *get_chr_token(Token *chr){
     chr->size = 4;
     chr->data = malloc(chr->size);
+    if(chr->data == NULL){
+        changeErrorCode(99);
+        return chr;
+    }
     strcpy(chr->data,"chr\0");
     chr->type = 10;
     chr->next = NULL;
@@ -550,6 +628,10 @@ Token *get_chr_token(Token *chr){
 Token *get_int_token(Token *integer){
     integer->size = 4;
     integer->data = malloc(integer->size);
+    if(integer->data == NULL){
+        changeErrorCode(99);
+        return integer;
+    }
     strcpy(integer->data,"int\0");
     integer->type = 1;
     integer->next = NULL;
@@ -559,6 +641,10 @@ Token *get_int_token(Token *integer){
 Token *get_float_token(Token *floating){
     floating->size = 8;
     floating->data = malloc(floating->size);
+    if(floating->data == NULL){
+        changeErrorCode(99);
+        return floating;
+    }
     strcpy(floating->data,"float64\0");
     floating->type = 2;
     floating->next = NULL;
@@ -568,6 +654,10 @@ Token *get_float_token(Token *floating){
 Token *get_string_token(Token *string){
     string->size = 7;
     string->data = malloc(string->size);
+    if(string->data == NULL){
+        changeErrorCode(99);
+        return string;
+    }
     strcpy(string->data,"string\0");
     string->type = 3;
     string->next = NULL;
@@ -577,6 +667,10 @@ Token *get_string_token(Token *string){
 Token *get_i_token(Token *i){
     i->size = 2;
     i->data = malloc(i->size);
+    if(i->data == NULL){
+        changeErrorCode(99);
+        return i;
+    }
     strcpy(i->data,"i\0");
     i->type = 0;
     i->next = NULL;
@@ -586,6 +680,10 @@ return i;
 Token *get_f_token(Token *f){
     f->size = 2;
     f->data = malloc(f->size);
+    if(f->data == NULL){
+        changeErrorCode(99);
+        return f;
+    }
     strcpy(f->data,"f\0");
     f->type = 0;
     f->next = NULL;
@@ -595,6 +693,10 @@ return f;
 Token *get_s_token(Token *s){
     s->size = 2;
     s->data = malloc(s->size);
+    if(s->data == NULL){
+        changeErrorCode(99);
+        return s;
+    }
     strcpy(s->data,"s\0");
     s->type = 0;
     s->next = NULL;
@@ -604,6 +706,10 @@ return s;
 Token *get_n_token(Token *n){
     n->size = 2;
     n->data = malloc(n->size);
+    if(n->data == NULL){
+        changeErrorCode(99);
+        return n;
+    }
     strcpy(n->data,"n\0");
     n->type = 0;
     n->next = NULL;
@@ -614,7 +720,11 @@ Token *get_print_type_token(Token *print_type)
 {
     print_type->size = 11;
     print_type->data = malloc(print_type->size);
-    strcpy(print_type->data,"print_type\0");
+    if(print_type->data == NULL){
+        changeErrorCode(99);
+        return print_type;
+    }
+    strcpy(print_type->data, "print_type\0");
     print_type->type = TOKEN_TYPE_PRINT;
     print_type->next = NULL;
 return print_type;
@@ -629,6 +739,10 @@ void symTab_for_inbuilt_func(SymTab *SymTable){
     *ord, *chr, *integer, *floating, *string, *i, *f, *s, *n, *helper, *print_type;
 
     helper = malloc (sizeof(Token));
+    if(helper == NULL){
+        changeErrorCode(99);
+        return;
+    }
     helper->next = NULL;
     startCommandFuncList = helper;
 
