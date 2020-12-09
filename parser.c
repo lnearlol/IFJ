@@ -34,9 +34,9 @@ int if_else_counter = -1;
 int for_counter = -1;
 
 /**
- * Function ckecks run of statement
+ * Function ckecks run of function_body
  * If function returns true, IFJcode20 will generate
- * @return Function returns true if it's second run of statement, and false if it's first run of statement
+ * @return Function returns true if it's second run of function_body, and false if it's first run of function_body
  */
 bool GET_REPEAT_FUNC_RUN(){
     return repeatFunctionRun;
@@ -263,7 +263,7 @@ void freeBothCompareLists(){
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
 
 /**
- * <PROGRAM_SRART> -> package main eol <FUNCTION_CHECK> eol eof
+ * Start parsing according to the LL rules.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool program_start(){
@@ -295,7 +295,7 @@ bool program_start(){
 //  ------------------------------------ F U N C T I O N ------------------------------------
 
 /**
- * <FUNCTION_CHECK> -> func IDENTIFIER ( <ALLOWED_EOL>  <INPUT_PARAMETERS>  <OUTPUT_PARAMETERS> { eol <FUNCTION_BODY> } eol
+ * Parsing header of fuction according to LL rules. Write function name to the SymTable.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool function_check(){
@@ -316,7 +316,7 @@ bool function_check(){
             if(token->type == TOKEN_TYPE_LEFT_BRACKET){
                 get_and_set_token();
                 allowed_eol();
-
+                // saving token pointers to make second run of function_body with same parameters
                 Token *repeat_function_run = NULL;
                 Token *saved_func_name_new = saved_func_name;
                 Token *saved_arg_name_new = saved_arg_name;
@@ -377,8 +377,7 @@ bool function_check(){
 //  ------------------------------------ I N P U T    P A R A M E T E R S ------------------------------------
 
 /**
- * <INPUT_PARAMETERS> -> )
- * <INPUT_PARAMETERS> -> <INPUT_SINGLE_PARAMETERS>
+ * Parsing function input parameters.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool input_parameters(){
@@ -392,8 +391,7 @@ bool input_parameters(){
 }
 
 /**
- * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string , <INPUT_SINGLE_PARAMETERS>
- * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string )
+ * Adding each input parameter to the SymTable.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool input_single_parameters(){
@@ -436,9 +434,9 @@ bool input_single_parameters(){
 //  ------------------------------------ O U T P U T    P A R A M E T E R S ------------------------------------
 
 /**
- * <OUTPUT_PARAMETERS> -> {
- * <OUTPUT_PARAMETERS> -> ( )
- * <OUTPUT_PARAMETERS> -> ( <OUTPUT_SINGLE_PARAMETERS>
+ * The function parse output function parameters. Changes the error code in case of need. 
+ * Checks according to LL rules.
+ * In first PRAGRAM_RUN write parameters to SymTable.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool output_parameters(){
@@ -462,8 +460,9 @@ bool output_parameters(){
 }
 
 /**
- * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string , <OUTPUT_SINGLE_PARAMETERS>
- * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string ) {
+ * The function parse output function parameters. Changes the error code in case of need. 
+ * Checks according to LL rules.
+ * In first PRAGRAM_RUN write parameters to SymTable.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 
@@ -525,17 +524,10 @@ bool first_run_body(){
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
 /**
- * <FUNCTION_BODY> -> } eol  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> { eol  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> eol  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> if <IF_CONSTRUCTION>  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> else  {  eol  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> for <FOR_CONSTRUCTION>  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> IDENTIFIER  <DEFINE_FUNC>  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> COMMAND_FUNCTION  <DEFINE_FUNC>  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> _  <DEFINE_FUNC>  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> return eol  <FUNCTION_BODY>
- * <FUNCTION_BODY> -> return  <RETURN_CONSTRUCTION> <FUNCTION_BODY>
+ * The function is concerned with syntactic and semantic validation of the body of function. Changes the error code in case of need. 
+ * Checks according to LL rules.
+ * Has two body_runs: first writes all variables to var SymTable->genVar to write them all before second ran starts. Second rand of function
+ * generates IFJcode20.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool function_body(){
@@ -705,7 +697,7 @@ bool function_body(){
 //  ------------------------------------ F O R    C O N S T R U C T I O N ------------------------------------
 
 /**
- * <FOR_CONSTRUCTION> ->  <DEFINE_FUNC> ; <IF_CONSTRUCTION> ; <DEFINE_FUNC> { eol <FUNCTION_BODY>
+ * Parsing for rule according LL grammar. Creating scopes and jumps if IFJcode20. Creating bonus depth-label for for-header.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool for_construction(){
@@ -780,7 +772,7 @@ bool for_construction(){
 //  ------------------------------------ I F    C O N S T R U C T I O N ------------------------------------
 
 /**
- * <IF_CONSTRUCTION> -> <IF_CONSTRUCTION> { eol <FUNCTION_BODY>
+ * Parsing if-rule according LL grammar. Creating scopes and jumps in IFJcode20. Working with else_stack.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool if_construction()
@@ -822,10 +814,6 @@ bool if_construction()
 //  ------------------------------------ O R    F U N C T I O N ()    F R O M    B O D Y 
 
 /**
- * <DEFINE_FUNC> -> <DEFINE_OPERANDS> := <COUNT_OPERANDS>
- * <DEFINE_FUNC> -> <DEFINE_OPERANDS> = <COUNT_OPERANDS>
- * DEFINCE_FUNC -> <DEFINE_OPERANDS> ( <EXPRESSION_FUNC_ARGUMENTS>
- * 
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
  * @param declare is true when declaration is allowed :=
@@ -893,12 +881,7 @@ bool define_func(int end_condition, bool declare, bool equating, bool func){
 }
 
 /**
- * <DEFINE_OPERANDS> -> IDENTIFIER
- * <DEFINE_OPERANDS> -> IDENTIFIER , <DEFINE_OPERANDS>
- * <DEFINE_OPERANDS> -> COMMAND_FUNCTION
- * <DEFINE_OPERANDS> -> COMMAND_FUNCTION , <DEFINE_OPERANDS>
- * <DEFINE_OPERANDS> -> _
- * <DEFINE_OPERANDS> -> _ , <DEFINE_OPERANDS>
+ * Parsing left side of expression according to the LL grammar. Adding left-side variables to SymTable. 
  * 
  * @param func is true when function is allowed
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
@@ -943,10 +926,8 @@ bool define_operands(int func){
 
 
 /**
- * <COUNT_OPERANDS> -> <IF_CONSTRUCTION>
- * <COUNT_OPERANDS> -> <IF_CONSTRUCTION> , <COUNT_OPERANDS>
+ * Function for recursive calling expressions + count of operands
  * 
- * function for recursive calling expressions + count of operands
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
@@ -997,12 +978,8 @@ bool count_operands(int end_condition){
 //  ------------------------------------ E X P R E S S I O N ------------------------------------
 
 /**
- * <IF_CONSTRUCTION> -> (  <ALLOWED_EOL>  <IF_CONSTRUCTION>
- * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>
- * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  OPERATOR  <ALLOWED_EOL>  <IF_CONSTRUCTION>
- * <IF_CONSTRUCTION> -> IDENTIFIER/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  (  <ALLOWED_EOL>  <EXPRESSION_FUNC_ARGUMENTS>
+ * Function basically parses syntax of expressions and calling expression_translator.
  * 
- * Function parses syntax of expressions
  * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
  * function will return true, else function will return false.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
@@ -1170,10 +1147,8 @@ bool expression(int end_condition){
 }
 
 /**
- * <IS_CLOSED_BRACKET> -> )  <IS_CLOSED_BRACKET>
- * <IS_CLOSED_BRACKET> -> eps
- * 
  * Function counts closed brackets
+ * 
  * @return counter of closed brackets
  */
 int is_closed_bracket(){
@@ -1187,8 +1162,7 @@ int is_closed_bracket(){
 }
 
 /**
- * <ALLOWED_EOL> -> eol  <ALLOWED_EOL>
- * <ALLOWED_EOL> -> eps
+ * Might be eol rule.
  */
 void allowed_eol(){
     while(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
@@ -1197,8 +1171,8 @@ void allowed_eol(){
 
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
 /**
- * <EXPRESSION_FUNC_ARGUMENTS> -> )
- * <EXPRESSION_FUNC_ARGUMENTS> -> <EXPRESSION_FUNC_SINGLE_ARGUMENT>
+ * Function parsing function arguments and checks if function with same name existing.
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool expression_func_arguments(){
 
@@ -1235,8 +1209,7 @@ bool expression_func_arguments(){
 
 
 /**
- * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  )
- * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  ,  <EXPRESSION_FUNC_SINGLE_ARGUMENT>
+ * Function parsing single func parameters and check if function has paramaters with the same type in SymTable.
  * 
  * @param arg_check pointer on list of input function arguments (SymTable)
  * @param args_output pointer on list of output function arguments (SymTable)
@@ -1300,10 +1273,7 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
 //  ------------------------------------ R E T U R N    C O N S T R U C T I O N ------------------------------------
 
 /**
- * <RETURN_CONSTRUCTION> -> eol
- * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  eol
- * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  ,  <RETURN_CONSTRUCTION>
- * 
+ * Parsing all returns according to LL grammar. In IFJcode20 push all return values on stack.
  * @param out_params pointer on list of output function arguments (SymTable)
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
@@ -1353,7 +1323,7 @@ bool return_construction(outputParams out_params){
 //  ------------------------------------ S T A R T    B L O C K    &    N E W    L I N E ------------------------------------
 
 /**
- * <START_BLOCK_NEW_LINE> -> { eol
+ * Open block new line function.
  * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
  */
 bool start_block_new_line(){
@@ -1372,6 +1342,7 @@ bool start_block_new_line(){
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
 /**
+ * Allocates and frees all structures, stacks and start of parsing.
  * @return function main returns error_flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code
  */
 int main(){
