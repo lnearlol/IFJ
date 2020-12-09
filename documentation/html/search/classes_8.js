@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['var_5fassembly_5fstack_75',['var_assembly_stack',['../structvar__assembly__stack.html',1,'']]],
-  ['variable_76',['Variable',['../structVariable.html',1,'']]],
-  ['variablescomparelist_77',['variablesCompareList',['../structvariablesCompareList.html',1,'']]]
+  ['token_123',['token',['../structtoken.html',1,'']]],
+  ['typecomparelist_124',['typeCompareList',['../structtypeCompareList.html',1,'']]],
+  ['types_125',['Types',['../unionTypes.html',1,'']]]
 ];

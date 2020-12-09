@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['peek_118',['peek',['../expression__translator_8c.html#af204bc878317f1e5450895232fa6e632',1,'expression_translator.c']]],
-  ['pop_119',['pop',['../expression__translator_8c.html#ad10645410672a16f67a961f95febfb36',1,'expression_translator.c']]],
-  ['prec_120',['prec',['../expression__translator_8c.html#a17ba43dca1e1c986aa36b6132523ba3c',1,'expression_translator.c']]],
-  ['push_121',['push',['../expression__translator_8c.html#aea5d3f0b63670e096832350615917181',1,'expression_translator.c']]],
-  ['puttypevariable_122',['putTypeVariable',['../symtable_8c.html#a61c7f0d9fcf9e522c536756614582f3a',1,'symtable.c']]]
+  ['main_203',['main',['../parser_8c.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'parser.c']]],
+  ['move_5finto_5finput_5fparameter_204',['MOVE_INTO_INPUT_PARAMETER',['../code__generator_8c.html#a7629d47fbdf5ba8dcd80c93b5f8c95ca',1,'MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep):&#160;code_generator.c'],['../parser_8h.html#a7629d47fbdf5ba8dcd80c93b5f8c95ca',1,'MOVE_INTO_INPUT_PARAMETER(inputParams InParam, Token *value, int deep):&#160;code_generator.c']]]
 ];

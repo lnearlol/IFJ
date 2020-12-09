@@ -68,7 +68,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Symbol table implementation.  
+<p><a class="el" href="structSymbol.html">Symbol</a> table implementation.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;symtable.h&quot;</code><br />
 </div><table class="memberdecls">
@@ -180,15 +180,9 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 <tr class="separator:a2c38a559943af3e7d68cae7f823e8996"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Symbol table implementation. </p>
+<div class="textblock"><p><a class="el" href="structSymbol.html">Symbol</a> table implementation. </p>
 <p>IFJ Projekt 2020, Tým 55</p>
-<dl class="section author"><dt>Author</dt><dd>&lt;xstepa64&gt; Stepaniuk Roman, Bc. </dd>
-<dd>
-&lt;xpastu04&gt; Pastushenko Vladislav </dd>
-<dd>
-&lt;xbahda01&gt; Bahdanovich Viktoryia </dd>
-<dd>
-&lt;xtomas34&gt; Tomason Viktoryia </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>&lt;xtomas34&gt; Tomason Viktoryia </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="a311d1750009d51d9f57215a2e8af808b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a311d1750009d51d9f57215a2e8af808b">&#9670;&nbsp;</a></span>addInputArguments()</h2>
@@ -322,7 +316,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
   <table class="params">
     <tr><td class="paramname">var1</td><td>Token that contains information about a variable </td></tr>
     <tr><td class="paramname">var2</td><td>Type of the second variable </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deepVar</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Signifies variable </td></tr>
   </table>
   </dd>
@@ -348,7 +342,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 </div><div class="memdoc">
 <p><a class="el" href="structFunction.html">Function</a> allocates a new symbol table </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">SymTable</td><td>Symbol table to be initialized </td></tr>
+    <tr><td class="paramname">SymTable</td><td><a class="el" href="structSymbol.html">Symbol</a> table to be initialized </td></tr>
   </table>
   </dd>
 </dl>
@@ -425,7 +419,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 <p><a class="el" href="structFunction.html">Function</a> find variable with the same name on maximum possible level </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Token that contains information about a variable </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deepVar</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Signifies variable </td></tr>
   </table>
   </dd>
@@ -467,7 +461,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 <p><a class="el" href="structFunction.html">Function</a> find variable with the type on maximum possible level </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Token that contains information about a variable </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deepVar</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Signifies variable </td></tr>
   </table>
   </dd>
@@ -568,7 +562,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 <p><a class="el" href="structFunction.html">Function</a> inserts new variable from function into symbol table for generation </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Token that contains information about a variable </td></tr>
-    <tr><td class="paramname">deep</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deep</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">genVar</td><td>Pointer to the symbol table for variables </td></tr>
   </table>
   </dd>
@@ -611,7 +605,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
 <p><a class="el" href="structFunction.html">Function</a> inserts new variable in the symbol table. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Token that contains information about a variable </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deepVar</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Pointer to the symbol table for variables </td></tr>
   </table>
   </dd>
@@ -657,10 +651,10 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>freeFunctions</b> (<a
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="structFunction.html">Function</a> put the type of a variable according to its name and deep </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunction.html">Function</a> put the type of a variable according to its name and depth </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Token that contains information about a variable </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">deepVar</td><td>Signifies the depth of the variable </td></tr>
     <tr><td class="paramname">varType</td><td>Signifies the type of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Signifies variable </td></tr>
   </table>
