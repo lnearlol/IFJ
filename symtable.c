@@ -5,9 +5,6 @@
  *
  * IFJ Projekt 2020, Tým 55
  *
- * @author <xstepa64> Stepaniuk Roman, Bc.
- * @author <xpastu04> Pastushenko Vladislav
- * @author <xbahda01> Bahdanovich Viktoryia
  * @author <xtomas34> Tomason Viktoryia
  */
 

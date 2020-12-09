@@ -1,3 +1,14 @@
+/**
+ * @file parser.h
+ * 
+ * @brief Parser header file
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xstepa64> Stepaniuk Roman, Bc.
+*/
+
+
 #include "symtable.h"
 
 Token *token;
