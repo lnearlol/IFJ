@@ -1028,7 +1028,7 @@ bool expression(int end_condition){
        
        if((token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION) 
        && !findFunction(token, SymTable->func) && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
-            sort_to_postfix(expr, deep, SymTable->var);
+            expression_processor(expr, deep, SymTable->var);
             changeErrorCode(3);
             delete_expr_stack = false;
             return false;
@@ -1053,14 +1053,14 @@ bool expression(int end_condition){
         if(token->type == end_condition){
             if (!normal_quantity_of_expressions){
                 delete_expr_stack = false;
-                sort_to_postfix(expr, deep, SymTable->var);
+                expression_processor(expr, deep, SymTable->var);
                 changeErrorCode(7);
                 return false;
             }
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 delete_expr_stack = false;
-                sort_to_postfix(expr, deep, SymTable->var);
+                expression_processor(expr, deep, SymTable->var);
                 changeErrorCode(3); // variable not defined 
                 return false;
             }
@@ -1071,7 +1071,7 @@ bool expression(int end_condition){
 
            
             delete_expr_stack = false;
-            int result = sort_to_postfix(expr, deep, SymTable->var);
+            int result = expression_processor(expr, deep, SymTable->var);
             if(result == -1){ // segfault fix, check if expression_tranlator goes fine
                 return false;
             }
@@ -1086,7 +1086,7 @@ bool expression(int end_condition){
             if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
                if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
                     delete_expr_stack = false;
-                    sort_to_postfix(expr, deep, SymTable->var);
+                    expression_processor(expr, deep, SymTable->var);
                     changeErrorCode(3); // variable not defined
                     return false;
                 } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
@@ -1100,7 +1100,7 @@ bool expression(int end_condition){
 
                     changeErrorCode(5);
                     delete_expr_stack = false;
-                    sort_to_postfix(expr, deep, SymTable->var);
+                    expression_processor(expr, deep, SymTable->var);
                     return false;
                 }
             }
