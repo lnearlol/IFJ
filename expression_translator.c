@@ -102,26 +102,52 @@ void implode(Stack_t *stack) {
     stack->data = realloc(stack->data, stack->size * sizeof(Token));
 }
 
+
+typedef enum
+{
+	S, // <
+	E, // =
+	R, // >
+	N  // ERR
+} Prec_table_sign_enum;
+
+int prec_table[7][7] = {
+//	|+- | */ | r | ( | ) | i | $ |
+	{ R , S  , R , S , R , S , R }, // +-
+	{ R , R  , R , S , R , S , R }, // */
+	{ S , S  , N , S , R , S , R }, // = <> <= < >= >
+	{ S , S  , S , S , E , S , N }, // (
+	{ R , R  , R , N , R , N , R }, // )
+	{ R , R  , R , N , R , N , R }, // i
+	{ S , S  , S , S , N , S , N }  // $
+};
+
 /**
  * Check token and return its priority
  * @param token Verifiable token
  * @return An integer representing the priority number
  */
-int prec(Token token) {
-    switch (token.type) {
-        case TOKEN_TYPE_MATH_OPERATOR:
-                if (strcmp(token.data, "/") == 0 || strcmp(token.data, "*") == 0)
-                        return 4;
-                else if (strcmp(token.data, "+") == 0 || strcmp(token.data, "-") == 0)
-                        return 3;
-                break;
-        case TOKEN_TYPE_LEFT_BRACKET:
-                return 1;
-                break;
-        case TOKEN_TYPE_LOGICAL_OPERATOR:
-                return 2;
-                break;
-        }
+int get_index(Token token) {
+    if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
+        if (strcmp(token.data, "+") == 0 || strcmp(token.data, "-") == 0) {
+            return 0;
+        } else if (strcmp(token.data, "*") == 0 || strcmp(token.data, "/") == 0) {
+            return 1;
+    }
+    } else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+        return 2;
+    } else if (token.type == TOKEN_TYPE_LEFT_BRACKET) {
+        return 3;
+    } else if (token.type == TOKEN_TYPE_RIGHT_BRACKET) {
+        return 4;
+    } else if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
+               token.type == TOKEN_TYPE_LITERAL_INT ||
+               token.type == TOKEN_TYPE_IDENTIFIER ||
+               token.type == TOKEN_TYPE_LITERAL_STRING) {
+        return 5;
+    } else {
+        return 6;
+    }
 }
 
 
@@ -142,8 +168,6 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                 return 0;
         }
 
-        Stack_t* opstack = createStack();
-        Stack_t* res = createStack();
 
         implode(stack);
         int result = 0;
@@ -154,8 +178,6 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                     token.type == TOKEN_TYPE_LITERAL_INT ||
                     token.type == TOKEN_TYPE_IDENTIFIER ||
                     token.type == TOKEN_TYPE_LITERAL_STRING) {
-
-                        push(res, token);
 
                         // Check and control type of expression
                         if (token.type == TOKEN_TYPE_IDENTIFIER) {
@@ -188,18 +210,8 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                                 }
                              }
                         }
-                } else if (token.type == TOKEN_TYPE_LEFT_BRACKET) {
-                        push(opstack, token);
-                } else if (token.type == TOKEN_TYPE_RIGHT_BRACKET) {
-                        for (Token poped_token = pop(opstack); poped_token.type != TOKEN_TYPE_LEFT_BRACKET; poped_token = pop(opstack)) {
-                                if (opstack->top == 0) {
-                                    result = -1;
-                                    changeErrorCode(2);
-                                    break;
-                                }
-                                push(res, poped_token);
-                        }
-                        if (result == -1) break;
+                } else if (token.type == TOKEN_TYPE_LEFT_BRACKET || token.type == TOKEN_TYPE_RIGHT_BRACKET) {
+                        continue;
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR || token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
                         // Check if logical expression. If expression includes few comparing operators it returns an error
                         if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
@@ -220,41 +232,14 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                                 break;
                             }
                         }
-                        while (opstack->top > 0 && prec(peek(opstack)) >= prec(token)) {
-                                if (prec(peek(opstack)) >= prec(token)) {
-                                        push(res, pop(opstack));
-                                }
-                        }
-                        push(opstack, token);
-                } else if (token.type == TOKEN_TYPE_EOL) {
-                        break;
                 }
                 else break;
         }
 
-        if (result != -1) {
-                if (logical_type_flag)
-                    result = 4;
 
-                for (int i = 0; opstack->top > 0; i++) {
-                        if(opstack->data[i].type == TOKEN_TYPE_LEFT_BRACKET || opstack->data[i].type == TOKEN_TYPE_RIGHT_BRACKET){
-                                deleteStack(&opstack);
-                                deleteStack(&stack);
-                                deleteStack(&res);
-                                changeErrorCode(2);
-                                return -1;
-                        }
-                        push(res, pop(opstack));
-                }
-                push(res, pop(stack));
-        }
 
-        deleteStack(&opstack);
+        if (result != -1) generateCode(stack, deepVar, Var, result);
         deleteStack(&stack);
-
-        if (result != -1) generateCode(res, deepVar, Var, result);
-
-        deleteStack(&res);
         return result;
 
 }
@@ -267,109 +252,180 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
  * @param incomingType An integer representing the expression type
  */
 void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
+        Token prevToken;
+        prevToken.type = TOKEN_TYPE_EOL;
+        Token breaker;
+        breaker.type = TOKEN_TYPE_END_BLOCK;
+        Stack_t* tmpStack = createStack();
+
+        push(stack, prevToken);
+        push(tmpStack, prevToken);
+        //printf("tmpStack->top %ld\n",tmpStack->top);
         int type = 0;
-        for (int i = 0; i < stack->top - 1; i++) {
-                Token token = stack->data[i];
-                if (type == 0) {
-                    if (token.type == TOKEN_TYPE_IDENTIFIER)
-                        type = findVariableWithType(&token, deepVar, Var)->type;
+
+        int i = 0;
+
+        implode(stack);
+        while (true) {
+            //printf("%d)", i);
+            prevToken = tmpStack->data[tmpStack->top -1];
+            Token actualToken = stack->data[i];
+
+           // printf("prevToken.data %s \nactualToken.data %s \n",prevToken.data , actualToken.data);
+
+            if (type == 0) {
+                    if (actualToken.type == TOKEN_TYPE_IDENTIFIER)
+                        type = findVariableWithType(&actualToken, deepVar, Var)->type;
                     else
-                        type = returnLiteralType(&token);
+                        type = returnLiteralType(&actualToken);
+            }
+            int sign = prec_table[get_index(prevToken)][get_index(actualToken)];
+            /*printf("Stack {");
+            for (int i2 = 0; i2 < i+1; i2 ++) printf("[%s],",stack->data[i2].data);
+            printf("}\n");
+            printf("tmpStack {");
+            for (int i2 = 0; i2 < tmpStack->top; i2 ++) printf("[%s],",tmpStack->data[i2].data);
+            printf("}\n");*/
+            bool checker;
+            switch (sign)
+            {
+            case S: // <
+                //printf("Знак < \n");
+                push(tmpStack, breaker);
+                push(tmpStack, actualToken);
+                i++;
+                break;
+            case E: // =
+                //printf("Знак =\n");
+                push(tmpStack, actualToken);
+                i++;
+                break;
+            case R: // >
+                //printf("Знак >\n");
+                if (tmpStack->top > 1) {
+                    if (tmpStack->data[tmpStack->top-2].type == TOKEN_TYPE_END_BLOCK || tmpStack->data[tmpStack->top-1].type == TOKEN_TYPE_RIGHT_BRACKET)  {
+
+                        checker = true;
+                    } else {
+                            checker = false;
+                    }
+                } else {
+                    checker = true;
                 }
-                if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
-                    token.type == TOKEN_TYPE_LITERAL_INT ||
-                    token.type == TOKEN_TYPE_IDENTIFIER ||
-                    token.type == TOKEN_TYPE_LITERAL_STRING) {
+
+                if (checker) {
+                    Token tmpToken = pop(tmpStack);
+                    pop(tmpStack);
+                    if (tmpToken.type == TOKEN_TYPE_RIGHT_BRACKET) pop(tmpStack);
+                    /*if (actualToken.type != TOKEN_TYPE_EOL) {
+                        push(tmpStack, actualToken);
+                    } else {
+                        pop(tmpStack);
+                    }*/
+
+
+
+                    if (tmpToken.type == TOKEN_TYPE_LITERAL_FLOAT ||
+                    tmpToken.type == TOKEN_TYPE_LITERAL_INT ||
+                    tmpToken.type == TOKEN_TYPE_IDENTIFIER ||
+                    tmpToken.type == TOKEN_TYPE_LITERAL_STRING) {
                         if(GET_REPEAT_FUNC_RUN()){
                             printf("PUSHS ");
-                            GEN_WRITE_VAR_LITERAL(&token, deepVar);
-                            printf("\n");
+                            GEN_WRITE_VAR_LITERAL(&tmpToken, deepVar);
+                            printf("\n\n");
                         }
-                } else if (token.type == TOKEN_TYPE_MATH_OPERATOR) {
-                    if (type != 3) {
-                        if (strcmp(token.data, "/") == 0) {
-                            if(incomingType == 1) {
-                                if(GET_REPEAT_FUNC_RUN()){
-                                    printf("POPS GF@tmpDividingByZero\n");
-                                    printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
-                                    printf("PUSHS GF@tmpDividingByZero\n");
-                                    printf("IDIVS\n");
+                    } else if (tmpToken.type == TOKEN_TYPE_MATH_OPERATOR) {
+                        if (type != 3) {
+                            if (strcmp(tmpToken.data, "/") == 0) {
+                                if(incomingType == 1) {
+                                    if(GET_REPEAT_FUNC_RUN()){
+                                        printf("POPS GF@tmpDividingByZero\n");
+                                        printf("JUMPIFEQ error9 GF@tmpDividingByZero int@0\n");
+                                        printf("PUSHS GF@tmpDividingByZero\n");
+                                        printf("IDIVS\n");
+                                    }
+                                }
+                                else if (incomingType == 2) {
+                                    if(GET_REPEAT_FUNC_RUN()){
+                                        printf("POPS GF@tmpDividingByZero\n");
+                                        printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
+                                        printf("PUSHS GF@tmpDividingByZero\n");
+                                        printf("DIVS\n");
+                                    }
                                 }
                             }
-                            else if (incomingType == 2) {
-                                if(GET_REPEAT_FUNC_RUN()){
-                                    printf("POPS GF@tmpDividingByZero\n");
-                                    printf("JUMPIFEQ error9 GF@tmpDividingByZero float@0x0p+0\n");
-                                    printf("PUSHS GF@tmpDividingByZero\n");
-                                    printf("DIVS\n");
-                                }
+                            else if (strcmp(tmpToken.data, "*") == 0) {
+                                if(GET_REPEAT_FUNC_RUN())
+                                    printf("MULS\n");
                             }
-                        }
-                        else if (strcmp(token.data, "*") == 0) {
-                            if(GET_REPEAT_FUNC_RUN())
-                                printf("MULS\n");
-                        }
-                        else if (strcmp(token.data, "+") == 0) {
-                            if(GET_REPEAT_FUNC_RUN())
-                                printf("ADDS\n");
-                        }
-                        else if (strcmp(token.data, "-") == 0) {
-                            if(GET_REPEAT_FUNC_RUN())
-                                printf("SUBS\n");
-                        }
+                            else if (strcmp(tmpToken.data, "+") == 0) {
+                                if(GET_REPEAT_FUNC_RUN())
+                                    printf("ADDS\n");
+                            }
+                            else if (strcmp(tmpToken.data, "-") == 0) {
+                                if(GET_REPEAT_FUNC_RUN())
+                                    printf("SUBS\n");
+                            }
 
+                        }
+                        else {
+                            if (strcmp(tmpToken.data, "+") == 0) {
+                                if(GET_REPEAT_FUNC_RUN()){
+                                    printf("POPS GF@str2\n");
+                                    printf("POPS GF@str1\n");
+                                    printf("CONCAT GF@strRes GF@str1 GF@str2\n");
+                                    printf("PUSHS GF@strRes\n");
+                                }
+                            } else
+                                break;
+                        }
                     }
-                    else {
-                        if (strcmp(token.data, "+") == 0) {
+                    else if (tmpToken.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                        if (strcmp(tmpToken.data, "<") == 0) {
                             if(GET_REPEAT_FUNC_RUN()){
-                                printf("POPS GF@str2\n");
-                                printf("POPS GF@str1\n");
-                                printf("CONCAT GF@strRes GF@str1 GF@str2\n");
-                                printf("PUSHS GF@strRes\n");
+                                printf("LTS\n");
                             }
-                        } else
-                            break;
-                    }
-                }
-                else if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
-                    if (strcmp(token.data, "<") == 0) {
-                        if(GET_REPEAT_FUNC_RUN()){
-                            printf("LTS\n");
                         }
-                    }
-                    else if (strcmp(token.data, "<=") == 0) {
-                        if(GET_REPEAT_FUNC_RUN()){
-                            printf("GTS\n");
-                            printf("NOTS\n");
+                        else if (strcmp(tmpToken.data, "<=") == 0) {
+                            if(GET_REPEAT_FUNC_RUN()){
+                                printf("GTS\n");
+                                printf("NOTS\n");
+                            }
                         }
-                    }
-                    else if (strcmp(token.data, ">") == 0) {
-                        if(GET_REPEAT_FUNC_RUN())
-                            printf("GTS\n");
-                    }
-                    else if (strcmp(token.data, ">=") == 0) {
-                        if(GET_REPEAT_FUNC_RUN()){
-                            printf("LTS\n");
-                            printf("NOTS\n");
+                        else if (strcmp(tmpToken.data, ">") == 0) {
+                            if(GET_REPEAT_FUNC_RUN())
+                                printf("GTS\n");
                         }
-                    }
-                    else if (strcmp(token.data, "==") == 0) {
-                        if(GET_REPEAT_FUNC_RUN())
-                            printf("EQS\n");
-                    }
-                    else if (strcmp(token.data, "!=") == 0) {
-                        if(GET_REPEAT_FUNC_RUN()){
-                            printf("EQS\n");
-                            printf("NOTS\n");
+                        else if (strcmp(tmpToken.data, ">=") == 0) {
+                            if(GET_REPEAT_FUNC_RUN()){
+                                printf("LTS\n");
+                                printf("NOTS\n");
+                            }
                         }
-                    }
+                        else if (strcmp(tmpToken.data, "==") == 0) {
+                            if(GET_REPEAT_FUNC_RUN())
+                                printf("EQS\n");
+                        }
+                        else if (strcmp(tmpToken.data, "!=") == 0) {
+                            if(GET_REPEAT_FUNC_RUN()){
+                                printf("EQS\n");
+                                printf("NOTS\n");
+                            }
+                        }
 
+                    } else if (tmpToken.type == TOKEN_TYPE_RIGHT_BRACKET) {
+                    }
                 }
-                else if (token.type == TOKEN_TYPE_EOL) {
-                        break;
-                }
-                else break;
+                break;
+            case N: // err
+                /* code */
+                break;
+            default:
+                break;
+            }
+            //printf("\n");
+            if (prevToken.type == TOKEN_TYPE_EOL && actualToken.type == TOKEN_TYPE_EOL) break;
+
         }
-        if(GET_REPEAT_FUNC_RUN())
-            printf("\n");
+        deleteStack(&tmpStack);
 }
