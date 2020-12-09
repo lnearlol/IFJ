@@ -33,10 +33,11 @@ SymTab *declaration(SymTab *SymTable){
 }
 
 // --------------------------------------   V A R I A B L E S   --------------------------------------
+
 /**
  * Function inserts new variable in the symbol table.
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Pointer to the symbol table for variables
  * @return Function true in a successful insertion
  */
@@ -80,7 +81,7 @@ SymTab *declaration(SymTab *SymTable){
 /**
  * Function find variable with the same name on maximum possible level
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  */
 variable findVariable(Token *token, int deepVar, variable Var){
@@ -114,10 +115,11 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 }
 
 //------------------- F I N D    E X I S T I N G    V A R I A B L E    W I T H   T Y P E
+
 /**
  * Function find variable with the type on maximum possible level
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  */
 variable findVariableWithType(Token *token, int deepVar, variable Var){
@@ -163,9 +165,9 @@ variable find_var_with_type_helper(Token *token, int deepVar, variable Var){
 //--------------------------------------
 
 /**
- * Function put the type of a variable according to its name and deep
+ * Function put the type of a variable according to its name and depth
  * @param token Token that contains information about a variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param varType Signifies the type of the variable
  * @param Var Signifies variable
  */
@@ -178,7 +180,6 @@ bool putTypeVariable(Token *token, int deepVar, int varType, variable Var){
         return true;
     }
 }
-
 
 /**
  * Function deletes the last appereance of the variable in the symbol table
@@ -208,7 +209,7 @@ void freeAllVariables(variable *Var){
  * Function compare two variables. Searching for a variable by name and deер
  * @param var1 Token that contains information about a variable
  * @param var2 Type of the second variable
- * @param deepVar Signifies the deep of the variable
+ * @param deepVar Signifies the depth of the variable
  * @param Var Signifies variable
  * @return Сorrect type
  */
@@ -254,11 +255,10 @@ int returnLiteralType(Token *token){
 }
 
 // --------------------------------------------------  G E N    V A R I A B L E S  ----------------------------------------------------
-
 /**
  * Function inserts new variable from function into symbol table for generation
  * @param token Token that contains information about a variable
- * @param deep Signifies the deep of the variable
+ * @param deep Signifies the depth of the variable
  * @param genVar Pointer to the symbol table for variables
  * @return Function true in a successful insertion
  */
@@ -297,6 +297,7 @@ void insertDepth(int deep, deepInside *Depth){
         insertDepth(deep, &(*Depth)->next);
     }
 }
+
 // Function deletes all variables into symbol table for generation
 void freeGenVariables(genVariable *genVar, bool print){
 
@@ -349,7 +350,8 @@ void insertFunction(Token *token, function *Func){
         changeErrorCode(3);
 	}
 }
-// Function deletes all functions with all parameters into symbol table
+
+// Function deletes all functions with all parameters into symbol table 
 void freeFunctions(function *Func){
     if(*Func == NULL){
 		return;
@@ -372,6 +374,7 @@ void freeFunctions(function *Func){
 	*Func = NULL;
 	return;
 }
+
 /**
  * Function finds for a function according to its name in the symbol table
  * @param token Token that contains information about a function
@@ -418,6 +421,7 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
     argument->next->name = arg_name->data;
     argument->next->type = arg_type->type;
 }
+
 /**
  * Function adds output arguments for a function according to its name in the symbol table
  * @param func_name Token that contains information about a function
@@ -454,6 +458,7 @@ Token *create_and_set_token(Token *helper){
     helper->next = NULL;
     return helper;
 }
+
 // Create token for function prints
 Token *get_print_token(Token *prints){
     prints->size = 6;
@@ -598,7 +603,7 @@ Token *get_s_token(Token *s){
     s->next = NULL;
 return s;
 }
-// Create a token for the "i" name
+// Create a token for the "n" name
 Token *get_n_token(Token *n){
     n->size = 2;
     n->data = malloc(n->size);
@@ -617,6 +622,7 @@ Token *get_print_type_token(Token *print_type)
     print_type->next = NULL;
 return print_type;
 }
+
 /**
  * Function adds inbuilt functions to the  symbol table when it is called
  * @param SymTable Token that contains information about a function

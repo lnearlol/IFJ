@@ -12,7 +12,6 @@
  */
 #include "parser.h"
 
-char framePrint[3];
 /**
  * Function insert header for ifjcode20 and creates a global variable for working with "main"
  */
@@ -103,30 +102,12 @@ void GEN_CALL(Token *token){
    printf("CALL $%s\n", token->data);
 }
 
-//Function defines the location frame
-void GEN_SET_FRAME_TYPE(){
-    genFrameType currentFrame = GET_GEN_FRAME();
-    
-    switch (currentFrame)
-    {
-        case GLOBAL:
-            strcpy(framePrint, "GF");
-            break;
-        case LOCAL:
-            strcpy(framePrint, "LF");
-            break;
-        case TEMPORARY:
-            strcpy(framePrint, "TF");    
-            break;
-    }
-}
 /**
  * Function writes a variable according to its type. If it's identifier find the deepest one by its name
  * @param token Pointer to the token that indicates the name of variable
  * @param deep Signifies the level of the variable
  */
 void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
-    GEN_SET_FRAME_TYPE();
     char *ASM_string = NULL;
     switch (token->type)
 	{
@@ -144,7 +125,7 @@ void GEN_WRITE_VAR_LITERAL(Token *token, int deep){
 			break;
 
         case TOKEN_TYPE_IDENTIFIER:
-            printf("%s@%s$%d", framePrint, token->data, findVariableWithType(token, deep, SymTable->var)->deep);
+            printf("LF@%s$%d", token->data, findVariableWithType(token, deep, SymTable->var)->deep);
             break;
         
         case TOKEN_TYPE_UNDERSCORE:

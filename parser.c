@@ -1,61 +1,91 @@
+/**
+ * @file parser.c
+ * 
+ * @brief Parser and function main implementation
+ * 
+ * IFJ Projekt 2020, Tým 55
+ * 
+ * @author <xstepa64> Stepaniuk Roman, Bc.
+*/
+
 #include "parser.h"
 
+// control if expression stack will be free in the end of program
 bool delete_expr_stack = false;
-int token_counter = 1;  // delete later
+// depth of label
 int deep = -1;
+// count of variables on the left part of expression, to compare the right side
 int number_of_operands = 0;
+// number of run of program
 int PROGRAMM_RUN = FIRST_RUN;
+// error detection. Program will return the error_flag
 int error_flag = 0;
+// check if each function has own return in case of need
 int return_in_function = true;
+// check if main function was in program
 bool wasMainInProgram = false;
+// separation of mathematical expression and logic expression to compare expressions return types
 bool WAS_CONDITION = false;
+// run of function_body() in each function
 bool repeatFunctionRun = false;
-
+// number of depth where was 'if' to possible edition 'else' in each function
 int if_else_counter = -1;
+// number of depth where for to adding new depth label
 int for_counter = -1;
 
-genFrameType GEN_FRAME = LOCAL;
-
-int GET_GEN_FRAME(){
-    return GEN_FRAME;
-}
-
-void CHANGE_GEN_FRAME(int Frame){
-    GEN_FRAME = Frame;
-}
-
+/**
+ * Function ckecks run of statement
+ * If function returns true, IFJcode20 will generate
+ * @return Function returns true if it's second run of statement, and false if it's first run of statement
+ */
 bool GET_REPEAT_FUNC_RUN(){
     return repeatFunctionRun;
 }
 
 
-
+/**
+ * Function allocates new token, moves pointer from current token to new token and calls get_token()
+ * Function calls changeErrorCode() if something goes wrong
+ */
 void get_and_set_token(){
         if(PROGRAMM_RUN == FIRST_RUN){
         token->next = malloc (sizeof(Token));
+        if(token->next == NULL){
+            changeErrorCode(99);
+            return;
+        }
         token = token->next;
         token->next = NULL;
         if (get_token(token) == 1)
             changeErrorCode(1);
-        token_counter++;  // delete later
     } else if (PROGRAMM_RUN == SECOND_RUN)
         token = token->next;
 }
 
 //  ------------------------------------ E R R O R    C O D E ------------------------------------
 
+/**
+ * @param code number of error
+ * Function change error_flag if some kind of error was found
+ */
 void changeErrorCode(int code){
     if(error_flag == 0)
         error_flag = code;
 }
 
 
-//  ------------------------------------ F O R   S T A C K ------------------------------------
+//  ------------------------------------  S T A C K   C O N T A I N E R  ------------------------------------
 
+/**
+ * Function allocates container of stacks
+ * @param myContainer pointer on container which contains pointers on all stacks
+ * @return Function returns pointer on stackContainer
+ */
 stackContainer *declareContainer(stackContainer *myContainer){
     myContainer = malloc(sizeof(struct stackContainer));
     if(myContainer == NULL){
-        changeErrorCode(99);
+            changeErrorCode(99);
+            return NULL;
     }
     myContainer->elseStack = NULL;
     myContainer->forStack = NULL;
@@ -66,20 +96,40 @@ stackContainer *declareContainer(stackContainer *myContainer){
     return myContainer;
 }
 
+
+//  ------------------------------------  F O R  /  I F   S T A C K  ------------------------------------
+
+/**
+ * Function adds one instanse of some stack and allocates memory for it
+ * @param changeStack pointer on some kind of stack
+ * @param deep depth of label
+ */
 void add_to_for_if_stack(else_stack *changeStack, int deep){
     
     if (*changeStack == NULL){
         (*changeStack) = malloc(sizeof(struct elseStack));
+        if(*changeStack == NULL){
+            changeErrorCode(99);
+            return;
+        }
         (*changeStack)->deep = deep;
         (*changeStack)->next = NULL;
     } else {
         else_stack tmpforStack = *changeStack;
         *changeStack = malloc(sizeof(struct elseStack));
+        if(*changeStack == NULL){
+            changeErrorCode(99);
+            return;
+        }
         (*changeStack)->deep = deep;
         (*changeStack)->next = tmpforStack;
     }
 }
 
+/**
+ * Function frees one instanse of some stack
+ * @param changeStack pointer on some kind of stack
+ */
 void delete_from_for_if_stack(else_stack *changeStack){
     if(*changeStack != NULL){
         else_stack tmpforStack = (*changeStack)->next;
@@ -90,13 +140,25 @@ void delete_from_for_if_stack(else_stack *changeStack){
 
 //  ------------------------------------ C O M P A R E    L I S T ------------------------------------
 
+/**
+ * Function adds variable to compare list and allocates memory for it
+ * @param var Token contains name of variable
+ */
 void add_var_to_compare_list(Token *var){
     if(varCompareList == NULL){
         varCompareList = malloc(sizeof(variables_compare_list));
+        if(varCompareList == NULL){
+            changeErrorCode(99);
+            return;
+        }
         varCompareList->var = var;
         varCompareList->next = NULL;
     } else {
         variables_compare_list *tmpList = malloc(sizeof(variables_compare_list));
+        if(tmpList == NULL){
+            changeErrorCode(99);
+            return;
+        }
         tmpList->var = var;
         tmpList->next = NULL;
         variables_compare_list *cycleList = varCompareList;
@@ -111,6 +173,9 @@ void add_var_to_compare_list(Token *var){
     }
 }
 
+/**
+ * Function frees last variable from compare list
+ */
 void delete_var_from_compare_list(){
     if(varCompareList != NULL){
         variables_compare_list *tmpList = varCompareList->next;
@@ -119,13 +184,25 @@ void delete_var_from_compare_list(){
     }
 }
 
+/**
+ * Function adds type to compare list and allocates memory for it
+ * @param type Token contains name of variable
+ */
 void add_type_to_compare_list(int type){
     if(typeCompareList == NULL){
         typeCompareList = malloc(sizeof(type_compare_list));
+        if(typeCompareList == NULL){
+            changeErrorCode(99);
+            return;
+        }
         typeCompareList->type = type;
         typeCompareList->next = NULL;
     } else {
         type_compare_list *tmpTypeList = malloc(sizeof(type_compare_list));
+        if(tmpTypeList == NULL){
+            changeErrorCode(99);
+            return;
+        }
         tmpTypeList->type = type;
         tmpTypeList->next = NULL;
         type_compare_list *cycleTypeList = typeCompareList;
@@ -140,6 +217,9 @@ void add_type_to_compare_list(int type){
     }
 }
 
+/**
+ * Function frees last type from compare list
+ */
 void delete_type_from_compare_list(){
 
     if(typeCompareList != NULL){
@@ -149,15 +229,10 @@ void delete_type_from_compare_list(){
     }
 }
 
-bool checkCompareLists(){
-    if (typeCompareList != NULL  || varCompareList != NULL){
-        changeErrorCode(3);
-        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
-        return false;
-    } else 
-        return true;
-}
-
+/**
+ * Function compares types of typeCompareList and varCompareList
+ * @return Function returns 0 if both stacks are empty, 1 if varCompareList isn't empty, -1 if typeCompareList isn't empty
+ */
 int compareCompareLists(){
     variables_compare_list *tmpVar = varCompareList;
     type_compare_list *tmpType = typeCompareList;
@@ -174,7 +249,9 @@ int compareCompareLists(){
     }
 }
 
-
+/**
+ * Function frees typeCompareList and varCompareList
+ */
 void freeBothCompareLists(){
     while(varCompareList != NULL || typeCompareList != NULL){
         if(typeCompareList != NULL)
@@ -184,7 +261,11 @@ void freeBothCompareLists(){
 }
 
 //  ------------------------------------ P R O G R A M    S T A R T ------------------------------------
-// package main \n func() EOF
+
+/**
+ * <PROGRAM_SRART> -> package main eol <FUNCTION_CHECK> eol eof
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool program_start(){
     bool program_start = false;
     allowed_eol();
@@ -213,6 +294,10 @@ bool program_start(){
 
 //  ------------------------------------ F U N C T I O N ------------------------------------
 
+/**
+ * <FUNCTION_CHECK> -> func IDENTIFIER ( <ALLOWED_EOL>  <INPUT_PARAMETERS>  <OUTPUT_PARAMETERS> { eol <FUNCTION_BODY> } eol
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool function_check(){
     bool func = false;
     if(token->type == TOKEN_TYPE_FUNC){
@@ -220,7 +305,7 @@ bool function_check(){
         if(token->type == TOKEN_TYPE_IDENTIFIER){
             if(!strcmp(token->data, "main"))
                 wasMainInProgram = true;
-            // A D D    F U N C T I O N S    T O    S Y M T A B L E
+            // adding functions to symtable
             if(PROGRAMM_RUN){          
                 insertFunction(token, &(SymTable->func));
             } else 
@@ -232,19 +317,15 @@ bool function_check(){
                 get_and_set_token();
                 allowed_eol();
 
-
                 Token *repeat_function_run = NULL;
-                    Token *saved_func_name_new = saved_func_name;
-                    Token *saved_arg_name_new = saved_arg_name;
-                    Token *saved_arg_type_new = saved_arg_type;
-                    repeat_function_run = token;
-                    fprintf(stderr, "token1 = %s\n", token->data);
+                Token *saved_func_name_new = saved_func_name;
+                Token *saved_arg_name_new = saved_arg_name;
+                Token *saved_arg_type_new = saved_arg_type;
+                repeat_function_run = token;
                 
-
                 func = input_parameters();
                 if(func){
                     get_and_set_token();
-
                     func = output_parameters();
                     if(func){
                         func = false;
@@ -259,20 +340,14 @@ bool function_check(){
                                 if(PROGRAMM_RUN == FIRST_RUN)
                                     func = first_run_body();
                                 else {
-                                    func = function_body(); // собираем инфу в дерево о инициализации всех возможных переменных всех глубин
-                                    // assembler function  выписать все DEFVAR'ы
-                                    // third run without defvars
-                                    // JUST DEREVO (NOT SEZNAM DEREV'VEV)
-                                    // save token linc on previous token and run body() again
+                                    func = function_body(); 
 
                                     repeatFunctionRun = true;
-                                    // W E    N E E D    T H I R D    R U N !!!!!!!!!!!!!!!!!!!!!!
                                     if(func){
                                         saved_func_name = saved_func_name_new;
                                         saved_arg_name = saved_arg_name_new;
                                         saved_arg_type = saved_arg_type_new;
                                         token = repeat_function_run;
-                                        fprintf(stderr, "token2 = %s\n", token->data);
                                         input_parameters();
                                         get_and_set_token();
                                         output_parameters();
@@ -301,6 +376,11 @@ bool function_check(){
 
 //  ------------------------------------ I N P U T    P A R A M E T E R S ------------------------------------
 
+/**
+ * <INPUT_PARAMETERS> -> )
+ * <INPUT_PARAMETERS> -> <INPUT_SINGLE_PARAMETERS>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool input_parameters(){
     bool input_parameters = false;
     
@@ -311,13 +391,18 @@ bool input_parameters(){
     return input_parameters;
 }
 
+/**
+ * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string , <INPUT_SINGLE_PARAMETERS>
+ * <INPUT_SINGLE_PARAMETERS> -> IDENTIFIER int/float/string )
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool input_single_parameters(){
     bool input_single_parameter = false;
     if(token->type == TOKEN_TYPE_IDENTIFIER){
         if(PROGRAMM_RUN){
-            if(strcmp(saved_func_name->data, "main") == 0){      // I F    M A I N   H A S   I N P U T   P A R A M S
+            if(strcmp(saved_func_name->data, "main") == 0){      // if function main has input parameters
                 changeErrorCode(6);
-                return false;  // error_flag = 4to-to
+                return false; 
             }   
         }
         saved_arg_name = token; // foo(a int) -> saved_arg_name = a
@@ -325,13 +410,12 @@ bool input_single_parameters(){
         get_and_set_token();
         if(token->type == TOKEN_TYPE_INT || token->type == TOKEN_TYPE_FLOAT || token->type == TOKEN_TYPE_STRING){
             saved_arg_type = token; // // foo(a int) -> saved_arg_type = int
-            if(PROGRAMM_RUN){        // A D D   F U N C   A R G S    T O    S Y M T A B L E
+            if(PROGRAMM_RUN){        // add function arguments to SymTable
                addInputArguments(saved_func_name, saved_arg_name, saved_arg_type, SymTable->func);
-            } else { // R U N 2,   C R E A T I N G    A R G U M E N T S   A S    Z E R O    L E V E L     V A R S
+            } else { // R U N 2,  creating arguments as zero-level vars
                 insertVariable(saved_arg_name, deep+1, &(SymTable->var));  // var
                 putTypeVariable(saved_arg_name, deep+1, saved_arg_type->type, SymTable->var);  // var_type
             }
-            // input_single_parameter = true;
             get_and_set_token();
             if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
                 return true;
@@ -351,6 +435,12 @@ bool input_single_parameters(){
 
 //  ------------------------------------ O U T P U T    P A R A M E T E R S ------------------------------------
 
+/**
+ * <OUTPUT_PARAMETERS> -> {
+ * <OUTPUT_PARAMETERS> -> ( )
+ * <OUTPUT_PARAMETERS> -> ( <OUTPUT_SINGLE_PARAMETERS>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool output_parameters(){
     bool output_parameters = false;
     if(token->type == TOKEN_TYPE_START_BLOCK)
@@ -370,6 +460,12 @@ bool output_parameters(){
     }
     return output_parameters;
 }
+
+/**
+ * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string , <OUTPUT_SINGLE_PARAMETERS>
+ * <OUTPUT_SINGLE_PARAMETERS> -> int/float/string ) {
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 
 bool output_single_parameters(){
     bool output_single_parameter = false;
@@ -401,9 +497,13 @@ bool output_single_parameters(){
 
 //  ------------------------------------  B O D Y    1    R U N  ------------------------------------
 
+/**
+ * Function works only on first run of program. Ignore all types of tokens except '}'
+ * Function gets next tokens until finds } which will be last in this function (depth will be the same as it was on start)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool first_run_body(){
     bool first_run_accept = true;
-
 
     while(1){
         if(token->type == TOKEN_TYPE_END_BLOCK)
@@ -424,6 +524,20 @@ bool first_run_body(){
 
 //  ------------------------------------ F U N C T I O N    B O D Y ------------------------------------
 
+/**
+ * <FUNCTION_BODY> -> } eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> { eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> if <IF_CONSTRUCTION>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> else  {  eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> for <FOR_CONSTRUCTION>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> IDENTIFIER  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> COMMAND_FUNCTION  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> _  <DEFINE_FUNC>  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> return eol  <FUNCTION_BODY>
+ * <FUNCTION_BODY> -> return  <RETURN_CONSTRUCTION> <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool function_body(){
     bool else_condition_flag = false;
     bool for_condition_flag = false;
@@ -441,21 +555,20 @@ bool function_body(){
         }
     }
 
-    // I G N O R I N G    E M P T Y    B L O C K S   -> { /n  /n }, but not if{ /n }
+    // ignoring empty blocks   -> { /n  /n }, but not if{ /n }
     if(token->type != TOKEN_TYPE_END_BLOCK && token->type != TOKEN_TYPE_EOL){
         empty_block = false;
     }
 
-    // W O R K I N G    W I T H    E L S E - S T A C K
+    // working with else-stack
     if(token->type == TOKEN_TYPE_ELSE && Container->elseStack != NULL){
         if(Container->elseStack->deep == deep)
             else_condition_flag = true;
 
         add_to_for_if_stack(&(Container->jumpElseStack), Container->jumpIfStack->deep);
-        ////printf("-------------- else +, if - %d\n", Container->jumpIfStack->deep);
         // jump2
         GEN_JUMP(current_function_name, Container->jumpElseStack->deep, false, NO_FOR);
-        // navěšti 1
+        // scope 1
         GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
         delete_from_for_if_stack(&(Container->jumpIfStack));
 
@@ -463,15 +576,13 @@ bool function_body(){
     } else if (Container->elseStack != NULL) {
         if(Container->elseStack->deep == deep && token->type != TOKEN_TYPE_END_BLOCK){
             delete_from_for_if_stack(&(Container->elseStack));
-            ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
-            // navěšti 1
+            // scope 1
             GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
             delete_from_for_if_stack(&(Container->jumpIfStack));
             
         } else if (Container->elseStack->deep > deep){
             delete_from_for_if_stack(&(Container->elseStack));
-            ////printf("-------------- if - %d\n", Container->jumpIfStack->deep);
-            // navěšti 1
+            // scope 1
             GEN_SCOPE(current_function_name, Container->jumpIfStack->deep, true, false);
             delete_from_for_if_stack(&(Container->jumpIfStack));
         }
@@ -482,7 +593,6 @@ bool function_body(){
         if(Container->forStack->deep == deep){
             delete_from_for_if_stack(&(Container->forStack));
             
-            ////printf("------------------%d\n", if_else_counter);
             // jumpFor2
             GEN_JUMP(current_function_name, Container->jumpForStack->next->deep, false, FOR_JUMP);
             // scopeFor4
@@ -501,19 +611,15 @@ bool function_body(){
     if(token->type == TOKEN_TYPE_END_BLOCK && Container->endElseStack != NULL){
         if(Container->endElseStack->deep == deep){
             delete_from_for_if_stack(&(Container->endElseStack));
-            ////printf("-------------- else - %d\n", Container->jumpElseStack->deep);
             // navěšti 2
             GEN_SCOPE(current_function_name, Container->jumpElseStack->deep, false, false);
             delete_from_for_if_stack(&(Container->jumpElseStack));
         }
     } 
-            //printf("------------------------------ deep = %d\n", deep);
-
 
     // E N D    B L O C K   ( L A S T )
     if(token->type == TOKEN_TYPE_END_BLOCK && deep == -1){
         function_accept = true;
-        //printf("------------------------------ IMMMMMMMMMMM HEEERE\n");
         if(findFunction(current_function_name, SymTable->func)->output_params != NULL && return_in_function == true){ // was not return command
                 changeErrorCode(6); // number of return args and function output args not the same
                 return false;
@@ -560,7 +666,7 @@ bool function_body(){
     // I D E N T I F I E R    --   D E C L A R E,  E Q U A T I N G,  F U N C T I O N
     }  else if (token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
         
-        if(define_func(TOKEN_TYPE_EOL, 1, 1, true)){
+        if(define_func(TOKEN_TYPE_EOL, true, true, true)){
             get_and_set_token();
             function_accept = function_body();   
         }
@@ -568,7 +674,7 @@ bool function_body(){
     // U N D E R S C O R E  --  D E C L A R E,  E Q U A T I N G
     } else if (token->type == TOKEN_TYPE_UNDERSCORE){
         
-        if(define_func(TOKEN_TYPE_EOL, 1, 1, false)){
+        if(define_func(TOKEN_TYPE_EOL, true, true, false)){
             get_and_set_token();
             function_accept = function_body();   
         }
@@ -578,39 +684,45 @@ bool function_body(){
         return_in_function = false;
         get_and_set_token();
         function F = findFunction(current_function_name, SymTable->func);
-        outputParams out_params = F->output_params;      // C O M P A R E   R E T U R N   A N D   O U T   P A R A M S
+        outputParams out_params = F->output_params;      // compare return and output parameters
 
-        // GEN_RETVAL_RETURN(out_params); // A S S E M B L Y
+        // GEN_RETVAL_RETURN(out_params); // assembly
 
-        if(token->type == TOKEN_TYPE_EOL && out_params == NULL)
+        if(token->type == TOKEN_TYPE_EOL && out_params == NULL){
+            GEN_END_OF_FUNCTION(current_function_name);
             function_accept = function_body();
-        else if(out_params != NULL && token->type != TOKEN_TYPE_EOL)
+        } else if(out_params != NULL && token->type != TOKEN_TYPE_EOL){
             function_accept = return_construction(out_params);
-        else {
+        } else {
             changeErrorCode(6); // number of return args and function output args not the same
             return false;
         }
         
     }
-    
-
     return function_accept;
 }
 
 //  ------------------------------------ F O R    C O N S T R U C T I O N ------------------------------------
 
+/**
+ * <FOR_CONSTRUCTION> ->  <DEFINE_FUNC> ; <IF_CONSTRUCTION> ; <DEFINE_FUNC> { eol <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool for_construction(){
     bool for_accept = false;
     deep++;
-    if(!define_func(TOKEN_TYPE_SEMICOLON, 1, 1, false)){
-        return false;
+
+    if(token->type != TOKEN_TYPE_SEMICOLON){
+        if(!define_func(TOKEN_TYPE_SEMICOLON, true, true, false)){
+            return false;
+        }
     }
     get_and_set_token();
 
 
     if(token->type != TOKEN_TYPE_SEMICOLON){
 
-        // A S S E M B L Y
+        // assembly
         for(int i = 0; i < 4; i++)    
             add_to_for_if_stack(&(Container->jumpForStack), ++for_counter);
         // scopeFor1
@@ -646,7 +758,7 @@ bool for_construction(){
     // scopeFor2
     GEN_SCOPE(current_function_name, Container->jumpForStack->next->deep, false, true);
 
-    if(!define_func(TOKEN_TYPE_START_BLOCK, 0, 1, false)){
+    if(!define_func(TOKEN_TYPE_START_BLOCK, false, true, false)){
         return false;
     }
     // jumpFor1
@@ -662,13 +774,15 @@ bool for_construction(){
             for_accept = function_body();
         }
     }
-
-
     return for_accept;
 }
 
 //  ------------------------------------ I F    C O N S T R U C T I O N ------------------------------------
 
+/**
+ * <IF_CONSTRUCTION> -> <IF_CONSTRUCTION> { eol <FUNCTION_BODY>
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool if_construction()
 {
     delete_expr_stack = true;
@@ -676,10 +790,13 @@ bool if_construction()
     bool if_accept = false;
     if_accept = expression(TOKEN_TYPE_START_BLOCK);
     if(if_accept){
+        if(!WAS_CONDITION ){
+            changeErrorCode(5);
+            return false;
+        }
         add_to_for_if_stack(&(Container->elseStack), deep);
-        // A S S E M B L Y
+        // assembly
         add_to_for_if_stack(&(Container->jumpIfStack), ++if_else_counter);
-        ////printf("------------------%d\n", if_else_counter);
         // jump1
         GEN_JUMP(current_function_name, Container->jumpIfStack->deep, true, NO_FOR);
 
@@ -700,42 +817,23 @@ bool if_construction()
     return if_accept;
 }
 
-//  ------------------------------------ L O G I C    E X P R E S S I O N ------------------------------------
-
-// bool logic_expression(int end_condition){
-//     bool logic_expression = false;
-    
-//         delete_expr_stack = true;
-//         expr = createStack();
-        
-//         logic_expression = expression(TOKEN_TYPE_LOGICAL_OPERATOR); //left side + operator
-        
-//         if(logic_expression && WAS_CONDITION){
-//             get_and_set_token();
-//             delete_expr_stack = true;
-//             expr = createStack();
-            
-//             logic_expression = expression(end_condition); //right side + semicolon (for)
-
-//             if(typeCompareList != NULL && typeCompareList->next != NULL){
-//                 if(typeCompareList->type != typeCompareList->next->type){
-//                     changeErrorCode(5);
-//                     logic_expression = false;
-//                 }
-//             }
-//         }
-//         freeBothCompareLists(); // free the logic list
-    
-//     return logic_expression;
-// }
-
-
-
 
 //  ------------------------------------ D E C L A R E   &   E Q U A T I N G    E X P R E S S I O N ------------------------------------
 //  ------------------------------------ O R    F U N C T I O N ()    F R O M    B O D Y 
 
-bool define_func(int end_condition, int declare, int equating, bool func){
+/**
+ * <DEFINE_FUNC> -> <DEFINE_OPERANDS> := <COUNT_OPERANDS>
+ * <DEFINE_FUNC> -> <DEFINE_OPERANDS> = <COUNT_OPERANDS>
+ * DEFINCE_FUNC -> <DEFINE_OPERANDS> ( <EXPRESSION_FUNC_ARGUMENTS>
+ * 
+ * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
+ * function will return true, else function will return false.
+ * @param declare is true when declaration is allowed :=
+ * @param equating is true when define is allowed =
+ * @param func is true when function is allowed
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
+bool define_func(int end_condition, bool declare, bool equating, bool func){
     bool define_accept = false;
     number_of_operands = 0;
 
@@ -744,35 +842,27 @@ bool define_func(int end_condition, int declare, int equating, bool func){
     } else {
         define_accept = define_operands(func);
         if(declare && define_accept && token->type == TOKEN_TYPE_DECLARE){
-            
-            // token
-            // mov token->name, EAX
 
             get_and_set_token();
 
             allowed_eol(); // [ a := \n b] situation
             define_accept = count_operands(end_condition);
-            // ЗАПИСЬ
             if(define_accept && !check_declare_logic(deep)){
-                
-                // if(GET_REPEAT_FUNC_RUN())
-                //     printf("beh dva deep - %d\n", deep);
-                // printf("heeeeeeeeeeeeeeeeeeeeeere\n");
                 changeErrorCode(7);
                 return false;
             } else if(define_accept){
                 GEN_CREATE_LEFT_SIDE(deep);
         }
 
-            // CHECKING TYPES FOR SYMTABLE
+            // checking types for SymTable
         } else if (equating && define_accept && token->type == TOKEN_TYPE_EQUATING){
             get_and_set_token();
             allowed_eol(); //[ a = \n b] situation
             define_accept = count_operands(end_condition);
 
-            // C O M P A R E   T W O   L I S T S
+            // compare two lists
             if(!check_define_logic(deep)){
-                changeErrorCode(7);
+                changeErrorCode(5);
                 return false;
             }
 
@@ -784,12 +874,12 @@ bool define_func(int end_condition, int declare, int equating, bool func){
             get_and_set_token();
             allowed_eol(); // func_name( \n args situation
             if(strcmp(saved_func_name->data, "print"))
-                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
+                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // assembly
 
             define_accept = expression_func_arguments();
             if (define_accept){
                 number_of_operands--;
-                freeBothCompareLists(); // L I S T   L O G I C
+                freeBothCompareLists(); // list logic : deleting lists
                 get_and_set_token();
                 define_accept = true;
             }
@@ -802,30 +892,38 @@ bool define_func(int end_condition, int declare, int equating, bool func){
     return define_accept;
 }
 
+/**
+ * <DEFINE_OPERANDS> -> IDENTIFIER
+ * <DEFINE_OPERANDS> -> IDENTIFIER , <DEFINE_OPERANDS>
+ * <DEFINE_OPERANDS> -> COMMAND_FUNCTION
+ * <DEFINE_OPERANDS> -> COMMAND_FUNCTION , <DEFINE_OPERANDS>
+ * <DEFINE_OPERANDS> -> _
+ * <DEFINE_OPERANDS> -> _ , <DEFINE_OPERANDS>
+ * 
+ * @param func is true when function is allowed
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool define_operands(int func){
    
     bool operands_accept = false;
 
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_UNDERSCORE || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
         number_of_operands++;
-                    fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
 
         add_var_to_compare_list(token);
-        GEN_ADD_VAR_TO_ASSEMBLY_STACK(token); // A S S E M B L Y
+        GEN_ADD_VAR_TO_ASSEMBLY_STACK(token); // assembly
 
-        // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
+        // check existing function logic
         saved_func_name = token;
-
         get_and_set_token();
         
         if(func && number_of_operands == 1 && token->type == TOKEN_TYPE_LEFT_BRACKET && (saved_func_name->type == TOKEN_TYPE_IDENTIFIER 
         || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION)){
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
                 changeErrorCode(3);   //  ERROR 3, not found function_name
-                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                 return false;
             }
-            // S Y M T A B L E    L O G I C
+            // SymTable logic
             if(findFunction(saved_func_name, SymTable->func))       
                 operands_accept = true;
             else {
@@ -843,7 +941,16 @@ bool define_operands(int func){
     return operands_accept;
 }
 
-// FUNCTION FOR RECURSIVE CALLING EXPRESSIONS + COUNT OF OPERANDS
+
+/**
+ * <COUNT_OPERANDS> -> <IF_CONSTRUCTION>
+ * <COUNT_OPERANDS> -> <IF_CONSTRUCTION> , <COUNT_OPERANDS>
+ * 
+ * function for recursive calling expressions + count of operands
+ * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
+ * function will return true, else function will return false.
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool count_operands(int end_condition){
     int current_end_condition = 0;   // for a, b = 2+1, 3+1   ',' -> end_condition
     bool count_operands_accept = false;
@@ -864,12 +971,11 @@ bool count_operands(int end_condition){
         delete_expr_stack = false;
     }
 
-    if(WAS_CONDITION){  // WAS LOGICAL OPERATOR IN EXPRESSION
+    if(WAS_CONDITION){  // if expression had logical operators
         changeErrorCode(5);
         return false;
     }
   
-
     if(count_operands_accept && number_of_operands > 0){
         get_and_set_token();
         count_operands_accept = count_operands(end_condition);
@@ -890,21 +996,29 @@ bool count_operands(int end_condition){
 
 //  ------------------------------------ E X P R E S S I O N ------------------------------------
 
+/**
+ * <IF_CONSTRUCTION> -> (  <ALLOWED_EOL>  <IF_CONSTRUCTION>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  OPERATOR  <ALLOWED_EOL>  <IF_CONSTRUCTION>
+ * <IF_CONSTRUCTION> -> IDENTIFIER/COMMAND_FUNCTION  <IS_CLOSED_BRACKET>  (  <ALLOWED_EOL>  <EXPRESSION_FUNC_ARGUMENTS>
+ * 
+ * Function parses syntax of expressions
+ * @param end_condition anticipation end condition of the function. If in result current token->type will be the same as end_condition,
+ * function will return true, else function will return false.
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool expression(int end_condition){
     bool expression_accept = false;
-    static int can_be_function = 1;
+    static bool can_be_function = true;
     static int bracket = 0;
     static int closed_bracket_counter = 0;
-    static int was_it_string = 0;
+    static bool was_it_string = false;
+    static bool normal_quantity_of_expressions = true;
 
-            // fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
-
-    
     if(token->type == TOKEN_TYPE_LEFT_BRACKET){
-        
         push(expr, *token);
         bracket++;
-        can_be_function = 0;
+        can_be_function = false;
         get_and_set_token();
         allowed_eol();
         expression_accept = expression(end_condition);
@@ -916,21 +1030,20 @@ bool expression(int end_condition){
        && !findFunction(token, SymTable->func) && (!SymTable->var || !findVariableWithType(token, deep, SymTable->var))){
             sort_to_postfix(expr, deep, SymTable->var);
             changeErrorCode(3);
-            fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
             delete_expr_stack = false;
             return false;
        }
 
         if(token->type == TOKEN_TYPE_LITERAL_STRING /* or it was string id*/) // to control if that was string
-            was_it_string = 1; 
+            was_it_string = true; 
 
-        // C H E C K   E X I S T I N G   F U N C T I O N   L O G I C
+        // check existing function logic
         saved_func_name = token;
         get_and_set_token();
         if(token->type != TOKEN_TYPE_LEFT_BRACKET);
             push(expr, *saved_func_name);
-    // CHECK CLOSED BRACKETS
 
+        // CHECK CLOSED BRACKETS
         closed_bracket_counter = is_closed_bracket();
         if(closed_bracket_counter){
             bracket -= closed_bracket_counter;
@@ -938,23 +1051,28 @@ bool expression(int end_condition){
 
 
         if(token->type == end_condition){
+            if (!normal_quantity_of_expressions){
+                delete_expr_stack = false;
+                sort_to_postfix(expr, deep, SymTable->var);
+                changeErrorCode(7);
+                return false;
+            }
             if((saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION) 
             && !findVariableWithType(saved_func_name, deep, SymTable->var)){
                 delete_expr_stack = false;
                 sort_to_postfix(expr, deep, SymTable->var);
                 changeErrorCode(3); // variable not defined 
-                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                 return false;
             }
 
             expression_accept = true;
-            was_it_string = 0;
-            can_be_function = 1;
+            was_it_string = false;
+            can_be_function = true;
 
            
             delete_expr_stack = false;
             int result = sort_to_postfix(expr, deep, SymTable->var);
-            if(result == -1){ // SEGFAULT FIX
+            if(result == -1){ // segfault fix, check if expression_tranlator goes fine
                 return false;
             }
             add_type_to_compare_list(result); // result
@@ -964,90 +1082,76 @@ bool expression(int end_condition){
             }
 
         } else if (token->type == TOKEN_TYPE_MATH_OPERATOR || token->type == TOKEN_TYPE_LOGICAL_OPERATOR){
-            // ЗАКИНУТЬ В СТЕК 2 (saved_function_name)
-            // ЗАКИНУТЬ В СТЕК 3 (token)
             
             if(saved_func_name->type == TOKEN_TYPE_IDENTIFIER || saved_func_name->type == TOKEN_TYPE_COMMAND_FUNCTION){
                if(!findVariableWithType(saved_func_name, deep, SymTable->var)){
                     delete_expr_stack = false;
                     sort_to_postfix(expr, deep, SymTable->var);
                     changeErrorCode(3); // variable not defined
-                    fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
                     return false;
                 } else if (findVariableWithType(saved_func_name, deep, SymTable->var)->type == TOKEN_TYPE_STRING){
-                    was_it_string = 1;
+                    was_it_string = true;
                 }
 
             }
 
-            if(was_it_string == 1){  // if used not '+' for string
+            if(was_it_string == true){  // if used not '+' for string
                 if(strcmp(token->data, "+") && token->type != TOKEN_TYPE_LOGICAL_OPERATOR){
 
                     changeErrorCode(5);
                     delete_expr_stack = false;
                     sort_to_postfix(expr, deep, SymTable->var);
-
                     return false;
                 }
             }
             push(expr, *token);
             get_and_set_token();
-            can_be_function = 0;
+            can_be_function = false;
             allowed_eol(); //[ a + \n b] situation
             expression_accept = expression(end_condition);
         } else if (token->type == TOKEN_TYPE_LEFT_BRACKET && can_be_function){
-            // S Y M T A B L E    L O G I C
+            // SymTable logic
             if(findVariableWithType(saved_func_name, deep, SymTable->var)){
-                changeErrorCode(3);   //  ERROR 3, not found function_name
-                fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+                changeErrorCode(3);   //  ERROR 3, not found current_function_name
                 return false;
             }
             if(!findFunction(saved_func_name, SymTable->func)){
-                changeErrorCode(6);   //  ERROR 3, not found function_name
+                changeErrorCode(6);   //  ERROR 6, not found current_function_name
                 return false;
             }
             get_and_set_token();
 
             allowed_eol(); // func_name( \n args situation
             if(strcmp(saved_func_name->data, "print"))
-                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // A S S E M B L Y
-            expression_accept = expression_func_arguments();  // ПОТОМ ПЕРЕДАВАТЬ СЮДА КОПИЮ УКАЗАТЕЛЬ НА ТОКЕН ИДЕНТИФИКАТОРА
+                GEN_CREATE_FRAME_AND_SET_PARAMS(findFunction(saved_func_name, SymTable->func)->input_params); // assembly
+            expression_accept = expression_func_arguments(); 
             if(strcmp(saved_func_name->data, "print"))
                 GEN_CALL(saved_func_name);
-            if(expression_accept){                            // (ПЕРЕД ЭТИМ ЕГО СОХРАНИВ) И ОБНУЛИТЬ В КОНЦЕ ПАРАМЕТРОВ
+            if(expression_accept){                            
                 get_and_set_token();
 
 
-                // OPERANDS ANALYSIS
+                // operands anylysis
                 if(compareCompareLists() == 0){
                     number_of_operands = 0;
                     end_condition = TOKEN_TYPE_EOL;
                 } else {
                     changeErrorCode(7);
                 }
-                // } else if (compareCompareLists() == -1){
-                //    changeErrorCode(7);
-                //     return false;
-                // } else if (compareCompareLists() == 1){
-                //     int tmp = number_of_operands;
-                //     outputParams out_tmp = findFunction(saved_func_name, SymTable->func)->output_params;
-                //     if(out_tmp == NULL){
-                //         changeErrorCode(7); 
-                //     } else {
-                //         out_tmp = out_tmp->next;
-                //         while(out_tmp != NULL){
-                //             out_tmp = out_tmp->next;
-                //             number_of_operands--;
-                //         }
-                //     }
-                // }
 
                 if(token->type == end_condition){
                     expression_accept = true;
-                    can_be_function = 1;
+                    can_be_function = true;
                 }
             }
+        } else if(token->type == TOKEN_TYPE_COMMA){
+            normal_quantity_of_expressions = false;
+            get_and_set_token();
+            expression_accept = expression(TOKEN_TYPE_EOL);
         }
+    } else if (token->type == TOKEN_TYPE_UNDERSCORE){
+        changeErrorCode(3);
+        return false;
     }
 
     if(bracket != 0){
@@ -1065,12 +1169,16 @@ bool expression(int end_condition){
     return expression_accept;
 }
 
-// CLOSED_BRACKET_COUNTER
+/**
+ * <IS_CLOSED_BRACKET> -> )  <IS_CLOSED_BRACKET>
+ * <IS_CLOSED_BRACKET> -> eps
+ * 
+ * Function counts closed brackets
+ * @return counter of closed brackets
+ */
 int is_closed_bracket(){
     int closed_bracket_counter = 0;
-    while(token->type == TOKEN_TYPE_RIGHT_BRACKET){
-        // ЗАКИНУТЬ В СТЕК 4 (token)
-        
+    while(token->type == TOKEN_TYPE_RIGHT_BRACKET){   
         push(expr, *token);
         get_and_set_token();
         closed_bracket_counter++;
@@ -1078,40 +1186,44 @@ int is_closed_bracket(){
     return closed_bracket_counter;
 }
 
+/**
+ * <ALLOWED_EOL> -> eol  <ALLOWED_EOL>
+ * <ALLOWED_EOL> -> eps
+ */
 void allowed_eol(){
     while(token->type == TOKEN_TYPE_EOL) // func_name( \n args situation
         get_and_set_token();
 }
 
 //  ------------------------------------ E X P R E S S I O N    A R G U M E N T S ------------------------------------
+/**
+ * <EXPRESSION_FUNC_ARGUMENTS> -> )
+ * <EXPRESSION_FUNC_ARGUMENTS> -> <EXPRESSION_FUNC_SINGLE_ARGUMENT>
+ */
 bool expression_func_arguments(){
 
     bool func_arguments_accept = false;
     
-    // F U N C T I O N   A R G U M E N T S   L O G I C
+    // function arguments logic
     function arg_find = findFunction(saved_func_name, SymTable->func);
     if(!arg_find) {
         changeErrorCode(3);  // not found function
-        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
         return false;
     }
+
     inputParams args_check = arg_find->input_params;
     outputParams args_output = arg_find->output_params;
 
-    // ADDING OUTPUT ARGS TO TYPE LIST
-            while(args_output != NULL){
-                    add_type_to_compare_list(args_output->type);
-                    args_output = args_output->next;
-                }
+    // adding output arguments to typeList
+    while(args_output != NULL){
+        add_type_to_compare_list(args_output->type);
+        args_output = args_output->next;
+    }
 
     if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
-        // LOGIC
-        
-        if(args_check == NULL){ // if after all arguments next argument in sym_table will be null  (except print)
+        // function arguments logic
+        if(args_check == NULL || !strcmp(arg_find->name, "print")){ // if after all arguments next argument in sym_table will be null  (except print)
             func_arguments_accept = true;
-            // записать аутпуты в лист 
-
-
         } else {
             changeErrorCode(6);
         }
@@ -1121,27 +1233,31 @@ bool expression_func_arguments(){
     return func_arguments_accept;
 }
 
+
+/**
+ * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  )
+ * <EXPRESSION_FUNC_SINGLE_ARGUMENT> -> IDENTIFIER/LITERAL/COMMAND_FUNCTION  ,  <EXPRESSION_FUNC_SINGLE_ARGUMENT>
+ * 
+ * @param arg_check pointer on list of input function arguments (SymTable)
+ * @param args_output pointer on list of output function arguments (SymTable)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool expression_func_single_argument(inputParams args_check, outputParams args_output){
     bool func_single_argument = false;
-    
     if(token->type == TOKEN_TYPE_IDENTIFIER || token->type == TOKEN_TYPE_LITERAL_FLOAT 
-    || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING){
+    || token->type == TOKEN_TYPE_LITERAL_INT || token->type == TOKEN_TYPE_LITERAL_STRING /* added*/ || token->type == TOKEN_TYPE_COMMAND_FUNCTION){
 
         if(args_check != NULL){
-            // F U N C T I O N   A R G U M E N T S   L O G I C  --   C H E C K    L I T E R A L    T Y P E
-            // S Y M T A B L E   F U N C T I O N  (returns  bool/int)
-            
-            if(args_check->type == 99){ // PRINT INPUT PARAMETERS TYPE
-                // t u t   p r i n t
-                                    fprintf(stderr, "%s %s %d\n", token->data, __FILE__, __LINE__);
+            // function arguments logic: check literal type
+            // (returns  bool/int)
+            if(args_check->type == TOKEN_TYPE_PRINT){ // PRINT INPUT PARAMETERS TYPE
 
                 GEN_PRINT_WRITE(token, deep);
                 args_check->next = args_check; // print cloning output argument
                 if(token->type == TOKEN_TYPE_IDENTIFIER){
                     if(!findVariableWithType(token, deep, SymTable->var)){
                         args_check->next = NULL;
-                        changeErrorCode(3); // not defined variable int //in
-                        fprintf(stderr, "%s %d\n", __FILE__, __LINE__);
+                        changeErrorCode(3); // not defined variable int 
                         return false;
                     }
                 }
@@ -1153,16 +1269,15 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
                 MOVE_INTO_INPUT_PARAMETER(args_check, token, deep);
             }
         }
-        // ---------
         get_and_set_token();
         if(token->type == TOKEN_TYPE_RIGHT_BRACKET){
-            // L O G I C   C H E C K    [ args_check->next is NULL, it was the last parameter in SymTable->Func->InputParams ]
+            // logic check :  [ args_check->next is NULL, it was the last parameter in SymTable->Func->InputParams ]
             if(args_check == NULL){
                 changeErrorCode(6);
                 return false;
             }
             
-            if(args_check->type == 99)  // CONDITION FOR MAKE VALID PRINT WITH ANY QUANTITY OF PARAMETERS
+            if(args_check->type == TOKEN_TYPE_PRINT)  // condition for making valid function PRINT with any quantity of parameters
                 args_check->next = NULL;
             if(args_check->next == NULL) {
                 func_single_argument = true;
@@ -1175,13 +1290,23 @@ bool expression_func_single_argument(inputParams args_check, outputParams args_o
             allowed_eol(); //[ a (c, \n b)] situation
             func_single_argument = expression_func_single_argument(args_check->next, args_output);
         }
+    } else if (token->type == TOKEN_TYPE_UNDERSCORE){
+        changeErrorCode(3);
+        return false;
     }
-        // args_check->next = NULL;
     return func_single_argument;
 }
 
 //  ------------------------------------ R E T U R N    C O N S T R U C T I O N ------------------------------------
-// FINISHED HERE
+
+/**
+ * <RETURN_CONSTRUCTION> -> eol
+ * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  eol
+ * <RETURN_CONSTRUCTION> -> <IF_CONSTRUCTION>  ,  <RETURN_CONSTRUCTION>
+ * 
+ * @param out_params pointer on list of output function arguments (SymTable)
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool return_construction(outputParams out_params){
     bool return_construction_accept = false;
     int return_end_condition = TOKEN_TYPE_EOL;
@@ -1197,8 +1322,8 @@ bool return_construction(outputParams out_params){
         return false;
     }
     
-    // L O G I C :  C O M P A R E   T Y P E S   E X P R    A N D    O U T P U T    P A R A M
-    if(out_params->type == typeCompareList->type){  // segfault pri funkci
+    // logic : compare types expr and output parameters
+    if(out_params->type == typeCompareList->type){  
         delete_type_from_compare_list();
     } else {
         changeErrorCode(6);
@@ -1209,8 +1334,8 @@ bool return_construction(outputParams out_params){
         
         get_and_set_token();
         // compare two lists with type
-        //compare_return_and_output_params_logic();
         freeBothCompareLists();
+        GEN_END_OF_FUNCTION(current_function_name);
         return_construction_accept = function_body();
     } else if(token->type == TOKEN_TYPE_COMMA && return_construction_accept){
         get_and_set_token();
@@ -1227,7 +1352,10 @@ bool return_construction(outputParams out_params){
 
 //  ------------------------------------ S T A R T    B L O C K    &    N E W    L I N E ------------------------------------
 
-
+/**
+ * <START_BLOCK_NEW_LINE> -> { eol
+ * @return function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag
+ */
 bool start_block_new_line(){
     bool start_block_accept = false;
     if(token->type == TOKEN_TYPE_START_BLOCK){
@@ -1243,6 +1371,9 @@ bool start_block_new_line(){
 
 //  ------------------------------------ M A I N    F U N C T I O N ------------------------------------
 
+/**
+ * @return function main returns error_flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code
+ */
 int main(){
     SymTable = declaration(SymTable);
     Container = declareContainer(Container);
@@ -1253,7 +1384,11 @@ int main(){
     GEN_CALL_INBUILDS();
 
     token = malloc (sizeof(Token));
-    token->next = NULL;
+    if(token == NULL){
+            changeErrorCode(99);
+    } else {
+        token->next = NULL;
+    }
     Token *second_run = token;
 
     if(get_token(token) == 1)
@@ -1308,8 +1443,5 @@ int main(){
     free(Container);
     free(SymTable);
     dtor(second_run);
-    // printf("---------------------------------------------------------------------------------------------------------\n");
-    // printf("                  [PROGRAMM RUN:%d] [ERROR CODE %d]\n", PROGRAMM_RUN, error_flag);
-    // printf("---------------------------------------------------------------------------------------------------------\n");
     return error_flag;
 }

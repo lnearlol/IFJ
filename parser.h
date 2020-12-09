@@ -1,11 +1,7 @@
 #include "symtable.h"
-//typedef enum {INPUT_PARAMS, OUTPUT_PARAMS, EXPRESSION_LEFT_SIDE, EXPRESSION_RIGHT_SIDE} nonterminal;
-typedef enum {STATE_NULL, STATE_BEGIN, STATE_FUNC, STATE_FREE, STATE_STRICT_EXPRESSION, 
-STATE_NON_STRICT_EXPRESSION, STATE_ERROR,
-STATE_INPUT_PARAMS, STATE_OUTPUT_PARAMS, STATE_EXPRESSION_LEFT_SIDE, STATE_EXPRESSION_RIGHT_SIDE} Syntax_State; 
-typedef enum {CONDITION_STRICTLY, CONDITION_NON_STRICTLY} Syntax_Condition; 
 
 Token *token;
+
 bool program_start();
 bool function_check();
 bool input_parameters();
@@ -16,29 +12,28 @@ bool first_run_body();
 bool function_body();
 bool for_construction();
 bool if_construction();
-// bool math_expression(int end_condition);
-bool logic_expression(int end_condition);
 bool expression(int end_condition);
 int is_closed_bracket();
 bool expression_func_arguments();
 bool expression_func_single_argument(inputParams args_check, outputParams args_outputFchan);
-
-
-bool expression_including_string(int end_condition);
-bool define_func(int end_condition, int declare, int equating, bool func);
+bool define_func(int end_condition, bool declare, bool equating, bool func);
 bool define_operands(int func);
 bool count_operands(int end_condition);
 bool start_block_new_line();
 bool return_construction();
-
-
 void allowed_eol();
 
+/**
+ * @struct Stack representation
+ */
 typedef struct elseStack {
     int deep;
     struct elseStack *next;
 } *else_stack;
 
+/**
+ * @struct Container representation
+ */
 typedef struct stackContainer{
     else_stack elseStack;
     else_stack forStack;
@@ -48,59 +43,58 @@ typedef struct stackContainer{
     else_stack jumpElseStack;
 } stackContainer;
 
+
 stackContainer *declareContainer(stackContainer *myContainer);
 stackContainer *Container;
+
 void add_to_for_if_stack(else_stack *changeStack, int deep);
 void delete_from_for_if_stack(else_stack *changeStack);
 
+// FIRST RUN OF THE PROGRAM
 #define FIRST_RUN 1
+// SECOND RUN OF THE PROGRAM
 #define SECOND_RUN 0
 SymTab *SymTable;
 Token *saved_func_name, *saved_arg_name, *saved_arg_type;
 
+/**
+ * @struct Compare list filled by names of variables
+ */
 typedef struct variablesCompareList{
     Token *var;
     struct variablesCompareList *next;
 } variables_compare_list;
 
+/**
+ * @struct Compare list filled by type numbers of expressions
+ */
 typedef struct typeCompareList{
     int type;
     struct typeCompareList *next;
 } type_compare_list;
 
-// C O M P A R E   L I S T
+// C O M P A R E   L I S T S
+
 void add_var_to_compare_list(Token *var);
 void add_type_to_compare_list(int type);
-
 void delete_var_from_compare_list();
 void delete_type_from_compare_list();
 void freeBothCompareLists();
-bool checkCompareLists();
 
-// void changeErrorCode(int code);
-// bool checkOneCompareList(type_compare_list *typeList);
 
 
 variables_compare_list *varCompareList;
 type_compare_list *typeCompareList;
 
 
-#define RETURN_TYPE 77
-
-
 Token *current_function_name;
-
 
 bool check_define_logic(int deep);
 bool check_declare_logic(int deep);
-bool compare_return_and_output_params_logic();
 
 
-// A S E M B L Y
+// I F J c o d e 2 0
 
-typedef enum {GLOBAL, LOCAL, TEMPORARY} genFrameType;
-int GET_GEN_FRAME();
-void CHANGE_GEN_FRAME(int Frame);
 bool GET_REPEAT_FUNC_RUN();
 
 
@@ -117,6 +111,10 @@ void GEN_SET_FRAME_TYPE();
 void GEN_RETVAL_CREATER(outputParams outPut);
 void GEN_RETVAL_RETURN(outputParams outPut);
 
+
+/**
+ * @struct stack with tokens names of variables for generating IFJcode20
+ */
 typedef struct var_assembly_stack{
     Token *token_stack;
     struct var_assembly_stack *next;
