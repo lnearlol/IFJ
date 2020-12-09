@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['deepinside_63',['DeepInside',['../structDeepInside.html',1,'']]]
+  ['compare_107',['Compare',['../structCompare.html',1,'']]],
+  ['container_108',['Container',['../structContainer.html',1,'']]]
 ];

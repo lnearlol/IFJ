@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['genvariable_66',['GenVariable',['../structGenVariable.html',1,'']]]
+  ['function_111',['Function',['../structFunction.html',1,'']]],
+  ['functions_112',['Functions',['../structFunctions.html',1,'']]]
 ];

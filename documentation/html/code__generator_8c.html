@@ -62,8 +62,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">code_generator.c File Reference</div>  </div>
 </div><!--header-->
@@ -87,9 +86,6 @@ Functions</h2></td></tr>
 <tr class="separator:a7629d47fbdf5ba8dcd80c93b5f8c95ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b01a0fa2dc42205cfc4eb294303df1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a8b01a0fa2dc42205cfc4eb294303df1f">GEN_CALL</a> (<a class="el" href="structtoken.html">Token</a> *<a class="el" href="structtoken.html">token</a>)</td></tr>
 <tr class="separator:a8b01a0fa2dc42205cfc4eb294303df1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab602190c35ba7fb0be008f45179c57f5"><td class="memItemLeft" align="right" valign="top"><a id="ab602190c35ba7fb0be008f45179c57f5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>GEN_SET_FRAME_TYPE</b> ()</td></tr>
-<tr class="separator:ab602190c35ba7fb0be008f45179c57f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a49f9d6995c14a1d59711153f3ac70b9d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a49f9d6995c14a1d59711153f3ac70b9d">GEN_WRITE_VAR_LITERAL</a> (<a class="el" href="structtoken.html">Token</a> *<a class="el" href="structtoken.html">token</a>, int deep)</td></tr>
 <tr class="separator:a49f9d6995c14a1d59711153f3ac70b9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af934740d38ca6bd05de9ae10e4e0e38b"><td class="memItemLeft" align="right" valign="top"><a id="af934740d38ca6bd05de9ae10e4e0e38b"></a>
@@ -102,7 +98,7 @@ char *&#160;</td><td class="memItemRight" valign="bottom"><b>GEN_ASM_STRING</b> 
 <tr class="separator:aead2ce53bc79f6bece174c35a8449541"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a676aeee985b85e6c40b9866155214c8a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a676aeee985b85e6c40b9866155214c8a">GEN_EQ_LEFT_SIDE</a> (int deep)</td></tr>
 <tr class="separator:a676aeee985b85e6c40b9866155214c8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4866d9895a5b99f3648c9946f58e11c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a4866d9895a5b99f3648c9946f58e11c1">GEN_ADD_VAR_TO_ASSEMBLY_STACK</a> (<a class="el" href="structtoken.html">Token</a> *stack)</td></tr>
+<tr class="memitem:a4866d9895a5b99f3648c9946f58e11c1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a4866d9895a5b99f3648c9946f58e11c1">GEN_ADD_VAR_TO_ASSEMBLY_STACK</a> (<a class="el" href="structtoken.html">Token</a> *<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:a4866d9895a5b99f3648c9946f58e11c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cb8e5ebbd353ed252ff7737886ee862"><td class="memItemLeft" align="right" valign="top"><a id="a1cb8e5ebbd353ed252ff7737886ee862"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>GEN_DELETE_VAR_FROM_ASSEMBLY_STACK</b> ()</td></tr>
@@ -137,12 +133,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>GEN_CALL_INBUILDS</b>
 <tr class="separator:a6c039a85794de0d3f1f2f8d5ff049596"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6c3cda355e4a3549c03dd6a65058cd96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="code__generator_8c.html#a6c3cda355e4a3549c03dd6a65058cd96">GENERATION_CHR</a> ()</td></tr>
 <tr class="separator:a6c3cda355e4a3549c03dd6a65058cd96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a06705eac149016a49da8471561fea6a0"><td class="memItemLeft" align="right" valign="top"><a id="a06705eac149016a49da8471561fea6a0"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><b>framePrint</b> [3]</td></tr>
-<tr class="separator:a06705eac149016a49da8471561fea6a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Code generator implementation. </p>
@@ -170,7 +160,7 @@ char&#160;</td><td class="memItemRight" valign="bottom"><b>framePrint</b> [3]</t
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Functions add variables to the stack </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunctions.html">Functions</a> add variables to the stack </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">stack</td><td>Pointer signifies the current stack </td></tr>
   </table>
@@ -336,7 +326,7 @@ char&#160;</td><td class="memItemRight" valign="bottom"><b>framePrint</b> [3]</t
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Functions generates "if" and "for" operation in code. Check on what label should jump </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunctions.html">Functions</a> generates "if" and "for" operation in code. Check on what label should jump </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Pointer to the token that indicates the name of function </td></tr>
     <tr><td class="paramname">count</td><td>Number of condition </td></tr>
@@ -420,7 +410,7 @@ char&#160;</td><td class="memItemRight" valign="bottom"><b>framePrint</b> [3]</t
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Functions creates label to jump on </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunctions.html">Functions</a> creates label to jump on </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">token</td><td>Pointer to the token that indicates the name of functions </td></tr>
     <tr><td class="paramname">count</td><td>Number of condition </td></tr>

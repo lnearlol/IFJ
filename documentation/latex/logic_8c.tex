@@ -1,0 +1,60 @@
+\hypertarget{logic_8c}{}\doxysection{logic.\+c File Reference}
+\label{logic_8c}\index{logic.c@{logic.c}}
+
+
+Logic functions working with Sym\+Table implementation.  
+
+
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{logic_8c_a4428822540861f10e0d691a9de5c9cd4}{check\+\_\+declare\+\_\+logic}} (int deep)
+\item 
+bool \mbox{\hyperlink{logic_8c_a59b58299d5161dd634ed442f828c8094}{check\+\_\+define\+\_\+logic}} (int deep)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Logic functions working with Sym\+Table implementation. 
+
+I\+FJ Projekt 2020, Tým 55
+
+\begin{DoxyAuthor}{Author}
+$<$xstepa64$>$ Stepaniuk Roman, Bc. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{logic_8c_a4428822540861f10e0d691a9de5c9cd4}\label{logic_8c_a4428822540861f10e0d691a9de5c9cd4}} 
+\index{logic.c@{logic.c}!check\_declare\_logic@{check\_declare\_logic}}
+\index{check\_declare\_logic@{check\_declare\_logic}!logic.c@{logic.c}}
+\doxysubsubsection{\texorpdfstring{check\_declare\_logic()}{check\_declare\_logic()}}
+{\footnotesize\ttfamily bool check\+\_\+declare\+\_\+logic (\begin{DoxyParamCaption}\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} creats variables in Sym\+Table with names which are written to var\+Compare\+List and give them types from \mbox{\hyperlink{structtypeCompareList}{type\+Compare\+List}} and frees that lists
+
+
+\begin{DoxyParams}{Parameters}
+{\em deep} & depth of label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns true if all expression types are successfully written to variable-\/$>$type in symtable. And returns false if there was any syntax or semantic error 
+\end{DoxyReturn}
+\mbox{\Hypertarget{logic_8c_a59b58299d5161dd634ed442f828c8094}\label{logic_8c_a59b58299d5161dd634ed442f828c8094}} 
+\index{logic.c@{logic.c}!check\_define\_logic@{check\_define\_logic}}
+\index{check\_define\_logic@{check\_define\_logic}!logic.c@{logic.c}}
+\doxysubsubsection{\texorpdfstring{check\_define\_logic()}{check\_define\_logic()}}
+{\footnotesize\ttfamily bool check\+\_\+define\+\_\+logic (\begin{DoxyParamCaption}\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} compares types of variables with names which are written to var\+Compare\+List and types from \mbox{\hyperlink{structtypeCompareList}{type\+Compare\+List}} and frees that lists
+
+
+\begin{DoxyParams}{Parameters}
+{\em deep} & depth of label \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns true if all types are the same, and returns false if at least only one type will be different 
+\end{DoxyReturn}

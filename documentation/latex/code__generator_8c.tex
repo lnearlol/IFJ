@@ -21,9 +21,6 @@ void \mbox{\hyperlink{code__generator_8c_a7629d47fbdf5ba8dcd80c93b5f8c95ca}{M\+O
 \item 
 void \mbox{\hyperlink{code__generator_8c_a8b01a0fa2dc42205cfc4eb294303df1f}{G\+E\+N\+\_\+\+C\+A\+LL}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}})
 \item 
-\mbox{\Hypertarget{code__generator_8c_ab602190c35ba7fb0be008f45179c57f5}\label{code__generator_8c_ab602190c35ba7fb0be008f45179c57f5}} 
-void {\bfseries G\+E\+N\+\_\+\+S\+E\+T\+\_\+\+F\+R\+A\+M\+E\+\_\+\+T\+Y\+PE} ()
-\item 
 void \mbox{\hyperlink{code__generator_8c_a49f9d6995c14a1d59711153f3ac70b9d}{G\+E\+N\+\_\+\+W\+R\+I\+T\+E\+\_\+\+V\+A\+R\+\_\+\+L\+I\+T\+E\+R\+AL}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep)
 \item 
 \mbox{\Hypertarget{code__generator_8c_af934740d38ca6bd05de9ae10e4e0e38b}\label{code__generator_8c_af934740d38ca6bd05de9ae10e4e0e38b}} 
@@ -36,7 +33,7 @@ void \mbox{\hyperlink{code__generator_8c_aead2ce53bc79f6bece174c35a8449541}{G\+E
 \item 
 void \mbox{\hyperlink{code__generator_8c_a676aeee985b85e6c40b9866155214c8a}{G\+E\+N\+\_\+\+E\+Q\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+DE}} (int deep)
 \item 
-void \mbox{\hyperlink{code__generator_8c_a4866d9895a5b99f3648c9946f58e11c1}{G\+E\+N\+\_\+\+A\+D\+D\+\_\+\+V\+A\+R\+\_\+\+T\+O\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$stack)
+void \mbox{\hyperlink{code__generator_8c_a4866d9895a5b99f3648c9946f58e11c1}{G\+E\+N\+\_\+\+A\+D\+D\+\_\+\+V\+A\+R\+\_\+\+T\+O\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structstack}{stack}})
 \item 
 \mbox{\Hypertarget{code__generator_8c_a1cb8e5ebbd353ed252ff7737886ee862}\label{code__generator_8c_a1cb8e5ebbd353ed252ff7737886ee862}} 
 void {\bfseries G\+E\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+V\+A\+R\+\_\+\+F\+R\+O\+M\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK} ()
@@ -71,12 +68,6 @@ void \mbox{\hyperlink{code__generator_8c_a6c039a85794de0d3f1f2f8d5ff049596}{G\+E
 \item 
 void \mbox{\hyperlink{code__generator_8c_a6c3cda355e4a3549c03dd6a65058cd96}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+C\+HR}} ()
 \end{DoxyCompactItemize}
-\doxysubsection*{Variables}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\Hypertarget{code__generator_8c_a06705eac149016a49da8471561fea6a0}\label{code__generator_8c_a06705eac149016a49da8471561fea6a0}} 
-char {\bfseries frame\+Print} \mbox{[}3\mbox{]}
-\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -102,7 +93,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \doxysubsubsection{\texorpdfstring{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK()}{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK()}}
 {\footnotesize\ttfamily void G\+E\+N\+\_\+\+A\+D\+D\+\_\+\+V\+A\+R\+\_\+\+T\+O\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{stack }\end{DoxyParamCaption})}
 
-Functions add variables to the stack 
+\mbox{\hyperlink{structFunctions}{Functions}} add variables to the stack 
 \begin{DoxyParams}{Parameters}
 {\em stack} & Pointer signifies the current stack \\
 \hline
@@ -168,7 +159,7 @@ Functions add variables to the stack
 \doxysubsubsection{\texorpdfstring{GEN\_JUMP()}{GEN\_JUMP()}}
 {\footnotesize\ttfamily void G\+E\+N\+\_\+\+J\+U\+MP (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{count,  }\item[{bool}]{if\+\_\+condition,  }\item[{int}]{for\+\_\+condition }\end{DoxyParamCaption})}
 
-Functions generates \char`\"{}if\char`\"{} and \char`\"{}for\char`\"{} operation in code. Check on what label should jump 
+\mbox{\hyperlink{structFunctions}{Functions}} generates \char`\"{}if\char`\"{} and \char`\"{}for\char`\"{} operation in code. Check on what label should jump 
 \begin{DoxyParams}{Parameters}
 {\em token} & Pointer to the token that indicates the name of function \\
 \hline
@@ -198,7 +189,7 @@ Functions generates \char`\"{}if\char`\"{} and \char`\"{}for\char`\"{} operation
 \doxysubsubsection{\texorpdfstring{GEN\_SCOPE()}{GEN\_SCOPE()}}
 {\footnotesize\ttfamily void G\+E\+N\+\_\+\+S\+C\+O\+PE (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{count,  }\item[{bool}]{if\+\_\+condition,  }\item[{bool}]{for\+\_\+condition }\end{DoxyParamCaption})}
 
-Functions creates label to jump on 
+\mbox{\hyperlink{structFunctions}{Functions}} creates label to jump on 
 \begin{DoxyParams}{Parameters}
 {\em token} & Pointer to the token that indicates the name of functions \\
 \hline

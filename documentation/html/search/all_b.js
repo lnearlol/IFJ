@@ -1,9 +1,5 @@
 var searchData=
 [
-  ['sort_5fto_5fpostfix_51',['sort_to_postfix',['../expression__translator_8c.html#a45c14fd7c38d322bd7efa652d1ce2c70',1,'expression_translator.c']]],
-  ['stack_5ftag_52',['Stack_tag',['../structStack__tag.html',1,'']]],
-  ['stackcontainer_53',['stackContainer',['../structstackContainer.html',1,'']]],
-  ['sym_5ftab_54',['sym_tab',['../structsym__tab.html',1,'']]],
-  ['symtab_5ffor_5finbuilt_5ffunc_55',['symTab_for_inbuilt_func',['../symtable_8c.html#a2c38a559943af3e7d68cae7f823e8996',1,'symtable.c']]],
-  ['symtable_2ec_56',['symtable.c',['../symtable_8c.html',1,'']]]
+  ['resize_89',['resize',['../expression__translator_8c.html#ae9eaaddeec870c4ad8c01ad7349e5b5c',1,'expression_translator.c']]],
+  ['return_5fconstruction_90',['return_construction',['../parser_8c.html#a3315253c94016ff36b36a0a019d19a0c',1,'parser.c']]]
 ];

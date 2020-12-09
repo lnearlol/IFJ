@@ -1,0 +1,474 @@
+\hypertarget{parser_8c}{}\doxysection{parser.\+c File Reference}
+\label{parser_8c}\index{parser.c@{parser.c}}
+
+
+Parser and function main implementation.  
+
+
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{parser_8c_af5f27f9be109aecf18a4fbcd19d90416}{G\+E\+T\+\_\+\+R\+E\+P\+E\+A\+T\+\_\+\+F\+U\+N\+C\+\_\+\+R\+UN}} ()
+\item 
+void \mbox{\hyperlink{parser_8c_a064f483616b9f68e9c3836b7db7fb3fe}{get\+\_\+and\+\_\+set\+\_\+token}} ()
+\item 
+void \mbox{\hyperlink{parser_8c_a05b088a42bdc596518618f9adad0ef19}{change\+Error\+Code}} (int code)
+\item 
+\mbox{\hyperlink{structstackContainer}{stack\+Container}} $\ast$ \mbox{\hyperlink{parser_8c_a2e8672155d867f0c25b78fbc9bcfd146}{declare\+Container}} (\mbox{\hyperlink{structstackContainer}{stack\+Container}} $\ast$my\+Container)
+\item 
+void \mbox{\hyperlink{parser_8c_af1b4f027c1bcc1aa2a21ac346142c6ba}{add\+\_\+to\+\_\+for\+\_\+if\+\_\+stack}} (\mbox{\hyperlink{structelseStack}{else\+\_\+stack}} $\ast$change\+Stack, int deep)
+\item 
+void \mbox{\hyperlink{parser_8c_a73d02159e2065c77fbe1a6eb6317ecf8}{delete\+\_\+from\+\_\+for\+\_\+if\+\_\+stack}} (\mbox{\hyperlink{structelseStack}{else\+\_\+stack}} $\ast$change\+Stack)
+\item 
+void \mbox{\hyperlink{parser_8c_afd2257aea4bbef9788045bbf709f341e}{add\+\_\+var\+\_\+to\+\_\+compare\+\_\+list}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$var)
+\item 
+void \mbox{\hyperlink{parser_8c_aff7f1b2a58cc854f7755f2f429df9f42}{delete\+\_\+var\+\_\+from\+\_\+compare\+\_\+list}} ()
+\item 
+void \mbox{\hyperlink{parser_8c_abc76788f56773b3ce6890be396188862}{add\+\_\+type\+\_\+to\+\_\+compare\+\_\+list}} (int type)
+\item 
+void \mbox{\hyperlink{parser_8c_a16e91a5dd0dc5fe4fae87f24a4bfc886}{delete\+\_\+type\+\_\+from\+\_\+compare\+\_\+list}} ()
+\item 
+int \mbox{\hyperlink{parser_8c_ac63f3feb22e9103bf3ed2b15e1bafd6c}{compare\+Compare\+Lists}} ()
+\item 
+void \mbox{\hyperlink{parser_8c_adefbf9362416c20da1305bced7f3aa03}{free\+Both\+Compare\+Lists}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a0c62b86e9477db986791fd57cc7d63bb}{program\+\_\+start}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_ae4b2e47d4d4218e704a3680124212bb5}{function\+\_\+check}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a16ceac8251a6156c689390f5b1071530}{input\+\_\+parameters}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_aaf5f4a73f1cca3089617ddfa82077d51}{input\+\_\+single\+\_\+parameters}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_aff4435989123fa7994b5c35fa65e2649}{output\+\_\+parameters}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a6b4d7734e2f71edde29b60a43a3ddb63}{output\+\_\+single\+\_\+parameters}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_aa55994aef40000f995219e7fb5369569}{first\+\_\+run\+\_\+body}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a4e1e2c34b95e4277afad0a71ae7abbef}{function\+\_\+body}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a2e5d10a2e46c65398342f04605b18474}{for\+\_\+construction}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_adfe921605bc139b67a6cfacc55b769e3}{if\+\_\+construction}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a7626f6a0646bde7b6084a8f9be0ec107}{define\+\_\+func}} (int end\+\_\+condition, bool declare, bool equating, bool func)
+\item 
+bool \mbox{\hyperlink{parser_8c_aacd374b0adadbae1194f994adf072ca7}{define\+\_\+operands}} (int func)
+\item 
+bool \mbox{\hyperlink{parser_8c_a6e75f2de9d015cc61064cb89e5ab26f1}{count\+\_\+operands}} (int end\+\_\+condition)
+\item 
+bool \mbox{\hyperlink{parser_8c_a537167bae464cb821cfbfa5df6cfcaf4}{expression}} (int end\+\_\+condition)
+\item 
+int \mbox{\hyperlink{parser_8c_a2338a9fc66fb8c4b1c4c84170b06fb02}{is\+\_\+closed\+\_\+bracket}} ()
+\item 
+void \mbox{\hyperlink{parser_8c_a04c4329b54b2e98157d00b4a3ea7de81}{allowed\+\_\+eol}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_ad6aeeeb6988a063a06ab047af9c85ecb}{expression\+\_\+func\+\_\+arguments}} ()
+\item 
+bool \mbox{\hyperlink{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}{expression\+\_\+func\+\_\+single\+\_\+argument}} (\mbox{\hyperlink{structinParam}{input\+Params}} args\+\_\+check, \mbox{\hyperlink{structoutParam}{output\+Params}} args\+\_\+output)
+\item 
+bool \mbox{\hyperlink{parser_8c_a3315253c94016ff36b36a0a019d19a0c}{return\+\_\+construction}} (\mbox{\hyperlink{structoutParam}{output\+Params}} out\+\_\+params)
+\item 
+bool \mbox{\hyperlink{parser_8c_a1a0c0a54c0d22446a0900ac93903483a}{start\+\_\+block\+\_\+new\+\_\+line}} ()
+\item 
+int \mbox{\hyperlink{parser_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{parser_8c_a2b0df72ece1c1103f77be293f9843dc4}\label{parser_8c_a2b0df72ece1c1103f77be293f9843dc4}} 
+bool {\bfseries delete\+\_\+expr\+\_\+stack} = false
+\item 
+\mbox{\Hypertarget{parser_8c_a05b4ab73415ff7072c0ebd59a7eb5fe8}\label{parser_8c_a05b4ab73415ff7072c0ebd59a7eb5fe8}} 
+int {\bfseries deep} = -\/1
+\item 
+\mbox{\Hypertarget{parser_8c_a246aab7bee1d6eb3764c008701592bc9}\label{parser_8c_a246aab7bee1d6eb3764c008701592bc9}} 
+int {\bfseries number\+\_\+of\+\_\+operands} = 0
+\item 
+\mbox{\Hypertarget{parser_8c_a83a8209ee34d8932b769e71feb153bd5}\label{parser_8c_a83a8209ee34d8932b769e71feb153bd5}} 
+int {\bfseries P\+R\+O\+G\+R\+A\+M\+M\+\_\+\+R\+UN} = F\+I\+R\+S\+T\+\_\+\+R\+UN
+\item 
+\mbox{\Hypertarget{parser_8c_abc22a72d751fd7b9edfd17ce47da5651}\label{parser_8c_abc22a72d751fd7b9edfd17ce47da5651}} 
+int {\bfseries error\+\_\+flag} = 0
+\item 
+\mbox{\Hypertarget{parser_8c_a119f00c8e0f1d487e6ef452c2eb05791}\label{parser_8c_a119f00c8e0f1d487e6ef452c2eb05791}} 
+int {\bfseries return\+\_\+in\+\_\+function} = true
+\item 
+\mbox{\Hypertarget{parser_8c_a08aa834604b443fe51540baa5cd9d28e}\label{parser_8c_a08aa834604b443fe51540baa5cd9d28e}} 
+bool {\bfseries was\+Main\+In\+Program} = false
+\item 
+\mbox{\Hypertarget{parser_8c_ab2fcdeb0f9e136b8be9c40b2ee00d7e1}\label{parser_8c_ab2fcdeb0f9e136b8be9c40b2ee00d7e1}} 
+bool {\bfseries W\+A\+S\+\_\+\+C\+O\+N\+D\+I\+T\+I\+ON} = false
+\item 
+\mbox{\Hypertarget{parser_8c_a637103b11033bd62cf3b46a40460b023}\label{parser_8c_a637103b11033bd62cf3b46a40460b023}} 
+bool {\bfseries repeat\+Function\+Run} = false
+\item 
+\mbox{\Hypertarget{parser_8c_a7d448e988ace45a2e6d7c50135874856}\label{parser_8c_a7d448e988ace45a2e6d7c50135874856}} 
+int {\bfseries if\+\_\+else\+\_\+counter} = -\/1
+\item 
+\mbox{\Hypertarget{parser_8c_a24361e04065ea4c490f2f32d5e3499be}\label{parser_8c_a24361e04065ea4c490f2f32d5e3499be}} 
+int {\bfseries for\+\_\+counter} = -\/1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Parser and function main implementation. 
+
+I\+FJ Projekt 2020, Tým 55
+
+\begin{DoxyAuthor}{Author}
+$<$xstepa64$>$ Stepaniuk Roman, Bc. 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{parser_8c_af1b4f027c1bcc1aa2a21ac346142c6ba}\label{parser_8c_af1b4f027c1bcc1aa2a21ac346142c6ba}} 
+\index{parser.c@{parser.c}!add\_to\_for\_if\_stack@{add\_to\_for\_if\_stack}}
+\index{add\_to\_for\_if\_stack@{add\_to\_for\_if\_stack}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{add\_to\_for\_if\_stack()}{add\_to\_for\_if\_stack()}}
+{\footnotesize\ttfamily void add\+\_\+to\+\_\+for\+\_\+if\+\_\+stack (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structelseStack}{else\+\_\+stack}} $\ast$}]{change\+Stack,  }\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds one instanse of some stack and allocates memory for it 
+\begin{DoxyParams}{Parameters}
+{\em change\+Stack} & pointer on some kind of stack \\
+\hline
+{\em deep} & depth of label \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{parser_8c_abc76788f56773b3ce6890be396188862}\label{parser_8c_abc76788f56773b3ce6890be396188862}} 
+\index{parser.c@{parser.c}!add\_type\_to\_compare\_list@{add\_type\_to\_compare\_list}}
+\index{add\_type\_to\_compare\_list@{add\_type\_to\_compare\_list}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{add\_type\_to\_compare\_list()}{add\_type\_to\_compare\_list()}}
+{\footnotesize\ttfamily void add\+\_\+type\+\_\+to\+\_\+compare\+\_\+list (\begin{DoxyParamCaption}\item[{int}]{type }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds type to compare list and allocates memory for it 
+\begin{DoxyParams}{Parameters}
+{\em type} & Token contains name of variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{parser_8c_afd2257aea4bbef9788045bbf709f341e}\label{parser_8c_afd2257aea4bbef9788045bbf709f341e}} 
+\index{parser.c@{parser.c}!add\_var\_to\_compare\_list@{add\_var\_to\_compare\_list}}
+\index{add\_var\_to\_compare\_list@{add\_var\_to\_compare\_list}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{add\_var\_to\_compare\_list()}{add\_var\_to\_compare\_list()}}
+{\footnotesize\ttfamily void add\+\_\+var\+\_\+to\+\_\+compare\+\_\+list (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{var }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} adds variable to compare list and allocates memory for it 
+\begin{DoxyParams}{Parameters}
+{\em var} & Token contains name of variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{parser_8c_a04c4329b54b2e98157d00b4a3ea7de81}\label{parser_8c_a04c4329b54b2e98157d00b4a3ea7de81}} 
+\index{parser.c@{parser.c}!allowed\_eol@{allowed\_eol}}
+\index{allowed\_eol@{allowed\_eol}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{allowed\_eol()}{allowed\_eol()}}
+{\footnotesize\ttfamily void allowed\+\_\+eol (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ -\/$>$ eol $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ -\/$>$ eps \mbox{\Hypertarget{parser_8c_a05b088a42bdc596518618f9adad0ef19}\label{parser_8c_a05b088a42bdc596518618f9adad0ef19}} 
+\index{parser.c@{parser.c}!changeErrorCode@{changeErrorCode}}
+\index{changeErrorCode@{changeErrorCode}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{changeErrorCode()}{changeErrorCode()}}
+{\footnotesize\ttfamily void change\+Error\+Code (\begin{DoxyParamCaption}\item[{int}]{code }\end{DoxyParamCaption})}
+
+
+\begin{DoxyParams}{Parameters}
+{\em code} & number of error \mbox{\hyperlink{structFunction}{Function}} change error\+\_\+flag if some kind of error was found \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{parser_8c_ac63f3feb22e9103bf3ed2b15e1bafd6c}\label{parser_8c_ac63f3feb22e9103bf3ed2b15e1bafd6c}} 
+\index{parser.c@{parser.c}!compareCompareLists@{compareCompareLists}}
+\index{compareCompareLists@{compareCompareLists}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{compareCompareLists()}{compareCompareLists()}}
+{\footnotesize\ttfamily int compare\+Compare\+Lists (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} compares types of \mbox{\hyperlink{structtypeCompareList}{type\+Compare\+List}} and var\+Compare\+List \begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns 0 if both stacks are empty, 1 if var\+Compare\+List isn\textquotesingle{}t empty, -\/1 if \mbox{\hyperlink{structtypeCompareList}{type\+Compare\+List}} isn\textquotesingle{}t empty 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a6e75f2de9d015cc61064cb89e5ab26f1}\label{parser_8c_a6e75f2de9d015cc61064cb89e5ab26f1}} 
+\index{parser.c@{parser.c}!count\_operands@{count\_operands}}
+\index{count\_operands@{count\_operands}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{count\_operands()}{count\_operands()}}
+{\footnotesize\ttfamily bool count\+\_\+operands (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition }\end{DoxyParamCaption})}
+
+$<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ , $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$
+
+function for recursive calling expressions + count of operands 
+\begin{DoxyParams}{Parameters}
+{\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a2e8672155d867f0c25b78fbc9bcfd146}\label{parser_8c_a2e8672155d867f0c25b78fbc9bcfd146}} 
+\index{parser.c@{parser.c}!declareContainer@{declareContainer}}
+\index{declareContainer@{declareContainer}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{declareContainer()}{declareContainer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structstackContainer}{stack\+Container}}$\ast$ declare\+Container (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structstackContainer}{stack\+Container}} $\ast$}]{my\+Container }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} allocates container of stacks 
+\begin{DoxyParams}{Parameters}
+{\em my\+Container} & pointer on container which contains pointers on all stacks \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns pointer on \mbox{\hyperlink{structstackContainer}{stack\+Container}} 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a7626f6a0646bde7b6084a8f9be0ec107}\label{parser_8c_a7626f6a0646bde7b6084a8f9be0ec107}} 
+\index{parser.c@{parser.c}!define\_func@{define\_func}}
+\index{define\_func@{define\_func}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{define\_func()}{define\_func()}}
+{\footnotesize\ttfamily bool define\+\_\+func (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition,  }\item[{bool}]{declare,  }\item[{bool}]{equating,  }\item[{bool}]{func }\end{DoxyParamCaption})}
+
+$<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ \+:= $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ = $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ D\+E\+F\+I\+N\+C\+E\+\_\+\+F\+U\+NC -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ ( $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$
+
+
+\begin{DoxyParams}{Parameters}
+{\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
+\hline
+{\em declare} & is true when declaration is allowed \+:= \\
+\hline
+{\em equating} & is true when define is allowed = \\
+\hline
+{\em func} & is true when function is allowed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_aacd374b0adadbae1194f994adf072ca7}\label{parser_8c_aacd374b0adadbae1194f994adf072ca7}} 
+\index{parser.c@{parser.c}!define\_operands@{define\_operands}}
+\index{define\_operands@{define\_operands}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{define\_operands()}{define\_operands()}}
+{\footnotesize\ttfamily bool define\+\_\+operands (\begin{DoxyParamCaption}\item[{int}]{func }\end{DoxyParamCaption})}
+
+$<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ \+\_\+ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ \+\_\+ , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$
+
+
+\begin{DoxyParams}{Parameters}
+{\em func} & is true when function is allowed \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a73d02159e2065c77fbe1a6eb6317ecf8}\label{parser_8c_a73d02159e2065c77fbe1a6eb6317ecf8}} 
+\index{parser.c@{parser.c}!delete\_from\_for\_if\_stack@{delete\_from\_for\_if\_stack}}
+\index{delete\_from\_for\_if\_stack@{delete\_from\_for\_if\_stack}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{delete\_from\_for\_if\_stack()}{delete\_from\_for\_if\_stack()}}
+{\footnotesize\ttfamily void delete\+\_\+from\+\_\+for\+\_\+if\+\_\+stack (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structelseStack}{else\+\_\+stack}} $\ast$}]{change\+Stack }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} frees one instanse of some stack 
+\begin{DoxyParams}{Parameters}
+{\em change\+Stack} & pointer on some kind of stack \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{parser_8c_a16e91a5dd0dc5fe4fae87f24a4bfc886}\label{parser_8c_a16e91a5dd0dc5fe4fae87f24a4bfc886}} 
+\index{parser.c@{parser.c}!delete\_type\_from\_compare\_list@{delete\_type\_from\_compare\_list}}
+\index{delete\_type\_from\_compare\_list@{delete\_type\_from\_compare\_list}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{delete\_type\_from\_compare\_list()}{delete\_type\_from\_compare\_list()}}
+{\footnotesize\ttfamily void delete\+\_\+type\+\_\+from\+\_\+compare\+\_\+list (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} frees last type from compare list \mbox{\Hypertarget{parser_8c_aff7f1b2a58cc854f7755f2f429df9f42}\label{parser_8c_aff7f1b2a58cc854f7755f2f429df9f42}} 
+\index{parser.c@{parser.c}!delete\_var\_from\_compare\_list@{delete\_var\_from\_compare\_list}}
+\index{delete\_var\_from\_compare\_list@{delete\_var\_from\_compare\_list}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{delete\_var\_from\_compare\_list()}{delete\_var\_from\_compare\_list()}}
+{\footnotesize\ttfamily void delete\+\_\+var\+\_\+from\+\_\+compare\+\_\+list (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} frees last variable from compare list \mbox{\Hypertarget{parser_8c_a537167bae464cb821cfbfa5df6cfcaf4}\label{parser_8c_a537167bae464cb821cfbfa5df6cfcaf4}} 
+\index{parser.c@{parser.c}!expression@{expression}}
+\index{expression@{expression}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{expression()}{expression()}}
+{\footnotesize\ttfamily bool expression (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition }\end{DoxyParamCaption})}
+
+$<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ O\+P\+E\+R\+A\+T\+OR $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$
+
+\mbox{\hyperlink{structFunction}{Function}} parses syntax of expressions 
+\begin{DoxyParams}{Parameters}
+{\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_ad6aeeeb6988a063a06ab047af9c85ecb}\label{parser_8c_ad6aeeeb6988a063a06ab047af9c85ecb}} 
+\index{parser.c@{parser.c}!expression\_func\_arguments@{expression\_func\_arguments}}
+\index{expression\_func\_arguments@{expression\_func\_arguments}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{expression\_func\_arguments()}{expression\_func\_arguments()}}
+{\footnotesize\ttfamily bool expression\+\_\+func\+\_\+arguments (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$ -\/$>$ ) $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$ -\/$>$ $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ \mbox{\Hypertarget{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}\label{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}} 
+\index{parser.c@{parser.c}!expression\_func\_single\_argument@{expression\_func\_single\_argument}}
+\index{expression\_func\_single\_argument@{expression\_func\_single\_argument}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{expression\_func\_single\_argument()}{expression\_func\_single\_argument()}}
+{\footnotesize\ttfamily bool expression\+\_\+func\+\_\+single\+\_\+argument (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structinParam}{input\+Params}}}]{args\+\_\+check,  }\item[{\mbox{\hyperlink{structoutParam}{output\+Params}}}]{args\+\_\+output }\end{DoxyParamCaption})}
+
+$<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON ) $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON , $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$
+
+
+\begin{DoxyParams}{Parameters}
+{\em arg\+\_\+check} & pointer on list of input function arguments (Sym\+Table) \\
+\hline
+{\em args\+\_\+output} & pointer on list of output function arguments (Sym\+Table) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_aa55994aef40000f995219e7fb5369569}\label{parser_8c_aa55994aef40000f995219e7fb5369569}} 
+\index{parser.c@{parser.c}!first\_run\_body@{first\_run\_body}}
+\index{first\_run\_body@{first\_run\_body}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{first\_run\_body()}{first\_run\_body()}}
+{\footnotesize\ttfamily bool first\+\_\+run\+\_\+body (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} works only on first run of program. Ignore all types of tokens except \textquotesingle{}\}\textquotesingle{} \mbox{\hyperlink{structFunction}{Function}} gets next tokens until finds \} which will be last in this function (depth will be the same as it was on start) \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a2e5d10a2e46c65398342f04605b18474}\label{parser_8c_a2e5d10a2e46c65398342f04605b18474}} 
+\index{parser.c@{parser.c}!for\_construction@{for\_construction}}
+\index{for\_construction@{for\_construction}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{for\_construction()}{for\_construction()}}
+{\footnotesize\ttfamily bool for\+\_\+construction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+F\+O\+R\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ ; $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ ; $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_adefbf9362416c20da1305bced7f3aa03}\label{parser_8c_adefbf9362416c20da1305bced7f3aa03}} 
+\index{parser.c@{parser.c}!freeBothCompareLists@{freeBothCompareLists}}
+\index{freeBothCompareLists@{freeBothCompareLists}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{freeBothCompareLists()}{freeBothCompareLists()}}
+{\footnotesize\ttfamily void free\+Both\+Compare\+Lists (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} frees \mbox{\hyperlink{structtypeCompareList}{type\+Compare\+List}} and var\+Compare\+List \mbox{\Hypertarget{parser_8c_a4e1e2c34b95e4277afad0a71ae7abbef}\label{parser_8c_a4e1e2c34b95e4277afad0a71ae7abbef}} 
+\index{parser.c@{parser.c}!function\_body@{function\_body}}
+\index{function\_body@{function\_body}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{function\_body()}{function\_body()}}
+{\footnotesize\ttfamily bool function\+\_\+body (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \} eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ if $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ else \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ for $<$\+F\+O\+R\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \+\_\+ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ return eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ return $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_ae4b2e47d4d4218e704a3680124212bb5}\label{parser_8c_ae4b2e47d4d4218e704a3680124212bb5}} 
+\index{parser.c@{parser.c}!function\_check@{function\_check}}
+\index{function\_check@{function\_check}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{function\_check()}{function\_check()}}
+{\footnotesize\ttfamily bool function\+\_\+check (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+C\+H\+E\+C\+K$>$ -\/$>$ func I\+D\+E\+N\+T\+I\+F\+I\+ER ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \} eol \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a064f483616b9f68e9c3836b7db7fb3fe}\label{parser_8c_a064f483616b9f68e9c3836b7db7fb3fe}} 
+\index{parser.c@{parser.c}!get\_and\_set\_token@{get\_and\_set\_token}}
+\index{get\_and\_set\_token@{get\_and\_set\_token}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{get\_and\_set\_token()}{get\_and\_set\_token()}}
+{\footnotesize\ttfamily void get\+\_\+and\+\_\+set\+\_\+token (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} allocates new token, moves pointer from current token to new token and calls get\+\_\+token() \mbox{\hyperlink{structFunction}{Function}} calls \mbox{\hyperlink{parser_8c_a05b088a42bdc596518618f9adad0ef19}{change\+Error\+Code()}} if something goes wrong \mbox{\Hypertarget{parser_8c_af5f27f9be109aecf18a4fbcd19d90416}\label{parser_8c_af5f27f9be109aecf18a4fbcd19d90416}} 
+\index{parser.c@{parser.c}!GET\_REPEAT\_FUNC\_RUN@{GET\_REPEAT\_FUNC\_RUN}}
+\index{GET\_REPEAT\_FUNC\_RUN@{GET\_REPEAT\_FUNC\_RUN}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{GET\_REPEAT\_FUNC\_RUN()}{GET\_REPEAT\_FUNC\_RUN()}}
+{\footnotesize\ttfamily bool G\+E\+T\+\_\+\+R\+E\+P\+E\+A\+T\+\_\+\+F\+U\+N\+C\+\_\+\+R\+UN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} ckecks run of statement If function returns true, I\+F\+Jcode20 will generate \begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns true if it\textquotesingle{}s second run of statement, and false if it\textquotesingle{}s first run of statement 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_adfe921605bc139b67a6cfacc55b769e3}\label{parser_8c_adfe921605bc139b67a6cfacc55b769e3}} 
+\index{parser.c@{parser.c}!if\_construction@{if\_construction}}
+\index{if\_construction@{if\_construction}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{if\_construction()}{if\_construction()}}
+{\footnotesize\ttfamily bool if\+\_\+construction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a16ceac8251a6156c689390f5b1071530}\label{parser_8c_a16ceac8251a6156c689390f5b1071530}} 
+\index{parser.c@{parser.c}!input\_parameters@{input\_parameters}}
+\index{input\_parameters@{input\_parameters}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{input\_parameters()}{input\_parameters()}}
+{\footnotesize\ttfamily bool input\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ) $<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_aaf5f4a73f1cca3089617ddfa82077d51}\label{parser_8c_aaf5f4a73f1cca3089617ddfa82077d51}} 
+\index{parser.c@{parser.c}!input\_single\_parameters@{input\_single\_parameters}}
+\index{input\_single\_parameters@{input\_single\_parameters}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{input\_single\_parameters()}{input\_single\_parameters()}}
+{\footnotesize\ttfamily bool input\+\_\+single\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER int/float/string , $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER int/float/string ) \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a2338a9fc66fb8c4b1c4c84170b06fb02}\label{parser_8c_a2338a9fc66fb8c4b1c4c84170b06fb02}} 
+\index{parser.c@{parser.c}!is\_closed\_bracket@{is\_closed\_bracket}}
+\index{is\_closed\_bracket@{is\_closed\_bracket}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{is\_closed\_bracket()}{is\_closed\_bracket()}}
+{\footnotesize\ttfamily int is\+\_\+closed\+\_\+bracket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ -\/$>$ ) $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ -\/$>$ eps
+
+\mbox{\hyperlink{structFunction}{Function}} counts closed brackets \begin{DoxyReturn}{Returns}
+counter of closed brackets 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{parser_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{parser.c@{parser.c}!main@{main}}
+\index{main@{main}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\begin{DoxyReturn}{Returns}
+function main returns error\+\_\+flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_aff4435989123fa7994b5c35fa65e2649}\label{parser_8c_aff4435989123fa7994b5c35fa65e2649}} 
+\index{parser.c@{parser.c}!output\_parameters@{output\_parameters}}
+\index{output\_parameters@{output\_parameters}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{output\_parameters()}{output\_parameters()}}
+{\footnotesize\ttfamily bool output\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ \{ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ( ) $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ( $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a6b4d7734e2f71edde29b60a43a3ddb63}\label{parser_8c_a6b4d7734e2f71edde29b60a43a3ddb63}} 
+\index{parser.c@{parser.c}!output\_single\_parameters@{output\_single\_parameters}}
+\index{output\_single\_parameters@{output\_single\_parameters}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{output\_single\_parameters()}{output\_single\_parameters()}}
+{\footnotesize\ttfamily bool output\+\_\+single\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ int/float/string , $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ int/float/string ) \{ \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a0c62b86e9477db986791fd57cc7d63bb}\label{parser_8c_a0c62b86e9477db986791fd57cc7d63bb}} 
+\index{parser.c@{parser.c}!program\_start@{program\_start}}
+\index{program\_start@{program\_start}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{program\_start()}{program\_start()}}
+{\footnotesize\ttfamily bool program\+\_\+start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+P\+R\+O\+G\+R\+A\+M\+\_\+\+S\+R\+A\+R\+T$>$ -\/$>$ package main eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+C\+H\+E\+C\+K$>$ eol eof \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a3315253c94016ff36b36a0a019d19a0c}\label{parser_8c_a3315253c94016ff36b36a0a019d19a0c}} 
+\index{parser.c@{parser.c}!return\_construction@{return\_construction}}
+\index{return\_construction@{return\_construction}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{return\_construction()}{return\_construction()}}
+{\footnotesize\ttfamily bool return\+\_\+construction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structoutParam}{output\+Params}}}]{out\+\_\+params }\end{DoxyParamCaption})}
+
+$<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ eol $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ eol $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ , $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$
+
+
+\begin{DoxyParams}{Parameters}
+{\em out\+\_\+params} & pointer on list of output function arguments (Sym\+Table) \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a1a0c0a54c0d22446a0900ac93903483a}\label{parser_8c_a1a0c0a54c0d22446a0900ac93903483a}} 
+\index{parser.c@{parser.c}!start\_block\_new\_line@{start\_block\_new\_line}}
+\index{start\_block\_new\_line@{start\_block\_new\_line}!parser.c@{parser.c}}
+\doxysubsubsection{\texorpdfstring{start\_block\_new\_line()}{start\_block\_new\_line()}}
+{\footnotesize\ttfamily bool start\+\_\+block\+\_\+new\+\_\+line (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+$<$\+S\+T\+A\+R\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+N\+E\+W\+\_\+\+L\+I\+N\+E$>$ -\/$>$ \{ eol \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}

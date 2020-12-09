@@ -62,49 +62,60 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">expression_translator.c File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>Functions for processing expressions.  
+<p><a class="el" href="structFunctions.html">Functions</a> for processing expressions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;expression_translator.h&quot;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a41bca4fb9d4e7719c0af66c40d4bf7ef"><td class="memItemLeft" align="right" valign="top"><a id="a41bca4fb9d4e7719c0af66c40d4bf7ef"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>Prec_table_sign_enum</b> { <b>S</b>, 
+<b>E</b>, 
+<b>R</b>, 
+<b>N</b>
+ }</td></tr>
+<tr class="separator:a41bca4fb9d4e7719c0af66c40d4bf7ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:aafe1c5adb004e07c746fd75391da8bf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structStack__tag.html">Stack_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#aafe1c5adb004e07c746fd75391da8bf1">createStack</a> ()</td></tr>
 <tr class="separator:aafe1c5adb004e07c746fd75391da8bf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac077b10de2cf0076d5df2a7e2d44bcdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a> (<a class="el" href="structStack__tag.html">Stack_t</a> **stack)</td></tr>
+<tr class="memitem:ac077b10de2cf0076d5df2a7e2d44bcdb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a> (<a class="el" href="structStack__tag.html">Stack_t</a> **<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:ac077b10de2cf0076d5df2a7e2d44bcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9eaaddeec870c4ad8c01ad7349e5b5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ae9eaaddeec870c4ad8c01ad7349e5b5c">resize</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack)</td></tr>
+<tr class="memitem:ae9eaaddeec870c4ad8c01ad7349e5b5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ae9eaaddeec870c4ad8c01ad7349e5b5c">resize</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:ae9eaaddeec870c4ad8c01ad7349e5b5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea5d3f0b63670e096832350615917181"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack, <a class="el" href="structtoken.html">Token</a> value)</td></tr>
+<tr class="memitem:aea5d3f0b63670e096832350615917181"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>, <a class="el" href="structtoken.html">Token</a> value)</td></tr>
 <tr class="separator:aea5d3f0b63670e096832350615917181"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad10645410672a16f67a961f95febfb36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtoken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ad10645410672a16f67a961f95febfb36">pop</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack)</td></tr>
+<tr class="memitem:ad10645410672a16f67a961f95febfb36"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtoken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ad10645410672a16f67a961f95febfb36">pop</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:ad10645410672a16f67a961f95febfb36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af204bc878317f1e5450895232fa6e632"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtoken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#af204bc878317f1e5450895232fa6e632">peek</a> (const <a class="el" href="structStack__tag.html">Stack_t</a> *stack)</td></tr>
+<tr class="memitem:af204bc878317f1e5450895232fa6e632"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structtoken.html">Token</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#af204bc878317f1e5450895232fa6e632">peek</a> (const <a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:af204bc878317f1e5450895232fa6e632"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e18527214463dff3452f19fb10cd0f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#a8e18527214463dff3452f19fb10cd0f6">implode</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack)</td></tr>
+<tr class="memitem:a8e18527214463dff3452f19fb10cd0f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#a8e18527214463dff3452f19fb10cd0f6">implode</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>)</td></tr>
 <tr class="separator:a8e18527214463dff3452f19fb10cd0f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a17ba43dca1e1c986aa36b6132523ba3c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#a17ba43dca1e1c986aa36b6132523ba3c">prec</a> (<a class="el" href="structtoken.html">Token</a> <a class="el" href="structtoken.html">token</a>)</td></tr>
-<tr class="separator:a17ba43dca1e1c986aa36b6132523ba3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45c14fd7c38d322bd7efa652d1ce2c70"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#a45c14fd7c38d322bd7efa652d1ce2c70">sort_to_postfix</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack, int deepVar, <a class="el" href="structVariable.html">variable</a> Var)</td></tr>
-<tr class="separator:a45c14fd7c38d322bd7efa652d1ce2c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab98150edd0490cc502008eee7ff271d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ab98150edd0490cc502008eee7ff271d6">generateCode</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *stack, int deepVar, <a class="el" href="structVariable.html">variable</a> Var, int incomingType)</td></tr>
+<tr class="memitem:a4c7605edd2c83a6ab72dcf0314f26546"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#a4c7605edd2c83a6ab72dcf0314f26546">get_index</a> (<a class="el" href="structtoken.html">Token</a> <a class="el" href="structtoken.html">token</a>)</td></tr>
+<tr class="separator:a4c7605edd2c83a6ab72dcf0314f26546"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aabd5b6b7b6c4b672012f2eb87887e67e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#aabd5b6b7b6c4b672012f2eb87887e67e">expression_processor</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>, int deepVar, <a class="el" href="structVariable.html">variable</a> Var)</td></tr>
+<tr class="separator:aabd5b6b7b6c4b672012f2eb87887e67e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab98150edd0490cc502008eee7ff271d6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="expression__translator_8c.html#ab98150edd0490cc502008eee7ff271d6">generateCode</a> (<a class="el" href="structStack__tag.html">Stack_t</a> *<a class="el" href="structstack.html">stack</a>, int deepVar, <a class="el" href="structVariable.html">variable</a> Var, int incomingType)</td></tr>
 <tr class="separator:ab98150edd0490cc502008eee7ff271d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:af0a7bd61a23d4f9863bb16afcd14ee7c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><b>prec_table</b> [7][7]</td></tr>
+<tr class="separator:af0a7bd61a23d4f9863bb16afcd14ee7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Functions for processing expressions. </p>
+<div class="textblock"><p><a class="el" href="structFunctions.html">Functions</a> for processing expressions. </p>
+<p>Header file for <a class="el" href="expression__translator_8c.html" title="Functions for processing expressions.">expression_translator.c</a> for processing expressions.</p>
 <p>IFJ Projekt 2020, Tým 55</p>
-<dl class="section author"><dt>Author</dt><dd>&lt;xstepa64&gt; Stepaniuk Roman, Bc. </dd>
-<dd>
-&lt;xpastu04&gt; Pastushenko Vladislav </dd>
-<dd>
-&lt;xbahda01&gt; Bahdanovich Viktoryia </dd>
-<dd>
-&lt;xtomas34&gt; Tomason Viktoryia </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>&lt;xpastu04&gt; Pastushenko Vladislav </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="aafe1c5adb004e07c746fd75391da8bf1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aafe1c5adb004e07c746fd75391da8bf1">&#9670;&nbsp;</a></span>createStack()</h2>
@@ -148,6 +159,48 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="aabd5b6b7b6c4b672012f2eb87887e67e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aabd5b6b7b6c4b672012f2eb87887e67e">&#9670;&nbsp;</a></span>expression_processor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int expression_processor </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structStack__tag.html">Stack_t</a> *&#160;</td>
+          <td class="paramname"><em>stack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>deepVar</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structVariable.html">variable</a>&#160;</td>
+          <td class="paramname"><em>Var</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Take stack of tokens, which contains expression, and create new stack of tokens, and controls if it has any errors. If it has error, returns -1, if no - returns type of expression </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
+    <tr><td class="paramname">Var</td><td>Pointer to the symbol table for variables </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An integer representing the expression type </dd></dl>
+
+</div>
+</div>
 <a id="ab98150edd0490cc502008eee7ff271d6"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ab98150edd0490cc502008eee7ff271d6">&#9670;&nbsp;</a></span>generateCode()</h2>
 
@@ -187,13 +240,38 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Prints assembly commands used to process expressions. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack of tokens with expression in postfix form </td></tr>
+    <tr><td class="paramname">stack</td><td><a class="el" href="structStack.html">Stack</a> of tokens with expression </td></tr>
     <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
     <tr><td class="paramname">Var</td><td>Pointer to the symbol table for variables </td></tr>
     <tr><td class="paramname">incomingType</td><td>An integer representing the expression type </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a4c7605edd2c83a6ab72dcf0314f26546"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c7605edd2c83a6ab72dcf0314f26546">&#9670;&nbsp;</a></span>get_index()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int get_index </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structtoken.html">Token</a>&#160;</td>
+          <td class="paramname"><em>token</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Check token and return its priority </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">token</td><td>Verifiable token </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>An integer representing the priority number </dd></dl>
 
 </div>
 </div>
@@ -214,7 +292,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Delete all empty blocks from the end of stack </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack which will be imploded </td></tr>
+    <tr><td class="paramname">stack</td><td><a class="el" href="structStack.html">Stack</a> which will be imploded </td></tr>
   </table>
   </dd>
 </dl>
@@ -238,7 +316,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Pop penultimate token from the stack </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack from which token will be pop. </td></tr>
+    <tr><td class="paramname">stack</td><td><a class="el" href="structStack.html">Stack</a> from which token will be pop. </td></tr>
   </table>
   </dd>
 </dl>
@@ -263,36 +341,11 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Pop token from the end of stack </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack from which token will be pop. </td></tr>
+    <tr><td class="paramname">stack</td><td><a class="el" href="structStack.html">Stack</a> from which token will be pop. </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Pop token </dd></dl>
-
-</div>
-</div>
-<a id="a17ba43dca1e1c986aa36b6132523ba3c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17ba43dca1e1c986aa36b6132523ba3c">&#9670;&nbsp;</a></span>prec()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">int prec </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structtoken.html">Token</a>&#160;</td>
-          <td class="paramname"><em>token</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Check token and return its priority </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">token</td><td>Verifiable token </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An integer representing the priority number </dd></dl>
 
 </div>
 </div>
@@ -323,7 +376,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 <p>Push token to the end of stack </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack to which token will be pushed. </td></tr>
+    <tr><td class="paramname">stack</td><td><a class="el" href="structStack.html">Stack</a> to which token will be pushed. </td></tr>
     <tr><td class="paramname">value</td><td>Pushed token </td></tr>
   </table>
   </dd>
@@ -355,47 +408,29 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a45c14fd7c38d322bd7efa652d1ce2c70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45c14fd7c38d322bd7efa652d1ce2c70">&#9670;&nbsp;</a></span>sort_to_postfix()</h2>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="af0a7bd61a23d4f9863bb16afcd14ee7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0a7bd61a23d4f9863bb16afcd14ee7c">&#9670;&nbsp;</a></span>prec_table</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int sort_to_postfix </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structStack__tag.html">Stack_t</a> *&#160;</td>
-          <td class="paramname"><em>stack</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>deepVar</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structVariable.html">variable</a>&#160;</td>
-          <td class="paramname"><em>Var</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
+          <td class="memname">int prec_table[7][7]</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Take stack of tokens, which contains expression, and create new stack of tokens, which will contain same expression but in postfix form. After that, it runs the generateCode function with new stack. Also gets and returns type of expression. Returns -1 if any error and sets error flags. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">stack</td><td>Stack of tokens with expression </td></tr>
-    <tr><td class="paramname">deepVar</td><td>Signifies the deep of the variable </td></tr>
-    <tr><td class="paramname">Var</td><td>Pointer to the symbol table for variables </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>An integer representing the expression type </dd></dl>
-
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line"> </div>
+<div class="line">    { R , S  , R , S , R , S , R }, </div>
+<div class="line">    { R , R  , R , S , R , S , R }, </div>
+<div class="line">    { S , S  , N , S , R , S , R }, </div>
+<div class="line">    { S , S  , S , S , E , S , N }, </div>
+<div class="line">    { R , R  , R , N , R , N , R }, </div>
+<div class="line">    { R , R  , R , N , R , N , R }, </div>
+<div class="line">    { S , S  , S , S , N , S , N }  </div>
+<div class="line">}</div>
+</div><!-- fragment -->
 </div>
 </div>
 </div><!-- contents -->

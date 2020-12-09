@@ -2,7 +2,7 @@
 \label{symtable_8c}\index{symtable.c@{symtable.c}}
 
 
-Symbol table implementation.  
+\mbox{\hyperlink{structSymbol}{Symbol}} table implementation.  
 
 
 {\ttfamily \#include \char`\"{}symtable.\+h\char`\"{}}\newline
@@ -116,7 +116,7 @@ void \mbox{\hyperlink{symtable_8c_a2c38a559943af3e7d68cae7f823e8996}{sym\+Tab\+\
 
 
 \doxysubsection{Detailed Description}
-Symbol table implementation. 
+\mbox{\hyperlink{structSymbol}{Symbol}} table implementation. 
 
 I\+FJ Projekt 2020, Tým 55
 
@@ -176,7 +176,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \hline
 {\em var2} & Type of the second variable \\
 \hline
-{\em deep\+Var} & Signifies the deep of the variable \\
+{\em deep\+Var} & Signifies the depth of the variable \\
 \hline
 {\em Var} & Signifies variable \\
 \hline
@@ -192,7 +192,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 
 \mbox{\hyperlink{structFunction}{Function}} allocates a new symbol table 
 \begin{DoxyParams}{Parameters}
-{\em Sym\+Table} & Symbol table to be initialized \\
+{\em Sym\+Table} & \mbox{\hyperlink{structSymbol}{Symbol}} table to be initialized \\
 \hline
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
@@ -221,7 +221,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \begin{DoxyParams}{Parameters}
 {\em token} & Token that contains information about a variable \\
 \hline
-{\em deep\+Var} & Signifies the deep of the variable \\
+{\em deep\+Var} & Signifies the depth of the variable \\
 \hline
 {\em Var} & Signifies variable \\
 \hline
@@ -236,7 +236,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \begin{DoxyParams}{Parameters}
 {\em token} & Token that contains information about a variable \\
 \hline
-{\em deep\+Var} & Signifies the deep of the variable \\
+{\em deep\+Var} & Signifies the depth of the variable \\
 \hline
 {\em Var} & Signifies variable \\
 \hline
@@ -275,7 +275,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \begin{DoxyParams}{Parameters}
 {\em token} & Token that contains information about a variable \\
 \hline
-{\em deep} & Signifies the deep of the variable \\
+{\em deep} & Signifies the depth of the variable \\
 \hline
 {\em gen\+Var} & Pointer to the symbol table for variables \\
 \hline
@@ -293,7 +293,7 @@ $<$xtomas34$>$ Tomason Viktoryia
 \begin{DoxyParams}{Parameters}
 {\em token} & Token that contains information about a variable \\
 \hline
-{\em deep\+Var} & Signifies the deep of the variable \\
+{\em deep\+Var} & Signifies the depth of the variable \\
 \hline
 {\em Var} & Pointer to the symbol table for variables \\
 \hline
@@ -307,11 +307,11 @@ $<$xtomas34$>$ Tomason Viktoryia
 \doxysubsubsection{\texorpdfstring{putTypeVariable()}{putTypeVariable()}}
 {\footnotesize\ttfamily bool put\+Type\+Variable (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep\+Var,  }\item[{int}]{var\+Type,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
 
-\mbox{\hyperlink{structFunction}{Function}} put the type of a variable according to its name and deep 
+\mbox{\hyperlink{structFunction}{Function}} put the type of a variable according to its name and depth 
 \begin{DoxyParams}{Parameters}
 {\em token} & Token that contains information about a variable \\
 \hline
-{\em deep\+Var} & Signifies the deep of the variable \\
+{\em deep\+Var} & Signifies the depth of the variable \\
 \hline
 {\em var\+Type} & Signifies the type of the variable \\
 \hline

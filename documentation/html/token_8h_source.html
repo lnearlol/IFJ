@@ -115,7 +115,7 @@ $(function() {
 <div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="keywordtype">int</span> get_token(<a class="code" href="structtoken.html">Token</a> *<a class="code" href="structtoken.html">token</a>);       <span class="comment">//function of processing a program code</span></div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">//release the allocated memory created with malloc()</span></div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="keywordtype">void</span> dtor(<a class="code" href="structtoken.html">Token</a> *first);</div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> changeErrorCode(<span class="keywordtype">int</span> code);</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="keywordtype">void</span> <a class="code" href="parser_8c.html#a05b088a42bdc596518618f9adad0ef19">changeErrorCode</a>(<span class="keywordtype">int</span> code);</div>
 <div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160; </div>
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160; </div>
@@ -136,32 +136,35 @@ $(function() {
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160; </div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
 <div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="comment">// EXPRESSION TRANLSATION</span></div>
-<div class="line"><a name="l00072"></a><span class="lineno"><a class="line" href="structStack__tag.html">   72</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structStack__tag.html">Stack_tag</a> {</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;    <a class="code" href="structtoken.html">Token</a> *data;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    <span class="keywordtype">size_t</span> size;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="keywordtype">size_t</span> top;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;} <a class="code" href="structStack__tag.html">Stack_t</a>;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<a class="code" href="structStack__tag.html">Stack_t</a> *expr;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<a class="code" href="structStack__tag.html">Stack_t</a>* <a class="code" href="expression__translator_8c.html#aafe1c5adb004e07c746fd75391da8bf1">createStack</a>();</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a>     (<a class="code" href="structStack__tag.html">Stack_t</a> **stack);</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">int</span>      <a class="code" href="expression__translator_8c.html#a45c14fd7c38d322bd7efa652d1ce2c70">sort_to_postfix</a> (<a class="code" href="structStack__tag.html">Stack_t</a> *stack, <span class="keywordtype">int</span> deepVar, <a class="code" href="structVariable.html">variable</a> Var);</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a>            (<a class="code" href="structStack__tag.html">Stack_t</a> *stack, <a class="code" href="structtoken.html">Token</a> value);</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="preprocessor">#define Backslash 92                    //Backslash ASCII code</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;<span class="preprocessor">#define ASCII_CODE_ARRAY_SIZE 4         //length of string containing ASCII code of character from literal string</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00076"></a><span class="lineno"><a class="line" href="structStack__tag.html">   76</a></span>&#160;<span class="keyword">typedef</span> <span class="keyword">struct </span><a class="code" href="structStack__tag.html">Stack_tag</a> {</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <a class="code" href="structtoken.html">Token</a> *data;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;    <span class="keywordtype">size_t</span> size;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">size_t</span> top;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;} <a class="code" href="structStack__tag.html">Stack_t</a>;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<a class="code" href="structStack__tag.html">Stack_t</a> *expr;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<a class="code" href="structStack__tag.html">Stack_t</a>* <a class="code" href="expression__translator_8c.html#aafe1c5adb004e07c746fd75391da8bf1">createStack</a>();</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a>     (<a class="code" href="structStack__tag.html">Stack_t</a> **<a class="code" href="structstack.html">stack</a>);</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">int</span>      <a class="code" href="expression__translator_8c.html#aabd5b6b7b6c4b672012f2eb87887e67e">expression_processor</a> (<a class="code" href="structStack__tag.html">Stack_t</a> *<a class="code" href="structstack.html">stack</a>, <span class="keywordtype">int</span> deepVar, <a class="code" href="structVariable.html">variable</a> Var);</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;<span class="keywordtype">void</span>     <a class="code" href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a>            (<a class="code" href="structStack__tag.html">Stack_t</a> *<a class="code" href="structstack.html">stack</a>, <a class="code" href="structtoken.html">Token</a> value);</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160; </div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="preprocessor">#define Backslash 92                    //Backslash ASCII code</span></div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;<span class="preprocessor">#define ASCII_CODE_ARRAY_SIZE 4         //length of string containing ASCII code of character from literal string</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="aparser_8c_html_a05b088a42bdc596518618f9adad0ef19"><div class="ttname"><a href="parser_8c.html#a05b088a42bdc596518618f9adad0ef19">changeErrorCode</a></div><div class="ttdeci">void changeErrorCode(int code)</div><div class="ttdef"><b>Definition:</b> parser.c:71</div></div>
 <div class="ttc" id="astructtoken_html"><div class="ttname"><a href="structtoken.html">token</a></div><div class="ttdef"><b>Definition:</b> token.h:41</div></div>
-<div class="ttc" id="asymtable_8c_html_a795bf80eca064085be1899437675bfbb"><div class="ttname"><a href="symtable_8c.html#a795bf80eca064085be1899437675bfbb">findVariableWithType</a></div><div class="ttdeci">variable findVariableWithType(Token *token, int deepVar, variable Var)</div><div class="ttdef"><b>Definition:</b> symtable.c:123</div></div>
-<div class="ttc" id="aexpression__translator_8c_html_ac077b10de2cf0076d5df2a7e2d44bcdb"><div class="ttname"><a href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a></div><div class="ttdeci">void deleteStack(Stack_t **stack)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:41</div></div>
+<div class="ttc" id="asymtable_8c_html_a795bf80eca064085be1899437675bfbb"><div class="ttname"><a href="symtable_8c.html#a795bf80eca064085be1899437675bfbb">findVariableWithType</a></div><div class="ttdeci">variable findVariableWithType(Token *token, int deepVar, variable Var)</div><div class="ttdef"><b>Definition:</b> symtable.c:125</div></div>
+<div class="ttc" id="aexpression__translator_8c_html_aabd5b6b7b6c4b672012f2eb87887e67e"><div class="ttname"><a href="expression__translator_8c.html#aabd5b6b7b6c4b672012f2eb87887e67e">expression_processor</a></div><div class="ttdeci">int expression_processor(Stack_t *stack, int deepVar, variable Var)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:162</div></div>
+<div class="ttc" id="astructstack_html"><div class="ttname"><a href="structstack.html">stack</a></div></div>
+<div class="ttc" id="aexpression__translator_8c_html_ac077b10de2cf0076d5df2a7e2d44bcdb"><div class="ttname"><a href="expression__translator_8c.html#ac077b10de2cf0076d5df2a7e2d44bcdb">deleteStack</a></div><div class="ttdeci">void deleteStack(Stack_t **stack)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:38</div></div>
 <div class="ttc" id="astructVariable_html"><div class="ttname"><a href="structVariable.html">Variable</a></div><div class="ttdef"><b>Definition:</b> token.h:55</div></div>
-<div class="ttc" id="aexpression__translator_8c_html_a45c14fd7c38d322bd7efa652d1ce2c70"><div class="ttname"><a href="expression__translator_8c.html#a45c14fd7c38d322bd7efa652d1ce2c70">sort_to_postfix</a></div><div class="ttdeci">int sort_to_postfix(Stack_t *stack, int deepVar, variable Var)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:141</div></div>
-<div class="ttc" id="aexpression__translator_8c_html_aafe1c5adb004e07c746fd75391da8bf1"><div class="ttname"><a href="expression__translator_8c.html#aafe1c5adb004e07c746fd75391da8bf1">createStack</a></div><div class="ttdeci">Stack_t * createStack()</div><div class="ttdef"><b>Definition:</b> expression_translator.c:21</div></div>
-<div class="ttc" id="astructStack__tag_html"><div class="ttname"><a href="structStack__tag.html">Stack_tag</a></div><div class="ttdef"><b>Definition:</b> token.h:72</div></div>
-<div class="ttc" id="aexpression__translator_8c_html_aea5d3f0b63670e096832350615917181"><div class="ttname"><a href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a></div><div class="ttdeci">void push(Stack_t *stack, Token value)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:66</div></div>
+<div class="ttc" id="aexpression__translator_8c_html_aafe1c5adb004e07c746fd75391da8bf1"><div class="ttname"><a href="expression__translator_8c.html#aafe1c5adb004e07c746fd75391da8bf1">createStack</a></div><div class="ttdeci">Stack_t * createStack()</div><div class="ttdef"><b>Definition:</b> expression_translator.c:18</div></div>
+<div class="ttc" id="astructStack__tag_html"><div class="ttname"><a href="structStack__tag.html">Stack_tag</a></div><div class="ttdef"><b>Definition:</b> token.h:76</div></div>
+<div class="ttc" id="aexpression__translator_8c_html_aea5d3f0b63670e096832350615917181"><div class="ttname"><a href="expression__translator_8c.html#aea5d3f0b63670e096832350615917181">push</a></div><div class="ttdeci">void push(Stack_t *stack, Token value)</div><div class="ttdef"><b>Definition:</b> expression_translator.c:63</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
