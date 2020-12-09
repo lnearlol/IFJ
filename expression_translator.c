@@ -153,15 +153,13 @@ int get_index(Token token) {
 
 /**
  * Take stack of tokens, which contains expression, and create new stack of tokens,
- * which will contain same expression but in postfix form.
- * After that, it runs the generateCode function with new stack.
- * Also gets and returns type of expression. Returns -1 if any error and sets error flags.
- * @param stack Stack of tokens with expression
+ * and controls if it has any errors. If it has error, returns -1, if no - returns type
+ * of expression
  * @param deepVar Signifies the deep of the variable
  * @param Var Pointer to the symbol table for variables
  * @return An integer representing the expression type
  */
-int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
+int expression_processor(Stack_t *stack, int deepVar, variable Var) {
 
         if (stack->top == 0) {
                 deleteStack(&stack);
@@ -254,7 +252,7 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
 
 /**
  * Prints assembly commands used to process expressions.
- * @param stack Stack of tokens with expression in postfix form
+ * @param stack Stack of tokens with expression
  * @param deepVar Signifies the deep of the variable
  * @param Var Pointer to the symbol table for variables
  * @param incomingType An integer representing the expression type
@@ -268,10 +266,8 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
         breaker.data = "<";
         Stack_t* tmpStack = createStack();
 
-        //printf("stack->data[stack->top].data %s, stack->size = %ld \n", stack->data[stack->top-1].data, stack->size);
         push(stack, prevToken);
         push(tmpStack, prevToken);
-        //printf("tmpStack->top %ld\n",tmpStack->top);
         int type = 0;
 
         int i = 0;
@@ -288,14 +284,6 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
             }
             int sign = prec_table[get_index(prevToken)][get_index(actualToken)];
             bool checker;
-
-            /*printf("Stack {");
-            for (int i2 = 0; i2 < i+1; i2 ++) printf("[%s],",stack->data[i2].data);
-            printf("}\n");
-            printf("tmpStack {");
-            for (int i3 = 0; i3 < tmpStack->top; i3 ++) printf("[%s],",tmpStack->data[i3].data);
-            printf("}\n");*/
-
             switch (sign)
             {
             case S: // <
@@ -421,15 +409,13 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
             case N: // err
                 if (prevToken.type == TOKEN_TYPE_EOL && actualToken.type == TOKEN_TYPE_EOL) break;
 
-                //printf("ERR\n");
                 deleteStack(&tmpStack);
-                changeErrorCode(5);
+                changeErrorCode(2);
                 return;
                 break;
             default:
                 break;
             }
-            //printf("\n");
             if (prevToken.type == TOKEN_TYPE_EOL && actualToken.type == TOKEN_TYPE_EOL) break;
 
         }

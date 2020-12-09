@@ -69,6 +69,10 @@ variable findVariableWithType(Token *token, int deepVar, variable Var);
 
 
 // EXPRESSION TRANLSATION
+
+/**
+ * @struct Stack of tokens
+ */
 typedef struct Stack_tag {
     Token *data;
     size_t size;
@@ -79,7 +83,7 @@ Stack_t *expr;
 
 Stack_t* createStack();
 void     deleteStack     (Stack_t **stack);
-int      sort_to_postfix (Stack_t *stack, int deepVar, variable Var);
+int      expression_processor (Stack_t *stack, int deepVar, variable Var);
 void     push            (Stack_t *stack, Token value);
 
 
