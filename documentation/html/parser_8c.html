@@ -71,7 +71,7 @@ $(function() {
 
 <p>Parser and function main implementation.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;parser.h&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="parser_8h_source.html">parser.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -280,7 +280,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;ALLOWED_EOL&gt; -&gt; eol &lt;ALLOWED_EOL&gt; &lt;ALLOWED_EOL&gt; -&gt; eps </p>
+<p>Might be eol rule. </p>
 
 </div>
 </div>
@@ -341,8 +341,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;COUNT_OPERANDS&gt; -&gt; &lt;IF_CONSTRUCTION&gt; &lt;COUNT_OPERANDS&gt; -&gt; &lt;IF_CONSTRUCTION&gt; , &lt;COUNT_OPERANDS&gt;</p>
-<p>function for recursive calling expressions + count of operands </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunction.html">Function</a> for recursive calling expressions + count of operands</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">end_condition</td><td>anticipation end condition of the function. If in result current token-&gt;type will be the same as end_condition, function will return true, else function will return false. </td></tr>
   </table>
@@ -414,7 +414,6 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;DEFINE_FUNC&gt; -&gt; &lt;DEFINE_OPERANDS&gt; := &lt;COUNT_OPERANDS&gt; &lt;DEFINE_FUNC&gt; -&gt; &lt;DEFINE_OPERANDS&gt; = &lt;COUNT_OPERANDS&gt; DEFINCE_FUNC -&gt; &lt;DEFINE_OPERANDS&gt; ( &lt;EXPRESSION_FUNC_ARGUMENTS&gt;</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">end_condition</td><td>anticipation end condition of the function. If in result current token-&gt;type will be the same as end_condition, function will return true, else function will return false. </td></tr>
@@ -443,7 +442,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;DEFINE_OPERANDS&gt; -&gt; IDENTIFIER &lt;DEFINE_OPERANDS&gt; -&gt; IDENTIFIER , &lt;DEFINE_OPERANDS&gt; &lt;DEFINE_OPERANDS&gt; -&gt; COMMAND_FUNCTION &lt;DEFINE_OPERANDS&gt; -&gt; COMMAND_FUNCTION , &lt;DEFINE_OPERANDS&gt; &lt;DEFINE_OPERANDS&gt; -&gt; _ &lt;DEFINE_OPERANDS&gt; -&gt; _ , &lt;DEFINE_OPERANDS&gt;</p>
+<p>Parsing left side of expression according to the LL grammar. Adding left-side variables to SymTable.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">func</td><td>is true when function is allowed </td></tr>
@@ -529,8 +528,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;IF_CONSTRUCTION&gt; -&gt; ( &lt;ALLOWED_EOL&gt; &lt;IF_CONSTRUCTION&gt; &lt;IF_CONSTRUCTION&gt; -&gt; IDENTIFIER/LITERAL/COMMAND_FUNCTION &lt;IS_CLOSED_BRACKET&gt; &lt;IF_CONSTRUCTION&gt; -&gt; IDENTIFIER/LITERAL/COMMAND_FUNCTION &lt;IS_CLOSED_BRACKET&gt; OPERATOR &lt;ALLOWED_EOL&gt; &lt;IF_CONSTRUCTION&gt; &lt;IF_CONSTRUCTION&gt; -&gt; IDENTIFIER/COMMAND_FUNCTION &lt;IS_CLOSED_BRACKET&gt; ( &lt;ALLOWED_EOL&gt; &lt;EXPRESSION_FUNC_ARGUMENTS&gt;</p>
-<p><a class="el" href="structFunction.html">Function</a> parses syntax of expressions </p><dl class="params"><dt>Parameters</dt><dd>
+<p><a class="el" href="structFunction.html">Function</a> basically parses syntax of expressions and calling expression_translator.</p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">end_condition</td><td>anticipation end condition of the function. If in result current token-&gt;type will be the same as end_condition, function will return true, else function will return false. </td></tr>
   </table>
@@ -554,7 +553,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;EXPRESSION_FUNC_ARGUMENTS&gt; -&gt; ) &lt;EXPRESSION_FUNC_ARGUMENTS&gt; -&gt; &lt;EXPRESSION_FUNC_SINGLE_ARGUMENT&gt; </p>
+<p><a class="el" href="structFunction.html">Function</a> parsing function arguments and checks if function with same name existing. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -583,7 +582,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;EXPRESSION_FUNC_SINGLE_ARGUMENT&gt; -&gt; IDENTIFIER/LITERAL/COMMAND_FUNCTION ) &lt;EXPRESSION_FUNC_SINGLE_ARGUMENT&gt; -&gt; IDENTIFIER/LITERAL/COMMAND_FUNCTION , &lt;EXPRESSION_FUNC_SINGLE_ARGUMENT&gt;</p>
+<p><a class="el" href="structFunction.html">Function</a> parsing single func parameters and check if function has paramaters with the same type in SymTable.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">arg_check</td><td>pointer on list of input function arguments (SymTable) </td></tr>
@@ -627,7 +626,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;FOR_CONSTRUCTION&gt; -&gt; &lt;DEFINE_FUNC&gt; ; &lt;IF_CONSTRUCTION&gt; ; &lt;DEFINE_FUNC&gt; { eol &lt;FUNCTION_BODY&gt; </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Parsing for rule according LL grammar. Creating scopes and jumps if IFJcode20. Creating bonus depth-label for for-header. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -663,7 +662,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;FUNCTION_BODY&gt; -&gt; } eol &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; { eol &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; eol &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; if &lt;IF_CONSTRUCTION&gt; &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; else { eol &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; for &lt;FOR_CONSTRUCTION&gt; &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; IDENTIFIER &lt;DEFINE_FUNC&gt; &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; COMMAND_FUNCTION &lt;DEFINE_FUNC&gt; &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; _ &lt;DEFINE_FUNC&gt; &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; return eol &lt;FUNCTION_BODY&gt; &lt;FUNCTION_BODY&gt; -&gt; return &lt;RETURN_CONSTRUCTION&gt; &lt;FUNCTION_BODY&gt; </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>The function is concerned with syntactic and semantic validation of the body of function. Changes the error code in case of need. Checks according to LL rules. Has two body_runs: first writes all variables to var SymTable-&gt;genVar to write them all before second ran starts. Second rand of function generates IFJcode20. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -681,7 +680,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;FUNCTION_CHECK&gt; -&gt; func IDENTIFIER ( &lt;ALLOWED_EOL&gt; &lt;INPUT_PARAMETERS&gt; &lt;OUTPUT_PARAMETERS&gt; { eol &lt;FUNCTION_BODY&gt; } eol </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Parsing header of fuction according to LL rules. Write function name to the SymTable. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -717,7 +716,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p><a class="el" href="structFunction.html">Function</a> ckecks run of statement If function returns true, IFJcode20 will generate </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="structFunction.html">Function</a> returns true if it's second run of statement, and false if it's first run of statement </dd></dl>
+<p><a class="el" href="structFunction.html">Function</a> ckecks run of function_body If function returns true, IFJcode20 will generate </p><dl class="section return"><dt>Returns</dt><dd><a class="el" href="structFunction.html">Function</a> returns true if it's second run of function_body, and false if it's first run of function_body </dd></dl>
 
 </div>
 </div>
@@ -735,7 +734,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;IF_CONSTRUCTION&gt; -&gt; &lt;IF_CONSTRUCTION&gt; { eol &lt;FUNCTION_BODY&gt; </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Parsing if-rule according LL grammar. Creating scopes and jumps in IFJcode20. Working with else_stack. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -753,7 +752,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;INPUT_PARAMETERS&gt; -&gt; ) &lt;INPUT_PARAMETERS&gt; -&gt; &lt;INPUT_SINGLE_PARAMETERS&gt; </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Parsing function input parameters. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -771,7 +770,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;INPUT_SINGLE_PARAMETERS&gt; -&gt; IDENTIFIER int/float/string , &lt;INPUT_SINGLE_PARAMETERS&gt; &lt;INPUT_SINGLE_PARAMETERS&gt; -&gt; IDENTIFIER int/float/string ) </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Adding each input parameter to the SymTable. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -789,8 +788,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;IS_CLOSED_BRACKET&gt; -&gt; ) &lt;IS_CLOSED_BRACKET&gt; &lt;IS_CLOSED_BRACKET&gt; -&gt; eps</p>
-<p><a class="el" href="structFunction.html">Function</a> counts closed brackets </p><dl class="section return"><dt>Returns</dt><dd>counter of closed brackets </dd></dl>
+<p><a class="el" href="structFunction.html">Function</a> counts closed brackets</p>
+<dl class="section return"><dt>Returns</dt><dd>counter of closed brackets </dd></dl>
 
 </div>
 </div>
@@ -808,7 +807,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="section return"><dt>Returns</dt><dd>function main returns error_flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code </dd></dl>
+<p>Allocates and frees all structures, stacks and start of parsing. </p><dl class="section return"><dt>Returns</dt><dd>function main returns error_flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code </dd></dl>
 
 </div>
 </div>
@@ -826,7 +825,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;OUTPUT_PARAMETERS&gt; -&gt; { &lt;OUTPUT_PARAMETERS&gt; -&gt; ( ) &lt;OUTPUT_PARAMETERS&gt; -&gt; ( &lt;OUTPUT_SINGLE_PARAMETERS&gt; </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>The function parse output function parameters. Changes the error code in case of need. Checks according to LL rules. In first PRAGRAM_RUN write parameters to SymTable. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -844,7 +843,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;OUTPUT_SINGLE_PARAMETERS&gt; -&gt; int/float/string , &lt;OUTPUT_SINGLE_PARAMETERS&gt; &lt;OUTPUT_SINGLE_PARAMETERS&gt; -&gt; int/float/string ) { </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>The function parse output function parameters. Changes the error code in case of need. Checks according to LL rules. In first PRAGRAM_RUN write parameters to SymTable. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -862,7 +861,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;PROGRAM_SRART&gt; -&gt; package main eol &lt;FUNCTION_CHECK&gt; eol eof </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Start parsing according to the LL rules. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>
@@ -881,8 +880,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;RETURN_CONSTRUCTION&gt; -&gt; eol &lt;RETURN_CONSTRUCTION&gt; -&gt; &lt;IF_CONSTRUCTION&gt; eol &lt;RETURN_CONSTRUCTION&gt; -&gt; &lt;IF_CONSTRUCTION&gt; , &lt;RETURN_CONSTRUCTION&gt;</p>
-<dl class="params"><dt>Parameters</dt><dd>
+<p>Parsing all returns according to LL grammar. In IFJcode20 push all return values on stack. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">out_params</td><td>pointer on list of output function arguments (SymTable) </td></tr>
   </table>
@@ -906,7 +904,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><b>for_counter</b> = -1</
         </tr>
       </table>
 </div><div class="memdoc">
-<p>&lt;START_BLOCK_NEW_LINE&gt; -&gt; { eol </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
+<p>Open block new line function. </p><dl class="section return"><dt>Returns</dt><dd>function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error_flag </dd></dl>
 
 </div>
 </div>

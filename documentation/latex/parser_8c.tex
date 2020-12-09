@@ -165,7 +165,7 @@ $<$xstepa64$>$ Stepaniuk Roman, Bc.
 \doxysubsubsection{\texorpdfstring{allowed\_eol()}{allowed\_eol()}}
 {\footnotesize\ttfamily void allowed\+\_\+eol (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ -\/$>$ eol $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ -\/$>$ eps \mbox{\Hypertarget{parser_8c_a05b088a42bdc596518618f9adad0ef19}\label{parser_8c_a05b088a42bdc596518618f9adad0ef19}} 
+Might be eol rule. \mbox{\Hypertarget{parser_8c_a05b088a42bdc596518618f9adad0ef19}\label{parser_8c_a05b088a42bdc596518618f9adad0ef19}} 
 \index{parser.c@{parser.c}!changeErrorCode@{changeErrorCode}}
 \index{changeErrorCode@{changeErrorCode}!parser.c@{parser.c}}
 \doxysubsubsection{\texorpdfstring{changeErrorCode()}{changeErrorCode()}}
@@ -191,9 +191,9 @@ $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ -\/$>$ eol $<$\+A\+L\+L\+O\+W\+E\+D\+
 \doxysubsubsection{\texorpdfstring{count\_operands()}{count\_operands()}}
 {\footnotesize\ttfamily bool count\+\_\+operands (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition }\end{DoxyParamCaption})}
 
-$<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ , $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$
+\mbox{\hyperlink{structFunction}{Function}} for recursive calling expressions + count of operands
 
-function for recursive calling expressions + count of operands 
+
 \begin{DoxyParams}{Parameters}
 {\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
 \hline
@@ -221,8 +221,6 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{define\_func()}{define\_func()}}
 {\footnotesize\ttfamily bool define\+\_\+func (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition,  }\item[{bool}]{declare,  }\item[{bool}]{equating,  }\item[{bool}]{func }\end{DoxyParamCaption})}
 
-$<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ \+:= $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ = $<$\+C\+O\+U\+N\+T\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ D\+E\+F\+I\+N\+C\+E\+\_\+\+F\+U\+NC -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ ( $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$
-
 
 \begin{DoxyParams}{Parameters}
 {\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
@@ -243,7 +241,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{define\_operands()}{define\_operands()}}
 {\footnotesize\ttfamily bool define\+\_\+operands (\begin{DoxyParamCaption}\item[{int}]{func }\end{DoxyParamCaption})}
 
-$<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ \+\_\+ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$ -\/$>$ \+\_\+ , $<$\+D\+E\+F\+I\+N\+E\+\_\+\+O\+P\+E\+R\+A\+N\+D\+S$>$
+Parsing left side of expression according to the LL grammar. Adding left-\/side variables to Sym\+Table.
 
 
 \begin{DoxyParams}{Parameters}
@@ -282,9 +280,9 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{expression()}{expression()}}
 {\footnotesize\ttfamily bool expression (\begin{DoxyParamCaption}\item[{int}]{end\+\_\+condition }\end{DoxyParamCaption})}
 
-$<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ O\+P\+E\+R\+A\+T\+OR $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$
+\mbox{\hyperlink{structFunction}{Function}} basically parses syntax of expressions and calling expression\+\_\+translator.
 
-\mbox{\hyperlink{structFunction}{Function}} parses syntax of expressions 
+
 \begin{DoxyParams}{Parameters}
 {\em end\+\_\+condition} & anticipation end condition of the function. If in result current token-\/$>$type will be the same as end\+\_\+condition, function will return true, else function will return false. \\
 \hline
@@ -298,13 +296,16 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{expression\_func\_arguments()}{expression\_func\_arguments()}}
 {\footnotesize\ttfamily bool expression\+\_\+func\+\_\+arguments (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$ -\/$>$ ) $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T\+S$>$ -\/$>$ $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ \mbox{\Hypertarget{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}\label{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}} 
+\mbox{\hyperlink{structFunction}{Function}} parsing function arguments and checks if function with same name existing. \begin{DoxyReturn}{Returns}
+function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
+\end{DoxyReturn}
+\mbox{\Hypertarget{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}\label{parser_8c_a0dccce9137f4c65008d5ee0ee81488aa}} 
 \index{parser.c@{parser.c}!expression\_func\_single\_argument@{expression\_func\_single\_argument}}
 \index{expression\_func\_single\_argument@{expression\_func\_single\_argument}!parser.c@{parser.c}}
 \doxysubsubsection{\texorpdfstring{expression\_func\_single\_argument()}{expression\_func\_single\_argument()}}
 {\footnotesize\ttfamily bool expression\+\_\+func\+\_\+single\+\_\+argument (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structinParam}{input\+Params}}}]{args\+\_\+check,  }\item[{\mbox{\hyperlink{structoutParam}{output\+Params}}}]{args\+\_\+output }\end{DoxyParamCaption})}
 
-$<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON ) $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+E\+R/\+L\+I\+T\+E\+R\+A\+L/\+C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON , $<$\+E\+X\+P\+R\+E\+S\+S\+I\+O\+N\+\_\+\+F\+U\+N\+C\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+A\+R\+G\+U\+M\+E\+N\+T$>$
+\mbox{\hyperlink{structFunction}{Function}} parsing single func parameters and check if function has paramaters with the same type in Sym\+Table.
 
 
 \begin{DoxyParams}{Parameters}
@@ -331,7 +332,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{for\_construction()}{for\_construction()}}
 {\footnotesize\ttfamily bool for\+\_\+construction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+F\+O\+R\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ ; $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ ; $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+Parsing for rule according LL grammar. Creating scopes and jumps if I\+F\+Jcode20. Creating bonus depth-\/label for for-\/header. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_adefbf9362416c20da1305bced7f3aa03}\label{parser_8c_adefbf9362416c20da1305bced7f3aa03}} 
@@ -346,7 +347,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{function\_body()}{function\_body()}}
 {\footnotesize\ttfamily bool function\+\_\+body (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \} eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ if $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ else \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ for $<$\+F\+O\+R\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ C\+O\+M\+M\+A\+N\+D\+\_\+\+F\+U\+N\+C\+T\+I\+ON $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ \+\_\+ $<$\+D\+E\+F\+I\+N\+E\+\_\+\+F\+U\+N\+C$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ return eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ -\/$>$ return $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+The function is concerned with syntactic and semantic validation of the body of function. Changes the error code in case of need. Checks according to LL rules. Has two body\+\_\+runs\+: first writes all variables to var Sym\+Table-\/$>$gen\+Var to write them all before second ran starts. Second rand of function generates I\+F\+Jcode20. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_ae4b2e47d4d4218e704a3680124212bb5}\label{parser_8c_ae4b2e47d4d4218e704a3680124212bb5}} 
@@ -355,7 +356,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{function\_check()}{function\_check()}}
 {\footnotesize\ttfamily bool function\+\_\+check (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+C\+H\+E\+C\+K$>$ -\/$>$ func I\+D\+E\+N\+T\+I\+F\+I\+ER ( $<$\+A\+L\+L\+O\+W\+E\+D\+\_\+\+E\+O\+L$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \} eol \begin{DoxyReturn}{Returns}
+Parsing header of fuction according to LL rules. Write function name to the Sym\+Table. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a064f483616b9f68e9c3836b7db7fb3fe}\label{parser_8c_a064f483616b9f68e9c3836b7db7fb3fe}} 
@@ -370,8 +371,8 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{GET\_REPEAT\_FUNC\_RUN()}{GET\_REPEAT\_FUNC\_RUN()}}
 {\footnotesize\ttfamily bool G\+E\+T\+\_\+\+R\+E\+P\+E\+A\+T\+\_\+\+F\+U\+N\+C\+\_\+\+R\+UN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\mbox{\hyperlink{structFunction}{Function}} ckecks run of statement If function returns true, I\+F\+Jcode20 will generate \begin{DoxyReturn}{Returns}
-\mbox{\hyperlink{structFunction}{Function}} returns true if it\textquotesingle{}s second run of statement, and false if it\textquotesingle{}s first run of statement 
+\mbox{\hyperlink{structFunction}{Function}} ckecks run of function\+\_\+body If function returns true, I\+F\+Jcode20 will generate \begin{DoxyReturn}{Returns}
+\mbox{\hyperlink{structFunction}{Function}} returns true if it\textquotesingle{}s second run of function\+\_\+body, and false if it\textquotesingle{}s first run of function\+\_\+body 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_adfe921605bc139b67a6cfacc55b769e3}\label{parser_8c_adfe921605bc139b67a6cfacc55b769e3}} 
 \index{parser.c@{parser.c}!if\_construction@{if\_construction}}
@@ -379,7 +380,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{if\_construction()}{if\_construction()}}
 {\footnotesize\ttfamily bool if\+\_\+construction (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ \{ eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+B\+O\+D\+Y$>$ \begin{DoxyReturn}{Returns}
+Parsing if-\/rule according LL grammar. Creating scopes and jumps in I\+F\+Jcode20. Working with else\+\_\+stack. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a16ceac8251a6156c689390f5b1071530}\label{parser_8c_a16ceac8251a6156c689390f5b1071530}} 
@@ -388,7 +389,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{input\_parameters()}{input\_parameters()}}
 {\footnotesize\ttfamily bool input\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ) $<$\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \begin{DoxyReturn}{Returns}
+Parsing function input parameters. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_aaf5f4a73f1cca3089617ddfa82077d51}\label{parser_8c_aaf5f4a73f1cca3089617ddfa82077d51}} 
@@ -397,7 +398,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{input\_single\_parameters()}{input\_single\_parameters()}}
 {\footnotesize\ttfamily bool input\+\_\+single\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER int/float/string , $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+I\+N\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ I\+D\+E\+N\+T\+I\+F\+I\+ER int/float/string ) \begin{DoxyReturn}{Returns}
+Adding each input parameter to the Sym\+Table. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a2338a9fc66fb8c4b1c4c84170b06fb02}\label{parser_8c_a2338a9fc66fb8c4b1c4c84170b06fb02}} 
@@ -406,9 +407,9 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{is\_closed\_bracket()}{is\_closed\_bracket()}}
 {\footnotesize\ttfamily int is\+\_\+closed\+\_\+bracket (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ -\/$>$ ) $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ $<$\+I\+S\+\_\+\+C\+L\+O\+S\+E\+D\+\_\+\+B\+R\+A\+C\+K\+E\+T$>$ -\/$>$ eps
+\mbox{\hyperlink{structFunction}{Function}} counts closed brackets
 
-\mbox{\hyperlink{structFunction}{Function}} counts closed brackets \begin{DoxyReturn}{Returns}
+\begin{DoxyReturn}{Returns}
 counter of closed brackets 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{parser_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
@@ -417,7 +418,7 @@ counter of closed brackets
 \doxysubsubsection{\texorpdfstring{main()}{main()}}
 {\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-\begin{DoxyReturn}{Returns}
+Allocates and frees all structures, stacks and start of parsing. \begin{DoxyReturn}{Returns}
 function main returns error\+\_\+flag. Error flag will be 0 if there was no mistake in program, else it will be number of error code 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_aff4435989123fa7994b5c35fa65e2649}\label{parser_8c_aff4435989123fa7994b5c35fa65e2649}} 
@@ -426,7 +427,7 @@ function main returns error\+\_\+flag. Error flag will be 0 if there was no mist
 \doxysubsubsection{\texorpdfstring{output\_parameters()}{output\_parameters()}}
 {\footnotesize\ttfamily bool output\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ \{ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ( ) $<$\+O\+U\+T\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ ( $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ \begin{DoxyReturn}{Returns}
+The function parse output function parameters. Changes the error code in case of need. Checks according to LL rules. In first P\+R\+A\+G\+R\+A\+M\+\_\+\+R\+UN write parameters to Sym\+Table. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a6b4d7734e2f71edde29b60a43a3ddb63}\label{parser_8c_a6b4d7734e2f71edde29b60a43a3ddb63}} 
@@ -435,7 +436,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{output\_single\_parameters()}{output\_single\_parameters()}}
 {\footnotesize\ttfamily bool output\+\_\+single\+\_\+parameters (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ int/float/string , $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ $<$\+O\+U\+T\+P\+U\+T\+\_\+\+S\+I\+N\+G\+L\+E\+\_\+\+P\+A\+R\+A\+M\+E\+T\+E\+R\+S$>$ -\/$>$ int/float/string ) \{ \begin{DoxyReturn}{Returns}
+The function parse output function parameters. Changes the error code in case of need. Checks according to LL rules. In first P\+R\+A\+G\+R\+A\+M\+\_\+\+R\+UN write parameters to Sym\+Table. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a0c62b86e9477db986791fd57cc7d63bb}\label{parser_8c_a0c62b86e9477db986791fd57cc7d63bb}} 
@@ -444,7 +445,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{program\_start()}{program\_start()}}
 {\footnotesize\ttfamily bool program\+\_\+start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+P\+R\+O\+G\+R\+A\+M\+\_\+\+S\+R\+A\+R\+T$>$ -\/$>$ package main eol $<$\+F\+U\+N\+C\+T\+I\+O\+N\+\_\+\+C\+H\+E\+C\+K$>$ eol eof \begin{DoxyReturn}{Returns}
+Start parsing according to the LL rules. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
 \mbox{\Hypertarget{parser_8c_a3315253c94016ff36b36a0a019d19a0c}\label{parser_8c_a3315253c94016ff36b36a0a019d19a0c}} 
@@ -453,9 +454,7 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{return\_construction()}{return\_construction()}}
 {\footnotesize\ttfamily bool return\+\_\+construction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structoutParam}{output\+Params}}}]{out\+\_\+params }\end{DoxyParamCaption})}
 
-$<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ eol $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ eol $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ -\/$>$ $<$\+I\+F\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$ , $<$\+R\+E\+T\+U\+R\+N\+\_\+\+C\+O\+N\+S\+T\+R\+U\+C\+T\+I\+O\+N$>$
-
-
+Parsing all returns according to LL grammar. In I\+F\+Jcode20 push all return values on stack. 
 \begin{DoxyParams}{Parameters}
 {\em out\+\_\+params} & pointer on list of output function arguments (Sym\+Table) \\
 \hline
@@ -469,6 +468,6 @@ function returns true if it goes without any syntax/semantic mistakes, else it r
 \doxysubsubsection{\texorpdfstring{start\_block\_new\_line()}{start\_block\_new\_line()}}
 {\footnotesize\ttfamily bool start\+\_\+block\+\_\+new\+\_\+line (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
 
-$<$\+S\+T\+A\+R\+T\+\_\+\+B\+L\+O\+C\+K\+\_\+\+N\+E\+W\+\_\+\+L\+I\+N\+E$>$ -\/$>$ \{ eol \begin{DoxyReturn}{Returns}
+Open block new line function. \begin{DoxyReturn}{Returns}
 function returns true if it goes without any syntax/semantic mistakes, else it returns false and changes error\+\_\+flag 
 \end{DoxyReturn}
