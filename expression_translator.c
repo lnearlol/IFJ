@@ -169,10 +169,10 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
         }
 
 
-        implode(stack);
+        //implode(stack);
         int result = 0;
         bool logical_type_flag = false;
-        for (int i = 0; i < stack->size; i++) {
+        for (int i = 0; i < stack->top; i++) {
                 Token token = stack->data[i];
                 if (token.type == TOKEN_TYPE_LITERAL_FLOAT ||
                     token.type == TOKEN_TYPE_LITERAL_INT ||
@@ -210,8 +210,16 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                                 }
                              }
                         }
-                } else if (token.type == TOKEN_TYPE_LEFT_BRACKET || token.type == TOKEN_TYPE_RIGHT_BRACKET) {
-                        continue;
+                } else if (token.type == TOKEN_TYPE_LEFT_BRACKET){
+                } else if (token.type == TOKEN_TYPE_RIGHT_BRACKET) {
+                    if (logical_type_flag) {
+                        if (i != stack->top - 1) {
+                            logical_type_flag = false;
+                            changeErrorCode(5);
+                            result = -1;
+                            break;
+                        }
+                    }
                 } else if (token.type == TOKEN_TYPE_MATH_OPERATOR || token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
                         // Check if logical expression. If expression includes few comparing operators it returns an error
                         if (token.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
@@ -236,8 +244,10 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
                 else break;
         }
 
-        if (result != -1 && GET_REPEAT_FUNC_RUN()) generateCode(stack, deepVar, Var, result);
+        //printf("result %d\n", result);
+        if (result != -1) generateCode(stack, deepVar, Var, result);
         deleteStack(&stack);
+        if (logical_type_flag) result = 4;
         return result;
 
 }
@@ -250,25 +260,21 @@ int sort_to_postfix(Stack_t *stack, int deepVar, variable Var) {
  * @param incomingType An integer representing the expression type
  */
 void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
-        if (stack->top == 1) {
-            printf("PUSHS ");
-            GEN_WRITE_VAR_LITERAL(&stack->data[0], deepVar);
-            printf("\n\n");
-            return;
-        }
         Token prevToken;
         prevToken.type = TOKEN_TYPE_EOL;
+        prevToken.data = "x";
         Token breaker;
         breaker.type = TOKEN_TYPE_END_BLOCK;
+        breaker.data = "<";
         Stack_t* tmpStack = createStack();
 
+        //printf("stack->data[stack->top].data %s, stack->size = %ld \n", stack->data[stack->top-1].data, stack->size);
         push(stack, prevToken);
         push(tmpStack, prevToken);
         //printf("tmpStack->top %ld\n",tmpStack->top);
         int type = 0;
 
         int i = 0;
-
         implode(stack);
         while (true) {
             prevToken = tmpStack->data[tmpStack->top -1];
@@ -282,6 +288,14 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
             }
             int sign = prec_table[get_index(prevToken)][get_index(actualToken)];
             bool checker;
+
+            /*printf("Stack {");
+            for (int i2 = 0; i2 < i+1; i2 ++) printf("[%s],",stack->data[i2].data);
+            printf("}\n");
+            printf("tmpStack {");
+            for (int i3 = 0; i3 < tmpStack->top; i3 ++) printf("[%s],",tmpStack->data[i3].data);
+            printf("}\n");*/
+
             switch (sign)
             {
             case S: // <
@@ -366,6 +380,8 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                         }
                     }
                     else if (tmpToken.type == TOKEN_TYPE_LOGICAL_OPERATOR) {
+                        printf("SAASDSADADASD\n");
+                        printf("tmpToken.data %s \n", tmpToken.data);
                         if (strcmp(tmpToken.data, "<") == 0) {
                             if(GET_REPEAT_FUNC_RUN()){
                                 printf("LTS\n");
@@ -403,6 +419,9 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
                 }
                 break;
             case N: // err
+                if (prevToken.type == TOKEN_TYPE_EOL && actualToken.type == TOKEN_TYPE_EOL) break;
+
+                //printf("ERR\n");
                 deleteStack(&tmpStack);
                 changeErrorCode(5);
                 return;
@@ -410,6 +429,7 @@ void generateCode(Stack_t *stack, int deepVar, variable Var, int incomingType) {
             default:
                 break;
             }
+            //printf("\n");
             if (prevToken.type == TOKEN_TYPE_EOL && actualToken.type == TOKEN_TYPE_EOL) break;
 
         }
