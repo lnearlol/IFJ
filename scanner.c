@@ -1,7 +1,3 @@
-<<<<<<< Updated upstream
-#include "scanner.h"
-
-=======
 /**
  * @file scanner.c
  *
@@ -19,7 +15,6 @@
  * @param state is a character that we check
  * @return Function returns 1 if symbol is allowed, 0 if not
  */
->>>>>>> Stashed changes
 int allowed_symbol(char state){
 	if((state >= ' ' && state <= '"') || state == '\n' || state == TAB || state >= '(' && state <= '>' || 
 	state >= 'A' && state <= 'Z' || state == '_' || state >= 'a' && state <= '{' || state == '}' || state == EOF)
@@ -27,60 +22,44 @@ int allowed_symbol(char state){
 	else 
 		return 0;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, determines if state is a number, letter or an underscore
  * @param state is a character that we check
  * @return Function returns 1 if symbol matches digits, letters or an underscore, 0 if not
  */
->>>>>>> Stashed changes
 int letter_or_num(char state){
 	if(state >= '0' && state <= '9' || state >= 'A' && state <= 'Z' || state >= 'a' && state <= 'z' || state == '_')
 		return 1;
 	else 
 		return 0;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, determines if it is a digit
  * @param state is a character that we check
  * @return Function returns 1 if symbol matches digits, 0 if not
  */
->>>>>>> Stashed changes
 int num(char state){
 	if(state >= '0' && state <= '9')
 		return 1;
 	else 
 		return 0;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, reads a symbol from stdin
  * @param state is a character in which we write a symbol from stdin, which we check and return
  * @return Function returns state, which we read or `%` if it wasn`t allowed
  */
->>>>>>> Stashed changes
 char read_a_symbol(char state){
 	state = fgetc(stdin);
 	if(!allowed_symbol(state))      //ERROR: FORBIDDEN SYMBOL
 		return '%';
 	return state;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, reads first non space symbol
  * @param state is a character that we check, rewrite and return
  * @return Function returns state, which we read
  */
->>>>>>> Stashed changes
 char first_non_space(char state){
 	do{
 		state = read_a_symbol(state);
@@ -88,30 +67,22 @@ char first_non_space(char state){
 
 	return state;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, reads first non TAB symbol
  * @param state is a character that we check, rewrite and return
  * @return Function returns state, which we read
  */
->>>>>>> Stashed changes
 char first_non_TAB(char state){
 	while(state == TAB)
 		state = read_a_symbol(state);
 
 	return state;
 }
-<<<<<<< Updated upstream
-
-=======
 /**
  * Helper function for `get_token`, reads first non TAB, non EOL and non space symbol
  * @param state is a character that we check, rewrite and return
  * @return Function returns state, which we read
  */
->>>>>>> Stashed changes
 char first_non_EOL(char state){
 	do{
 		state = read_a_symbol(state);
@@ -119,14 +90,6 @@ char first_non_EOL(char state){
 
 	return state;
 }
-<<<<<<< Updated upstream
-
-void data_append(Token *token, char state){
-    token->data = realloc(token->data, ++token->size);
-    strncat(token->data, &state, 1);
-}
-
-=======
 /**
  * Helper function for `get_token`, filling token data
  * @param token Structure instance that contains information about token
@@ -148,7 +111,6 @@ int data_append(Token *token, char state){
  * @param token Structure instance that contains information about token
  * @return Function returns 1 if token->data contains a command function name, 0 if not
  */
->>>>>>> Stashed changes
 int check_command_functions(Token *token){
 	char command_functions[FUNCTIONS_ARRAY_SIZE][FUNCTIONS_ARRAY_SIZE] = {"inputs", "inputi", "inputf", "print", "int2float", "float2int", "len", "substr", "ord", "chr"};
 	for(int i = 0; i < FUNCTIONS_ARRAY_SIZE; i++){
