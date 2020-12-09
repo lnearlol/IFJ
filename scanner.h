@@ -5,7 +5,7 @@
 #define WRONG_DATA_TOKEN_TYPE -1        //type of token for wrong data
 
 //input validation functions
-int allowed_symbol(char state);                     
+int allowed_symbol(char state);
 int letter_or_num(char state);
 int num(char state);
 //reading a symbol from program code

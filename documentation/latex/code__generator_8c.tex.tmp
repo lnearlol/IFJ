@@ -1,0 +1,312 @@
+\hypertarget{code__generator_8c}{}\doxysection{code\+\_\+generator.\+c File Reference}
+\label{code__generator_8c}\index{code\_generator.c@{code\_generator.c}}
+
+
+Code generator implementation.  
+
+
+{\ttfamily \#include \char`\"{}parser.\+h\char`\"{}}\newline
+Include dependency graph for code\+\_\+generator.\+c\+:
+% FIG 0
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{code__generator_8c_a31d01561c22ca62fa61389a6f3db1aa7}{G\+E\+N\+\_\+\+S\+T\+A\+R\+T\+\_\+\+M\+A\+IN}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a5785ffc5557b96df28595d89b47fec81}{G\+E\+N\+\_\+\+S\+T\+A\+R\+T\+\_\+\+O\+F\+\_\+\+F\+U\+N\+C\+T\+I\+ON}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}})
+\item 
+void \mbox{\hyperlink{code__generator_8c_a7531549a88216f27b1d0cb37c2a73370}{G\+E\+N\+\_\+\+E\+N\+D\+\_\+\+O\+F\+\_\+\+F\+U\+N\+C\+T\+I\+ON}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}})
+\item 
+void \mbox{\hyperlink{code__generator_8c_af77d7ff9152ba2c750618562f5996a3a}{G\+E\+N\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+F\+R\+A\+M\+E\+\_\+\+A\+N\+D\+\_\+\+S\+E\+T\+\_\+\+P\+A\+R\+A\+MS}} (\mbox{\hyperlink{structinParam}{input\+Params}} In\+Params)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a7629d47fbdf5ba8dcd80c93b5f8c95ca}{M\+O\+V\+E\+\_\+\+I\+N\+T\+O\+\_\+\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+ER}} (\mbox{\hyperlink{structinParam}{input\+Params}} In\+Param, \mbox{\hyperlink{structtoken}{Token}} $\ast$value, int deep)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a8b01a0fa2dc42205cfc4eb294303df1f}{G\+E\+N\+\_\+\+C\+A\+LL}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}})
+\item 
+\mbox{\Hypertarget{code__generator_8c_ab602190c35ba7fb0be008f45179c57f5}\label{code__generator_8c_ab602190c35ba7fb0be008f45179c57f5}} 
+void {\bfseries G\+E\+N\+\_\+\+S\+E\+T\+\_\+\+F\+R\+A\+M\+E\+\_\+\+T\+Y\+PE} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a49f9d6995c14a1d59711153f3ac70b9d}{G\+E\+N\+\_\+\+W\+R\+I\+T\+E\+\_\+\+V\+A\+R\+\_\+\+L\+I\+T\+E\+R\+AL}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep)
+\item 
+\mbox{\Hypertarget{code__generator_8c_af934740d38ca6bd05de9ae10e4e0e38b}\label{code__generator_8c_af934740d38ca6bd05de9ae10e4e0e38b}} 
+char $\ast$ {\bfseries A\+S\+M\+\_\+\+D\+A\+T\+A\+\_\+\+A\+P\+P\+E\+ND} (char $\ast$A\+S\+M\+\_\+string, char state, int length)
+\item 
+\mbox{\Hypertarget{code__generator_8c_a5ad1aacdb804604d3b27d2407757a6e1}\label{code__generator_8c_a5ad1aacdb804604d3b27d2407757a6e1}} 
+char $\ast$ {\bfseries G\+E\+N\+\_\+\+A\+S\+M\+\_\+\+S\+T\+R\+I\+NG} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, char $\ast$A\+S\+M\+\_\+string)
+\item 
+void \mbox{\hyperlink{code__generator_8c_aead2ce53bc79f6bece174c35a8449541}{G\+E\+N\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+DE}} (int deep)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a676aeee985b85e6c40b9866155214c8a}{G\+E\+N\+\_\+\+E\+Q\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+DE}} (int deep)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a4866d9895a5b99f3648c9946f58e11c1}{G\+E\+N\+\_\+\+A\+D\+D\+\_\+\+V\+A\+R\+\_\+\+T\+O\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$stack)
+\item 
+\mbox{\Hypertarget{code__generator_8c_a1cb8e5ebbd353ed252ff7737886ee862}\label{code__generator_8c_a1cb8e5ebbd353ed252ff7737886ee862}} 
+void {\bfseries G\+E\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+V\+A\+R\+\_\+\+F\+R\+O\+M\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK} ()
+\item 
+\mbox{\Hypertarget{code__generator_8c_a6eebb625b23f775d0d2339d24f91252e}\label{code__generator_8c_a6eebb625b23f775d0d2339d24f91252e}} 
+void {\bfseries G\+E\+N\+\_\+\+D\+E\+L\+E\+T\+E\+\_\+\+F\+U\+L\+L\+\_\+\+V\+A\+R\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_ac9d908d073a202b2e162f7a8bfb0eb9a}{G\+E\+N\+\_\+\+P\+R\+I\+N\+T\+\_\+\+W\+R\+I\+TE}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int deep)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a7879480b4e1c4c8de344fd50c250fec3}{G\+E\+N\+\_\+\+J\+U\+MP}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int count, bool if\+\_\+condition, int for\+\_\+condition)
+\item 
+void \mbox{\hyperlink{code__generator_8c_a8338105aab6aa686b5617085740b8f52}{G\+E\+N\+\_\+\+S\+C\+O\+PE}} (\mbox{\hyperlink{structtoken}{Token}} $\ast$\mbox{\hyperlink{structtoken}{token}}, int count, bool if\+\_\+condition, bool for\+\_\+condition)
+\item 
+\mbox{\Hypertarget{code__generator_8c_a560f86011ab7d914965b5b1a0d5b88b9}\label{code__generator_8c_a560f86011ab7d914965b5b1a0d5b88b9}} 
+void {\bfseries G\+E\+N\+\_\+\+C\+A\+L\+L\+\_\+\+I\+N\+B\+U\+I\+L\+DS} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_abcb84b2c55dd9228ff5fb391f3e6a4cd}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TI}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_acc3718dab0bd04a7e15d306ce3503789}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TS}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_ae342163ddd468de65f6f1ae14f9cee0a}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TF}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_abbda2294709400e904e6ce2539dfebe4}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+L\+EN}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_aa569e4737d26fd4fa8826adf35fea32f}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+F\+L\+O\+A\+T2\+I\+NT}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a59d41dc365f2deb30726d47afba1e518}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+T2\+F\+L\+O\+AT}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a120741a678c6ff1000a7af8fe2f8800f}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+S\+U\+B\+S\+TR}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a6c039a85794de0d3f1f2f8d5ff049596}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+O\+RD}} ()
+\item 
+void \mbox{\hyperlink{code__generator_8c_a6c3cda355e4a3549c03dd6a65058cd96}{G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+C\+HR}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{code__generator_8c_a06705eac149016a49da8471561fea6a0}\label{code__generator_8c_a06705eac149016a49da8471561fea6a0}} 
+char {\bfseries frame\+Print} \mbox{[}3\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Code generator implementation. 
+
+I\+FJ Projekt 2020, Tým 55
+
+\begin{DoxyAuthor}{Author}
+$<$xstepa64$>$ Stepaniuk Roman, Bc. 
+
+$<$xpastu04$>$ Pastushenko Vladislav 
+
+$<$xbahda01$>$ Bahdanovich Viktoryia 
+
+$<$xtomas34$>$ Tomason Viktoryia 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{code__generator_8c_a4866d9895a5b99f3648c9946f58e11c1}\label{code__generator_8c_a4866d9895a5b99f3648c9946f58e11c1}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK@{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK}}
+\index{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK@{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK()}{GEN\_ADD\_VAR\_TO\_ASSEMBLY\_STACK()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+A\+D\+D\+\_\+\+V\+A\+R\+\_\+\+T\+O\+\_\+\+A\+S\+S\+E\+M\+B\+L\+Y\+\_\+\+S\+T\+A\+CK (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+Functions add variables to the stack 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Pointer signifies the current stack \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a8b01a0fa2dc42205cfc4eb294303df1f}\label{code__generator_8c_a8b01a0fa2dc42205cfc4eb294303df1f}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_CALL@{GEN\_CALL}}
+\index{GEN\_CALL@{GEN\_CALL}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_CALL()}{GEN\_CALL()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+C\+A\+LL (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} calls needed function 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the function name \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_af77d7ff9152ba2c750618562f5996a3a}\label{code__generator_8c_af77d7ff9152ba2c750618562f5996a3a}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS@{GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS}}
+\index{GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS@{GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS()}{GEN\_CREATE\_FRAME\_AND\_SET\_PARAMS()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+F\+R\+A\+M\+E\+\_\+\+A\+N\+D\+\_\+\+S\+E\+T\+\_\+\+P\+A\+R\+A\+MS (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structinParam}{input\+Params}}}]{In\+Params }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} creates temporary frame and initialize temporary variables 
+\begin{DoxyParams}{Parameters}
+{\em In\+Params} & Signifies input parameters of function \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_aead2ce53bc79f6bece174c35a8449541}\label{code__generator_8c_aead2ce53bc79f6bece174c35a8449541}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_CREATE\_LEFT\_SIDE@{GEN\_CREATE\_LEFT\_SIDE}}
+\index{GEN\_CREATE\_LEFT\_SIDE@{GEN\_CREATE\_LEFT\_SIDE}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_CREATE\_LEFT\_SIDE()}{GEN\_CREATE\_LEFT\_SIDE()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+C\+R\+E\+A\+T\+E\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+DE (\begin{DoxyParamCaption}\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} takes the variable by its level, then removes it from the stack 
+\begin{DoxyParams}{Parameters}
+{\em deep} & Signifies the level of the variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a7531549a88216f27b1d0cb37c2a73370}\label{code__generator_8c_a7531549a88216f27b1d0cb37c2a73370}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_END\_OF\_FUNCTION@{GEN\_END\_OF\_FUNCTION}}
+\index{GEN\_END\_OF\_FUNCTION@{GEN\_END\_OF\_FUNCTION}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_END\_OF\_FUNCTION()}{GEN\_END\_OF\_FUNCTION()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+E\+N\+D\+\_\+\+O\+F\+\_\+\+F\+U\+N\+C\+T\+I\+ON (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates pop instruction with return and jump to the end of function for \char`\"{}main\char`\"{}. 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the function name \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a676aeee985b85e6c40b9866155214c8a}\label{code__generator_8c_a676aeee985b85e6c40b9866155214c8a}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_EQ\_LEFT\_SIDE@{GEN\_EQ\_LEFT\_SIDE}}
+\index{GEN\_EQ\_LEFT\_SIDE@{GEN\_EQ\_LEFT\_SIDE}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_EQ\_LEFT\_SIDE()}{GEN\_EQ\_LEFT\_SIDE()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+E\+Q\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+DE (\begin{DoxyParamCaption}\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} takes the variable by its level, then removes it from the stack 
+\begin{DoxyParams}{Parameters}
+{\em deep} & Signifies the level of the variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a7879480b4e1c4c8de344fd50c250fec3}\label{code__generator_8c_a7879480b4e1c4c8de344fd50c250fec3}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_JUMP@{GEN\_JUMP}}
+\index{GEN\_JUMP@{GEN\_JUMP}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_JUMP()}{GEN\_JUMP()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+J\+U\+MP (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{count,  }\item[{bool}]{if\+\_\+condition,  }\item[{int}]{for\+\_\+condition }\end{DoxyParamCaption})}
+
+Functions generates \char`\"{}if\char`\"{} and \char`\"{}for\char`\"{} operation in code. Check on what label should jump 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the name of function \\
+\hline
+{\em count} & Number of condition \\
+\hline
+{\em if\+\_\+condition} & Signifies if condition \char`\"{}if \char`\"{}is the current condition \\
+\hline
+{\em for\+\_\+condition} & Signifies if condition \char`\"{}for \char`\"{}is the current condition \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_ac9d908d073a202b2e162f7a8bfb0eb9a}\label{code__generator_8c_ac9d908d073a202b2e162f7a8bfb0eb9a}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_PRINT\_WRITE@{GEN\_PRINT\_WRITE}}
+\index{GEN\_PRINT\_WRITE@{GEN\_PRINT\_WRITE}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_PRINT\_WRITE()}{GEN\_PRINT\_WRITE()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+P\+R\+I\+N\+T\+\_\+\+W\+R\+I\+TE (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} print 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the name of variable \\
+\hline
+{\em deep} & Signifies the level of the variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a8338105aab6aa686b5617085740b8f52}\label{code__generator_8c_a8338105aab6aa686b5617085740b8f52}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_SCOPE@{GEN\_SCOPE}}
+\index{GEN\_SCOPE@{GEN\_SCOPE}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_SCOPE()}{GEN\_SCOPE()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+S\+C\+O\+PE (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{count,  }\item[{bool}]{if\+\_\+condition,  }\item[{bool}]{for\+\_\+condition }\end{DoxyParamCaption})}
+
+Functions creates label to jump on 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the name of functions \\
+\hline
+{\em count} & Number of condition \\
+\hline
+{\em if\+\_\+condition} & Signifies if condition \char`\"{}if \char`\"{}is the current condition \\
+\hline
+{\em for\+\_\+condition} & Signifies if condition \char`\"{}for \char`\"{}is the current condition \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a31d01561c22ca62fa61389a6f3db1aa7}\label{code__generator_8c_a31d01561c22ca62fa61389a6f3db1aa7}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_START\_MAIN@{GEN\_START\_MAIN}}
+\index{GEN\_START\_MAIN@{GEN\_START\_MAIN}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_START\_MAIN()}{GEN\_START\_MAIN()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+S\+T\+A\+R\+T\+\_\+\+M\+A\+IN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} insert header for ifjcode20 and creates a global variable for working with \char`\"{}main\char`\"{} \mbox{\Hypertarget{code__generator_8c_a5785ffc5557b96df28595d89b47fec81}\label{code__generator_8c_a5785ffc5557b96df28595d89b47fec81}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_START\_OF\_FUNCTION@{GEN\_START\_OF\_FUNCTION}}
+\index{GEN\_START\_OF\_FUNCTION@{GEN\_START\_OF\_FUNCTION}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_START\_OF\_FUNCTION()}{GEN\_START\_OF\_FUNCTION()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+S\+T\+A\+R\+T\+\_\+\+O\+F\+\_\+\+F\+U\+N\+C\+T\+I\+ON (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates function with the creation of a local frame and creates temporary frame for working with \char`\"{}main\char`\"{}. 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the function name \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a49f9d6995c14a1d59711153f3ac70b9d}\label{code__generator_8c_a49f9d6995c14a1d59711153f3ac70b9d}} 
+\index{code\_generator.c@{code\_generator.c}!GEN\_WRITE\_VAR\_LITERAL@{GEN\_WRITE\_VAR\_LITERAL}}
+\index{GEN\_WRITE\_VAR\_LITERAL@{GEN\_WRITE\_VAR\_LITERAL}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GEN\_WRITE\_VAR\_LITERAL()}{GEN\_WRITE\_VAR\_LITERAL()}}
+{\footnotesize\ttfamily void G\+E\+N\+\_\+\+W\+R\+I\+T\+E\+\_\+\+V\+A\+R\+\_\+\+L\+I\+T\+E\+R\+AL (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{token,  }\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} writes a variable according to its type. If it\textquotesingle{}s identifier find the deepest one by its name 
+\begin{DoxyParams}{Parameters}
+{\em token} & Pointer to the token that indicates the name of variable \\
+\hline
+{\em deep} & Signifies the level of the variable \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{code__generator_8c_a6c3cda355e4a3549c03dd6a65058cd96}\label{code__generator_8c_a6c3cda355e4a3549c03dd6a65058cd96}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_CHR@{GENERATION\_CHR}}
+\index{GENERATION\_CHR@{GENERATION\_CHR}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_CHR()}{GENERATION\_CHR()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+C\+HR (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates chr instruction in code. chr(i int) (string, int) \mbox{\Hypertarget{code__generator_8c_aa569e4737d26fd4fa8826adf35fea32f}\label{code__generator_8c_aa569e4737d26fd4fa8826adf35fea32f}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_FLOAT2INT@{GENERATION\_FLOAT2INT}}
+\index{GENERATION\_FLOAT2INT@{GENERATION\_FLOAT2INT}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_FLOAT2INT()}{GENERATION\_FLOAT2INT()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+F\+L\+O\+A\+T2\+I\+NT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates float2int instruction in code. float2int (f float64) (int) \mbox{\Hypertarget{code__generator_8c_ae342163ddd468de65f6f1ae14f9cee0a}\label{code__generator_8c_ae342163ddd468de65f6f1ae14f9cee0a}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_INPUTF@{GENERATION\_INPUTF}}
+\index{GENERATION\_INPUTF@{GENERATION\_INPUTF}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_INPUTF()}{GENERATION\_INPUTF()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TF (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates inputf instruction in code. inputf() (float,int) \mbox{\Hypertarget{code__generator_8c_abcb84b2c55dd9228ff5fb391f3e6a4cd}\label{code__generator_8c_abcb84b2c55dd9228ff5fb391f3e6a4cd}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_INPUTI@{GENERATION\_INPUTI}}
+\index{GENERATION\_INPUTI@{GENERATION\_INPUTI}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_INPUTI()}{GENERATION\_INPUTI()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TI (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates inputi instruction in code. inputi() (int,int) \mbox{\Hypertarget{code__generator_8c_acc3718dab0bd04a7e15d306ce3503789}\label{code__generator_8c_acc3718dab0bd04a7e15d306ce3503789}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_INPUTS@{GENERATION\_INPUTS}}
+\index{GENERATION\_INPUTS@{GENERATION\_INPUTS}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_INPUTS()}{GENERATION\_INPUTS()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+P\+U\+TS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates inputs instruction in code. inputs() (string,int) \mbox{\Hypertarget{code__generator_8c_a59d41dc365f2deb30726d47afba1e518}\label{code__generator_8c_a59d41dc365f2deb30726d47afba1e518}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_INT2FLOAT@{GENERATION\_INT2FLOAT}}
+\index{GENERATION\_INT2FLOAT@{GENERATION\_INT2FLOAT}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_INT2FLOAT()}{GENERATION\_INT2FLOAT()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+I\+N\+T2\+F\+L\+O\+AT (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates int2float instruction in code. int2float (i int)(float64) \mbox{\Hypertarget{code__generator_8c_abbda2294709400e904e6ce2539dfebe4}\label{code__generator_8c_abbda2294709400e904e6ce2539dfebe4}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_LEN@{GENERATION\_LEN}}
+\index{GENERATION\_LEN@{GENERATION\_LEN}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_LEN()}{GENERATION\_LEN()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+L\+EN (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates len instruction in code. len (s string) (int) \mbox{\Hypertarget{code__generator_8c_a6c039a85794de0d3f1f2f8d5ff049596}\label{code__generator_8c_a6c039a85794de0d3f1f2f8d5ff049596}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_ORD@{GENERATION\_ORD}}
+\index{GENERATION\_ORD@{GENERATION\_ORD}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_ORD()}{GENERATION\_ORD()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+O\+RD (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates ord instruction in code. ord(s string,i int) (int, int) \mbox{\Hypertarget{code__generator_8c_a120741a678c6ff1000a7af8fe2f8800f}\label{code__generator_8c_a120741a678c6ff1000a7af8fe2f8800f}} 
+\index{code\_generator.c@{code\_generator.c}!GENERATION\_SUBSTR@{GENERATION\_SUBSTR}}
+\index{GENERATION\_SUBSTR@{GENERATION\_SUBSTR}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{GENERATION\_SUBSTR()}{GENERATION\_SUBSTR()}}
+{\footnotesize\ttfamily void G\+E\+N\+E\+R\+A\+T\+I\+O\+N\+\_\+\+S\+U\+B\+S\+TR (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} generates substr instruction in code. substr(s string,i int,n int) (string, int) \mbox{\Hypertarget{code__generator_8c_a7629d47fbdf5ba8dcd80c93b5f8c95ca}\label{code__generator_8c_a7629d47fbdf5ba8dcd80c93b5f8c95ca}} 
+\index{code\_generator.c@{code\_generator.c}!MOVE\_INTO\_INPUT\_PARAMETER@{MOVE\_INTO\_INPUT\_PARAMETER}}
+\index{MOVE\_INTO\_INPUT\_PARAMETER@{MOVE\_INTO\_INPUT\_PARAMETER}!code\_generator.c@{code\_generator.c}}
+\doxysubsubsection{\texorpdfstring{MOVE\_INTO\_INPUT\_PARAMETER()}{MOVE\_INTO\_INPUT\_PARAMETER()}}
+{\footnotesize\ttfamily void M\+O\+V\+E\+\_\+\+I\+N\+T\+O\+\_\+\+I\+N\+P\+U\+T\+\_\+\+P\+A\+R\+A\+M\+E\+T\+ER (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structinParam}{input\+Params}}}]{In\+Param,  }\item[{\mbox{\hyperlink{structtoken}{Token}} $\ast$}]{value,  }\item[{int}]{deep }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} moves parameters value to the temporary 
+\begin{DoxyParams}{Parameters}
+{\em In\+Param} & Signifies input parameters of function \\
+\hline
+{\em value} & Pointer to the token that indicates the name of variable \\
+\hline
+{\em deep} & Signifies the level of the variable \\
+\hline
+\end{DoxyParams}

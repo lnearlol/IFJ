@@ -1,0 +1,182 @@
+\hypertarget{expression__translator_8c}{}\doxysection{expression\+\_\+translator.\+c File Reference}
+\label{expression__translator_8c}\index{expression\_translator.c@{expression\_translator.c}}
+
+
+Functions for processing expressions.  
+
+
+{\ttfamily \#include \char`\"{}expression\+\_\+translator.\+h\char`\"{}}\newline
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$ \mbox{\hyperlink{expression__translator_8c_aafe1c5adb004e07c746fd75391da8bf1}{create\+Stack}} ()
+\item 
+void \mbox{\hyperlink{expression__translator_8c_ac077b10de2cf0076d5df2a7e2d44bcdb}{delete\+Stack}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$$\ast$stack)
+\item 
+void \mbox{\hyperlink{expression__translator_8c_ae9eaaddeec870c4ad8c01ad7349e5b5c}{resize}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack)
+\item 
+void \mbox{\hyperlink{expression__translator_8c_aea5d3f0b63670e096832350615917181}{push}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack, \mbox{\hyperlink{structtoken}{Token}} value)
+\item 
+\mbox{\hyperlink{structtoken}{Token}} \mbox{\hyperlink{expression__translator_8c_ad10645410672a16f67a961f95febfb36}{pop}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack)
+\item 
+\mbox{\hyperlink{structtoken}{Token}} \mbox{\hyperlink{expression__translator_8c_af204bc878317f1e5450895232fa6e632}{peek}} (const \mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack)
+\item 
+void \mbox{\hyperlink{expression__translator_8c_a8e18527214463dff3452f19fb10cd0f6}{implode}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack)
+\item 
+int \mbox{\hyperlink{expression__translator_8c_a17ba43dca1e1c986aa36b6132523ba3c}{prec}} (\mbox{\hyperlink{structtoken}{Token}} \mbox{\hyperlink{structtoken}{token}})
+\item 
+int \mbox{\hyperlink{expression__translator_8c_a45c14fd7c38d322bd7efa652d1ce2c70}{sort\+\_\+to\+\_\+postfix}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var)
+\item 
+void \mbox{\hyperlink{expression__translator_8c_ab98150edd0490cc502008eee7ff271d6}{generate\+Code}} (\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$stack, int deep\+Var, \mbox{\hyperlink{structVariable}{variable}} Var, int incoming\+Type)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Functions for processing expressions. 
+
+I\+FJ Projekt 2020, Tým 55
+
+\begin{DoxyAuthor}{Author}
+$<$xstepa64$>$ Stepaniuk Roman, Bc. 
+
+$<$xpastu04$>$ Pastushenko Vladislav 
+
+$<$xbahda01$>$ Bahdanovich Viktoryia 
+
+$<$xtomas34$>$ Tomason Viktoryia 
+\end{DoxyAuthor}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{expression__translator_8c_aafe1c5adb004e07c746fd75391da8bf1}\label{expression__translator_8c_aafe1c5adb004e07c746fd75391da8bf1}} 
+\index{expression\_translator.c@{expression\_translator.c}!createStack@{createStack}}
+\index{createStack@{createStack}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{createStack()}{createStack()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}}$\ast$ create\+Stack (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} for creating stack of tokens. \begin{DoxyReturn}{Returns}
+New empty stack of tokens 
+\end{DoxyReturn}
+\mbox{\Hypertarget{expression__translator_8c_ac077b10de2cf0076d5df2a7e2d44bcdb}\label{expression__translator_8c_ac077b10de2cf0076d5df2a7e2d44bcdb}} 
+\index{expression\_translator.c@{expression\_translator.c}!deleteStack@{deleteStack}}
+\index{deleteStack@{deleteStack}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{deleteStack()}{deleteStack()}}
+{\footnotesize\ttfamily void delete\+Stack (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$$\ast$}]{stack }\end{DoxyParamCaption})}
+
+\mbox{\hyperlink{structFunction}{Function}} for deleting stack of tokens. 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Pointer to the deleting stack. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{expression__translator_8c_ab98150edd0490cc502008eee7ff271d6}\label{expression__translator_8c_ab98150edd0490cc502008eee7ff271d6}} 
+\index{expression\_translator.c@{expression\_translator.c}!generateCode@{generateCode}}
+\index{generateCode@{generateCode}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{generateCode()}{generateCode()}}
+{\footnotesize\ttfamily void generate\+Code (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack,  }\item[{int}]{deep\+Var,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var,  }\item[{int}]{incoming\+Type }\end{DoxyParamCaption})}
+
+Prints assembly commands used to process expressions. 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack of tokens with expression in postfix form \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Pointer to the symbol table for variables \\
+\hline
+{\em incoming\+Type} & An integer representing the expression type \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{expression__translator_8c_a8e18527214463dff3452f19fb10cd0f6}\label{expression__translator_8c_a8e18527214463dff3452f19fb10cd0f6}} 
+\index{expression\_translator.c@{expression\_translator.c}!implode@{implode}}
+\index{implode@{implode}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{implode()}{implode()}}
+{\footnotesize\ttfamily void implode (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+Delete all empty blocks from the end of stack 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack which will be imploded \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{expression__translator_8c_af204bc878317f1e5450895232fa6e632}\label{expression__translator_8c_af204bc878317f1e5450895232fa6e632}} 
+\index{expression\_translator.c@{expression\_translator.c}!peek@{peek}}
+\index{peek@{peek}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{peek()}{peek()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structtoken}{Token}} peek (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+Pop penultimate token from the stack 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack from which token will be pop. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pop token 
+\end{DoxyReturn}
+\mbox{\Hypertarget{expression__translator_8c_ad10645410672a16f67a961f95febfb36}\label{expression__translator_8c_ad10645410672a16f67a961f95febfb36}} 
+\index{expression\_translator.c@{expression\_translator.c}!pop@{pop}}
+\index{pop@{pop}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structtoken}{Token}} pop (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+Pop token from the end of stack 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack from which token will be pop. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pop token 
+\end{DoxyReturn}
+\mbox{\Hypertarget{expression__translator_8c_a17ba43dca1e1c986aa36b6132523ba3c}\label{expression__translator_8c_a17ba43dca1e1c986aa36b6132523ba3c}} 
+\index{expression\_translator.c@{expression\_translator.c}!prec@{prec}}
+\index{prec@{prec}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{prec()}{prec()}}
+{\footnotesize\ttfamily int prec (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structtoken}{Token}}}]{token }\end{DoxyParamCaption})}
+
+Check token and return its priority 
+\begin{DoxyParams}{Parameters}
+{\em token} & Verifiable token \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer representing the priority number 
+\end{DoxyReturn}
+\mbox{\Hypertarget{expression__translator_8c_aea5d3f0b63670e096832350615917181}\label{expression__translator_8c_aea5d3f0b63670e096832350615917181}} 
+\index{expression\_translator.c@{expression\_translator.c}!push@{push}}
+\index{push@{push}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{push()}{push()}}
+{\footnotesize\ttfamily void push (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack,  }\item[{\mbox{\hyperlink{structtoken}{Token}}}]{value }\end{DoxyParamCaption})}
+
+Push token to the end of stack 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack to which token will be pushed. \\
+\hline
+{\em value} & Pushed token \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{expression__translator_8c_ae9eaaddeec870c4ad8c01ad7349e5b5c}\label{expression__translator_8c_ae9eaaddeec870c4ad8c01ad7349e5b5c}} 
+\index{expression\_translator.c@{expression\_translator.c}!resize@{resize}}
+\index{resize@{resize}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{resize()}{resize()}}
+{\footnotesize\ttfamily void resize (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack }\end{DoxyParamCaption})}
+
+Resizing of stack of tokens. 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Resized stack. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{expression__translator_8c_a45c14fd7c38d322bd7efa652d1ce2c70}\label{expression__translator_8c_a45c14fd7c38d322bd7efa652d1ce2c70}} 
+\index{expression\_translator.c@{expression\_translator.c}!sort\_to\_postfix@{sort\_to\_postfix}}
+\index{sort\_to\_postfix@{sort\_to\_postfix}!expression\_translator.c@{expression\_translator.c}}
+\doxysubsubsection{\texorpdfstring{sort\_to\_postfix()}{sort\_to\_postfix()}}
+{\footnotesize\ttfamily int sort\+\_\+to\+\_\+postfix (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structStack__tag}{Stack\+\_\+t}} $\ast$}]{stack,  }\item[{int}]{deep\+Var,  }\item[{\mbox{\hyperlink{structVariable}{variable}}}]{Var }\end{DoxyParamCaption})}
+
+Take stack of tokens, which contains expression, and create new stack of tokens, which will contain same expression but in postfix form. After that, it runs the generate\+Code function with new stack. Also gets and returns type of expression. Returns -\/1 if any error and sets error flags. 
+\begin{DoxyParams}{Parameters}
+{\em stack} & Stack of tokens with expression \\
+\hline
+{\em deep\+Var} & Signifies the deep of the variable \\
+\hline
+{\em Var} & Pointer to the symbol table for variables \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An integer representing the expression type 
+\end{DoxyReturn}

@@ -1,14 +1,14 @@
 /**
  * @file symtable.c
- * 
+ *
  * @brief Symbol table implementation
- * 
+ *
  * IFJ Projekt 2020, Tým 55
- * 
+ *
  * @author <xstepa64> Stepaniuk Roman, Bc.
  * @author <xpastu04> Pastushenko Vladislav
- * @author <xbahda01> Bahdanovich Viktoryia 
- * @author <xtomas34> Tomason Viktoryia 
+ * @author <xbahda01> Bahdanovich Viktoryia
+ * @author <xtomas34> Tomason Viktoryia
  */
 
 #include "symtable.h"
@@ -42,7 +42,7 @@ SymTab *declaration(SymTab *SymTable){
  * @return Function true in a successful insertion
  */
  bool insertVariable(Token *token, int deepVar, variable *Var){
-    
+
     if(*Var == NULL){
 		*Var = malloc(sizeof(struct Variable));
 		(*Var)->name = token->data;
@@ -54,7 +54,7 @@ SymTab *declaration(SymTab *SymTable){
         (*Var)->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
 		return true;
 
-	} else if ((*Var != NULL) && ((*Var)->deep < deepVar)){  
+	} else if ((*Var != NULL) && ((*Var)->deep < deepVar)){
         variable tmp = malloc(sizeof(struct Variable));
         tmp->LPtr = NULL;
         tmp->RPtr = NULL;
@@ -63,10 +63,10 @@ SymTab *declaration(SymTab *SymTable){
         tmp->name = token->data;
         tmp->length = token->size;
         tmp->type = VAR_TYPE_UNDEFINED;  // VAR_TYPE_UNDEFINED = -1
-        *Var = tmp;   
+        *Var = tmp;
         return true;
     }
-    
+
     else if(strcmp((*Var)->name, token->data) > 0) {
 		insertVariable(token, deepVar, &((*Var)->LPtr));
 
@@ -95,7 +95,7 @@ variable findVariable(Token *token, int deepVar, variable Var){
         if(tmp != NULL){
             return tmp;
         }
-        else 
+        else
             findVariable(token, deepVar-1, Var->prevTree);
     }
 }
@@ -109,8 +109,8 @@ variable findVariableHelper(Token *token, int deepVar, variable Var){
 
 	} else if(strcmp(Var->name, token->data) > 0) {
 		findVariableHelper(token, deepVar, Var->LPtr);
-		
-	} else if(strcmp(Var->name, token->data) == 0) 
+
+	} else if(strcmp(Var->name, token->data) == 0)
 		return Var;
 }
 
@@ -198,7 +198,7 @@ void freeVariablesLastLabel(variable *Var){
     }
 }
 
-// Function deletes all variables into symbol table 
+// Function deletes all variables into symbol table
 void freeAllVariables(variable *Var){
 
     while(*Var != NULL)
@@ -220,9 +220,9 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
 
     // printf("---------------------------- var1 = %d, var2 = %d\n", var1->type, var2);
 
-    if(var1->type == TOKEN_TYPE_IDENTIFIER){      
+    if(var1->type == TOKEN_TYPE_IDENTIFIER){
         variable tmp = findVariableWithType(var1, deep, Var);
-        
+
         if(!tmp){
             changeErrorCode(3);
             return 0;
@@ -234,10 +234,10 @@ int compareTwoVariables(Token *var1, int var2, int deep, variable Var){
         type1 = returnLiteralType(var1);
     }
     // printf("type1 = %d, type2 = %d", type1, type2);
-    
+
     if(type1 == type2){
         return type1;
-    } else 
+    } else
         return 0;
 }
 
@@ -264,7 +264,7 @@ int returnLiteralType(Token *token){
  */
 void insertGenVariable(Token *token, int deep, genVariable *genVar){
     if(*genVar == NULL){
-                
+
 		*genVar = malloc(sizeof(struct GenVariable));
 		(*genVar)->name = token->data;
 		(*genVar)->LPtr = NULL;
@@ -290,7 +290,7 @@ void insertDepth(int deep, deepInside *Depth){
         *Depth = malloc(sizeof(struct DeepInside));
         (*Depth)->next = NULL;
         (*Depth)->depthValue = deep;
-        return; 
+        return;
     } else if ((*Depth)->depthValue == deep) {
         return;
     } else {
@@ -300,11 +300,11 @@ void insertDepth(int deep, deepInside *Depth){
 
 // Function deletes all variables into symbol table for generation
 void freeGenVariables(genVariable *genVar, bool print){
-    
+
     if(*genVar == NULL){
         return;
     }
-    
+
     freeGenVariables(&(*genVar)->LPtr, print);
     freeGenVariables(&(*genVar)->RPtr, print);
     deepInside tmp_depth;
@@ -376,9 +376,9 @@ void freeFunctions(function *Func){
 }
 
 /**
- * Function finds for a function according to its name in the symbol table  
+ * Function finds for a function according to its name in the symbol table
  * @param token Token that contains information about a function
- * @param Func Signifies the name of function 
+ * @param Func Signifies the name of function
  */
 function findFunction(Token *token, function Func){
 
@@ -389,18 +389,18 @@ function findFunction(Token *token, function Func){
 
 	} else if(strcmp(Func->name, token->data) > 0) {
 		findFunction(token, Func->LPtr);
-		
+
 	} else if(strcmp(Func->name, token->data) == 0) {
 		return Func;
 	}
 }
 
 /**
- * Function adds input arguments for a function according to its name in the symbol table  
+ * Function adds input arguments for a function according to its name in the symbol table
  * @param func_name Token that contains information about a function
- * @param arg_name Signifies the name of argument 
- * @param arg_type Signifies the type of argument 
- * @param Func Signifies function 
+ * @param arg_name Signifies the name of argument
+ * @param arg_type Signifies the type of argument
+ * @param Func Signifies function
  */
 void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
@@ -423,10 +423,10 @@ void addInputArguments(Token *func_name, Token *arg_name, Token *arg_type, funct
 }
 
 /**
- * Function adds output arguments for a function according to its name in the symbol table  
+ * Function adds output arguments for a function according to its name in the symbol table
  * @param func_name Token that contains information about a function
- * @param arg_type Signifies the type of argument 
- * @param Func Signifies function 
+ * @param arg_type Signifies the type of argument
+ * @param Func Signifies function
  */
 void addOutputArguments(Token *func_name, Token *arg_type, function Func){
      function Found = findFunction(func_name, Func);
@@ -514,7 +514,7 @@ Token *get_float2int_token(Token *float2int){
     return float2int;
 }
 // Create token for function len
-Token *get_len_token(Token *len){  
+Token *get_len_token(Token *len){
     len->size = 4;
     len->data = malloc(len->size);
     strcpy(len->data,"len\0");
@@ -628,9 +628,9 @@ return print_type;
  * @param SymTable Token that contains information about a function
  */
 void symTab_for_inbuilt_func(SymTab *SymTable){
-    Token *prints, *inputs, *inputi, *inputf, *int2float, *float2int, *len, *substr, 
+    Token *prints, *inputs, *inputi, *inputf, *int2float, *float2int, *len, *substr,
     *ord, *chr, *integer, *floating, *string, *i, *f, *s, *n, *helper, *print_type;
-    
+
     helper = malloc (sizeof(Token));
     helper->next = NULL;
     startCommandFuncList = helper;
@@ -723,7 +723,7 @@ void symTab_for_inbuilt_func(SymTab *SymTable){
     addInputArguments(ord, i, integer, SymTable->func);
     addOutputArguments(ord, integer, SymTable->func);
     addOutputArguments(ord, integer, SymTable->func);
-    
+
     helper = create_and_set_token(helper);
     helper = get_chr_token(helper);
     chr = helper;
