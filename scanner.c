@@ -1,5 +1,19 @@
+/**
+ * @file scanner.c
+ *
+ * @brief Functions for the lexical analyzer
+ *
+ * IFJ Projekt 2020, Tým 55
+ *
+ * @author <xbahda01> Bahdanovich Viktoryia 
+ */
 #include "scanner.h"
 
+/**
+ * Function 
+ * @param state Signifies
+ * @return 1 if its match
+ */
 int allowed_symbol(char state){
     if((state >= ' ' && state <= '"') || state == '\n' || state == TAB || state >= '(' && state <= '>' || 
     state >= 'A' && state <= 'Z' || state == '_' || state >= 'a' && state <= '{' || state == '}' || state == EOF)
@@ -7,28 +21,44 @@ int allowed_symbol(char state){
     else 
         return 0;
 }
-
+/**
+ * Function determines if it is a number, letter or an underscore
+ * @param state Signifies
+ * @return 
+ */
 int letter_or_num(char state){
     if(state >= '0' && state <= '9' || state >= 'A' && state <= 'Z' || state >= 'a' && state <= 'z' || state == '_')
         return 1;
     else 
         return 0;
 }
-
+/**
+ * Function determines if it is a digit
+ * @param state Signifies
+ * @return 1 if its match
+ */
 int num(char state){
     if(state >= '0' && state <= '9')
         return 1;
     else 
         return 0;
 }
-
+/**
+ * Function read a symbol
+ * @param state Signifies
+ * @return State
+ */
 char read_a_symbol(char state){
     state = fgetc(stdin);
     if(!allowed_symbol(state))      //ERROR: FORBIDDEN SYMBOL
         return '%';
     return state;
 }
-
+/**
+ * Function read a symbol
+ * @param state Signifies
+ * @return State
+ */
 char first_non_space(char state){
     do{
         state = read_a_symbol(state);
@@ -36,14 +66,22 @@ char first_non_space(char state){
 
     return state;
 }
-
+/**
+ * Function read a symbol
+ * @param state Signifies
+ * @return State
+ */
 char first_non_TAB(char state){
     while(state == TAB)
         state = read_a_symbol(state);
 
     return state;
 }
-
+/**
+ * Function read a symbol
+ * @param state Signifies
+ * @return State
+ */
 char first_non_EOL(char state){
     do{
         state = read_a_symbol(state);
@@ -51,12 +89,20 @@ char first_non_EOL(char state){
 
     return state;
 }
-
+/**
+ * Function read a symbol
+ * @param state Signifies
+ * @return State
+ */
 void data_append(Token *token, char state){
     token->data = realloc(token->data, ++token->size);
     strncat(token->data, &state, 1);
 }
-
+/**
+ * Function read a symbol
+ * @param token Signifies
+ * @return 
+ */
 int check_command_functions(Token *token){
     char command_functions[FUNCTIONS_ARRAY_SIZE][FUNCTIONS_ARRAY_SIZE] = {"inputs", "inputi", "inputf", "print", "int2float", "float2int", "len", "substr", "ord", "chr"};
     for(int i = 0; i < FUNCTIONS_ARRAY_SIZE; i++){
